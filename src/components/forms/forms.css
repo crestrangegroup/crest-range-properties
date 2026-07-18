@@ -1,0 +1,99 @@
+.phone-row {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  min-width: 0;
+}
+
+.phone-code {
+  position: relative;
+  flex: none;
+}
+
+.phone-code-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  min-height: 45px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.phone-code-btn:hover {
+  border-color: var(--gold);
+}
+
+.phone-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-start: 0;
+  width: 290px;
+  max-width: 78vw;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 44px rgba(20, 18, 13, 0.18);
+  z-index: 40;
+  overflow: hidden;
+}
+
+.phone-search {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 11px 12px;
+  font-size: 15px;
+  background: #fff;
+}
+.phone-search:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
+}
+
+.phone-list {
+  max-height: 244px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.phone-list button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: start;
+}
+.phone-list button:hover {
+  background: #f2eddd;
+}
+
+.phone-empty {
+  padding: 14px 12px;
+  font-size: 14px;
+}
+
+/* Date inputs accept both the native picker and manual typing. */
+.date-input {
+  min-height: 45px;
+}
+
+.form-note {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+
+.form-sent {
+  border: 1px solid var(--gold);
+  background: rgba(242, 207, 20, 0.09);
+  border-radius: var(--radius);
+  padding: 22px;
+}

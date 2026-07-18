@@ -1,0 +1,56 @@
+.carousel {
+  position: relative;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  /* Slides are clipped here, so the page itself never scrolls sideways. */
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* RTL mirrors the travel direction without a second stylesheet. */
+[dir='rtl'] .carousel-track {
+  transform: scaleX(1);
+}
+
+.carousel-slide {
+  min-width: 0;
+  padding-inline: 10px;
+  box-sizing: border-box;
+  display: flex;
+}
+.carousel-slide > * {
+  width: 100%;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+.carousel-dots button {
+  width: 26px;
+  height: 3px;
+  border: 0;
+  padding: 0;
+  border-radius: 2px;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.carousel-dots button.on {
+  background: var(--gold);
+}
+
+@media (max-width: 720px) {
+  .carousel-slide {
+    padding-inline: 6px;
+  }
+}

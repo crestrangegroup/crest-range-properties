@@ -1,0 +1,251 @@
+.hdr {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.hdr-in {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: var(--header-h);
+  padding-inline: var(--pad-x);
+  max-width: var(--maxw);
+  margin-inline: auto;
+}
+
+.hdr-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.hdr-logo img.mark {
+  height: 40px;
+  width: auto;
+}
+.hdr-logo img.word {
+  height: 34px;
+  width: auto;
+}
+
+.hdr-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-inline: auto;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.hdr-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+}
+
+.hdr-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.nav-a {
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+}
+.nav-a:hover {
+  color: var(--gold);
+}
+.nav-a.active {
+  color: var(--gold);
+}
+
+/* About > Our Team dropdown */
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.drop-panel {
+  position: absolute;
+  top: 100%;
+  inset-inline-start: -10px;
+  padding-top: 10px;
+  z-index: 70;
+}
+.drop-inner {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 44px rgba(20, 18, 13, 0.16);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 168px;
+  animation: fadeUp 0.18s ease both;
+}
+.drop-item {
+  padding: 9px 12px;
+  border-radius: 2px;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--ink);
+  text-align: start;
+}
+.drop-item:hover {
+  background: #f2eddd;
+  color: var(--ink);
+}
+
+/* language switcher */
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+}
+.lang button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-mute);
+  padding: 4px 2px;
+  font: inherit;
+}
+.lang button:hover,
+.lang button.on {
+  color: var(--gold);
+}
+.lang-more {
+  position: relative;
+}
+.lang-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  inset-inline-end: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 44px rgba(20, 18, 13, 0.16);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  z-index: 80;
+  animation: fadeUp 0.16s ease both;
+}
+.lang-panel button {
+  text-align: start;
+  padding: 8px 11px;
+  border-radius: 2px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.lang-panel button:hover {
+  background: #f2eddd;
+}
+
+.hdr-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+  color: var(--ink);
+  flex: none;
+}
+
+/* ---- mobile ---- */
+
+.hdr-mobile {
+  display: none;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 14px var(--pad-x) 22px;
+  animation: fadeUp 0.2s ease both;
+}
+.hdr-mobile .group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.hdr-mobile .group:last-of-type {
+  border-bottom: 0;
+}
+.hdr-mobile .group-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-block: 6px;
+}
+.hdr-mobile .m-link {
+  padding: 11px 0;
+  font-size: 16px;
+  color: var(--ink);
+}
+.hdr-mobile .m-link.active {
+  color: var(--gold);
+}
+.hdr-mobile .m-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-block: 10px;
+}
+.hdr-mobile .m-langs button {
+  border: 1px solid var(--line-strong);
+  background: none;
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.hdr-mobile .m-langs button.on {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+@media (max-width: 1140px) {
+  .hdr-nav,
+  .hdr-right {
+    display: none;
+  }
+  .hdr-burger {
+    display: inline-flex;
+    margin-inline-start: auto;
+  }
+  .hdr-mobile.open {
+    display: block;
+  }
+}
+
+@media (max-width: 420px) {
+  .hdr-logo img.word {
+    height: 26px;
+  }
+  .hdr-logo img.mark {
+    height: 32px;
+  }
+}

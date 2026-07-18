@@ -1,0 +1,42 @@
+/* Legal pages are always rendered in English, left to right, even when the
+   surrounding site is in Arabic. */
+.legal {
+  max-width: 760px;
+  direction: ltr;
+  text-align: left;
+}
+
+.legal h2 {
+  font-size: 20px;
+  margin-top: 34px;
+  margin-bottom: 10px;
+}
+
+.legal p,
+.legal li {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.legal ul {
+  padding-inline-start: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legal address {
+  font-style: normal;
+  line-height: 1.8;
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  margin-top: 12px;
+}
+
+.legal-note {
+  font-size: 13px;
+  border-inline-start: 2px solid var(--gold);
+  padding-inline-start: 12px;
+  margin-top: 18px;
+}
