@@ -9,8 +9,44 @@
 // Provided automatically by the platform:
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
-import Anthropic from 'npm:@anthropic-ai/sdk@0.72.0'
+// The Anthropic call is made with plain fetch rather than the npm SDK: the
+// Deno edge runtime resolves `npm:` specifiers at cold boot, and pulling the
+// full SDK in made the function fail to boot (503 on the CORS preflight, before
+// any handler code ran). The Messages API is a single POST, so the SDK bought
+// us nothing here.
 import { createClient } from 'npm:@supabase/supabase-js@2'
+
+const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages'
+const ANTHROPIC_VERSION = '2023-06-01'
+
+interface AnthropicRequest {
+  model: string
+  max_tokens: number
+  system: string
+  messages: { role: 'user' | 'assistant'; content: string }[]
+  thinking?: { type: 'disabled' }
+  output_config?: Record<string, unknown>
+}
+
+async function callAnthropic(apiKey: string, body: AnthropicRequest): Promise<string> {
+  const res = await fetch(ANTHROPIC_URL, {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': ANTHROPIC_VERSION,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const json = await res.json()
+  if (!res.ok || json.error) {
+    throw new Error(`Anthropic ${res.status}: ${JSON.stringify(json.error ?? json).slice(0, 300)}`)
+  }
+  return (json.content ?? [])
+    .filter((b: { type: string }) => b.type === 'text')
+    .map((b: { text: string }) => b.text)
+    .join('')
+}
 
 // Mid-tier Sonnet-class model, chosen for natural conversation quality at
 // boutique-agency traffic cost. Thinking is disabled: this is a chat widget,
@@ -136,7 +172,6 @@ Deno.serve(async (req: Request) => {
 
     const { mode, sessionId, history = [], detail = '', returningHint = null } = await req.json()
 
-    const anthropic = new Anthropic({ apiKey })
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
@@ -163,7 +198,7 @@ Deno.serve(async (req: Request) => {
       const hint = returningHint
         ? `\nThis browser has chatted before. Possible prior name: "${returningHint.name}", prior topic: "${returningHint.summary}". Treat this as a soft hint only. Ask to verify before claiming to recognise them.`
         : ''
-      const res = await anthropic.messages.create({
+      reply = await callAnthropic(apiKey, {
         model: MODEL,
         max_tokens: 300,
         thinking: { type: 'disabled' },
@@ -175,12 +210,11 @@ Deno.serve(async (req: Request) => {
           },
         ],
       })
-      reply = res.content.filter((b) => b.type === 'text').map((b) => (b as { text: string }).text).join('\n')
     } else {
       const messages = toApiMessages(history as Msg[])
       if (!messages.length) return json({ reply: '', connect: false, summary: '' })
 
-      const res = await anthropic.messages.create({
+      const text = await callAnthropic(apiKey, {
         model: MODEL,
         max_tokens: 512,
         thinking: { type: 'disabled' },
@@ -188,11 +222,6 @@ Deno.serve(async (req: Request) => {
         system: mode === 'agent' ? AGENT_SYSTEM : CONCIERGE_SYSTEM,
         messages,
       })
-
-      const text = res.content
-        .filter((b) => b.type === 'text')
-        .map((b) => (b as { text: string }).text)
-        .join('')
       try {
         const parsed = JSON.parse(text)
         reply = parsed.reply ?? ''
