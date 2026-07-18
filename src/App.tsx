@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import CustomCursor from './components/CustomCursor'
 import AgentLiveChat from './components/chat/AgentLiveChat'
 import { ChatProvider } from './components/chat/ChatProvider'
+import { ListingsProvider } from './lib/ListingsProvider'
 import { ROUTES } from './routes'
 
 import Home from './pages/Home'
@@ -34,6 +35,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
+    <ListingsProvider>
     <ChatProvider>
       <ScrollToTop />
       <CustomCursor />
@@ -62,5 +64,6 @@ export default function App() {
       </div>
       <AgentLiveChat />
     </ChatProvider>
+    </ListingsProvider>
   )
 }

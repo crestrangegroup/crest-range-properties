@@ -1,7 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
-import { LISTINGS } from '../data/listings'
+import { useListings } from '../lib/ListingsProvider'
 import { byId } from '../data/team'
 import { ROUTES } from '../routes'
 import { fmtPrice, fmtSqft } from '../lib/format'
@@ -20,7 +20,8 @@ export default function PropertyDetail() {
   const { slug } = useParams()
   const { t, tListing, role } = useI18n()
 
-  const listing = LISTINGS.find((l) => l.slug === slug)
+  const { listings, loading } = useListings()
+  const listing = listings.find((l) => l.slug === slug)
 
   // Hooks must run before any early return, so all state is declared up front.
   const [first, setFirst] = useState('')
@@ -45,11 +46,18 @@ export default function PropertyDetail() {
   }, [mPrice, mDown, mYears, mRate])
 
   const related = useMemo(
-    () => (listing ? LISTINGS.filter((l) => l.slug !== listing.slug && l.area === listing.area).concat(LISTINGS.filter((l) => l.slug !== listing.slug && l.area !== listing.area)).slice(0, 3) : []),
-    [listing],
+    () =>
+      listing
+        ? listings
+            .filter((l) => l.slug !== listing.slug && l.area === listing.area)
+            .concat(listings.filter((l) => l.slug !== listing.slug && l.area !== listing.area))
+            .slice(0, 3)
+        : [],
+    [listings, listing],
   )
 
-  if (!listing) return <NotFound />
+  // Don't flash "not found" while live listings are still arriving.
+  if (!listing) return loading ? null : <NotFound />
 
   const l = tListing(listing)
   const agent = byId(listing.agent)

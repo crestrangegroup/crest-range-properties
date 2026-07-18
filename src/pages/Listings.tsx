@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
-import { LISTINGS, COMMUNITIES, PROPERTY_TYPES, Purpose } from '../data/listings'
+import { COMMUNITIES, PROPERTY_TYPES, Purpose } from '../data/listings'
+import { useListings } from '../lib/ListingsProvider'
 import ListingCard from '../components/ListingCard'
 import PageHead from '../components/PageHead'
 
@@ -15,6 +16,7 @@ export default function Listings({ forcedPurpose }: Props) {
   // Filters live in the URL, so a filtered view is shareable and survives a
   // refresh or a back/forward step exactly as the visitor left it.
   const [params, setParams] = useSearchParams()
+  const { listings } = useListings()
 
   const purpose = forcedPurpose ?? (params.get('purpose') as Purpose | null)
   const community = params.get('community') ?? ''
@@ -31,7 +33,7 @@ export default function Listings({ forcedPurpose }: Props) {
 
   const results = useMemo(
     () =>
-      LISTINGS.filter((l) => {
+      listings.filter((l) => {
         if (purpose && l.purpose !== purpose) return false
         if (community && l.area !== community) return false
         if (type && l.type !== type) return false
@@ -39,7 +41,7 @@ export default function Listings({ forcedPurpose }: Props) {
         if (maxPrice && l.price > Number(maxPrice)) return false
         return true
       }),
-    [purpose, community, type, beds, maxPrice],
+    [listings, purpose, community, type, beds, maxPrice],
   )
 
   const title = forcedPurpose === 'sale' ? t.navBuy : forcedPurpose === 'rent' ? t.navRent : t.listingsH

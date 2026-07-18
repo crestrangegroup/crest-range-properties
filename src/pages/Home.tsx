@@ -2,7 +2,8 @@ import { useEffect, useState, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { ROUTES } from '../routes'
-import { LISTINGS, COMMUNITIES, PROPERTY_TYPES } from '../data/listings'
+import { COMMUNITIES, PROPERTY_TYPES } from '../data/listings'
+import { useListings } from '../lib/ListingsProvider'
 import { HOODS, ARTICLES, HERO_IMAGES, STATS } from '../data/content'
 import ListingCard from '../components/ListingCard'
 import Carousel from '../components/Carousel'
@@ -19,6 +20,7 @@ export default function Home() {
   const { t, tHood, tArticle, area } = useI18n()
   const navigate = useNavigate()
   const [heroIdx, setHeroIdx] = useState(0)
+  const { listings } = useListings()
 
   const [community, setCommunity] = useState('')
   const [type, setType] = useState('')
@@ -53,7 +55,7 @@ export default function Home() {
     setEmail('')
   }
 
-  const featured = LISTINGS.slice(0, 6)
+  const featured = listings.slice(0, 6)
 
   return (
     <>
