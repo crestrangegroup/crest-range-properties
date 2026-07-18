@@ -5,6 +5,18 @@
 [build.environment]
   NODE_VERSION = "24"
 
+  # These two are PUBLIC by design. The Supabase URL and the anon (publishable)
+  # key are meant to be shipped in the browser bundle - Row Level Security is
+  # what protects the data, not the secrecy of this key. Keeping them here means
+  # a fresh clone or a re-linked Netlify site builds correctly with no manual
+  # dashboard setup, which is what previously produced a build with no backend.
+  #
+  # Never add SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY or the Resend key
+  # here. Those are server-side secrets and belong in Supabase Edge Function
+  # secrets, where they are never exposed to the browser.
+  VITE_SUPABASE_URL = "https://zxptxpyszmwdayrtjsfj.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4cHR4cHlzem13ZGF5cnRqc2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNzQ2NzAsImV4cCI6MjA5OTk1MDY3MH0.92AxqmRBOJ0ZSy1aPsiy5VCjsFU7vWG7mkLew70qVto"
+
 # Real client-side routing: every deep link and hard refresh must serve index.html
 # so React Router can resolve the URL, instead of 404-ing or bouncing to Home.
 [[redirects]]
