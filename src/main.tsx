@@ -5,6 +5,11 @@ import App from './App'
 import { I18nProvider } from './i18n/I18nProvider'
 import './styles.css'
 
+// The app manages its own scroll position (ScrollToTop, and the #team anchor on
+// About). Leaving this on "auto" lets the browser restore a stale offset after
+// our scroll has already run.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+
 const el = document.getElementById('root')
 if (!el) throw new Error('Root element #root is missing from index.html')
 

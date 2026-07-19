@@ -17,6 +17,17 @@
   VITE_SUPABASE_URL = "https://zxptxpyszmwdayrtjsfj.supabase.co"
   VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4cHR4cHlzem13ZGF5cnRqc2ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNzQ2NzAsImV4cCI6MjA5OTk1MDY3MH0.92AxqmRBOJ0ZSy1aPsiy5VCjsFU7vWG7mkLew70qVto"
 
+# Team was merged into About. Redirect at the edge rather than client-side: a
+# JS bounce from /team leaves the browser with no hash to anchor on, so its
+# scroll restoration resets to the top after our scroll runs. Serving
+# /about#team directly means the browser anchors natively. Must precede the
+# SPA catch-all below, since the first matching rule wins.
+[[redirects]]
+  from = "/team"
+  to = "/about#team"
+  status = 301
+  force = true
+
 # Real client-side routing: every deep link and hard refresh must serve index.html
 # so React Router can resolve the URL, instead of 404-ing or bouncing to Home.
 [[redirects]]
