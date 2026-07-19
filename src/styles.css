@@ -483,11 +483,32 @@ h4 {
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Mobile is a layout in its own right, not a shrunk desktop: tighten the
+     vertical rhythm so sections sit densely instead of floating in whitespace. */
   .section {
-    padding-block: 44px;
+    padding-block: 30px;
+  }
+  .grid {
+    gap: 16px;
   }
   .btn {
     padding: 12px 18px;
+  }
+  .sec-head {
+    margin-bottom: 18px;
+  }
+  .h1 {
+    font-size: clamp(30px, 8.4vw, 40px);
+  }
+  .h2 {
+    font-size: clamp(23px, 6.4vw, 30px);
+  }
+  .lede {
+    font-size: 15px;
+  }
+  .card {
+    /* Cards carry their own inner padding; trim it on small screens. */
+    --card-pad: 16px;
   }
 }
 

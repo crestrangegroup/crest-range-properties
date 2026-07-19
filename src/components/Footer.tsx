@@ -2,13 +2,15 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../routes'
 import { useI18n } from '../i18n/I18nProvider'
 import { COMPANY, mailLink, telLink } from '../data/company'
-import { Instagram, Facebook, LinkedIn, TikTok, YouTube } from './Icons'
+import { Instagram, Facebook, LinkedIn, TikTok, Threads, YouTube } from './Icons'
 
+/** Fixed display order: LinkedIn, Instagram, TikTok, Threads, Facebook, YouTube. */
 const SOCIALS = [
-  { href: COMPANY.social.instagram, label: 'Instagram', Icon: Instagram },
-  { href: COMPANY.social.facebook, label: 'Facebook', Icon: Facebook },
   { href: COMPANY.social.linkedin, label: 'LinkedIn', Icon: LinkedIn },
+  { href: COMPANY.social.instagram, label: 'Instagram', Icon: Instagram },
   { href: COMPANY.social.tiktok, label: 'TikTok', Icon: TikTok },
+  { href: COMPANY.social.threads, label: 'Threads', Icon: Threads },
+  { href: COMPANY.social.facebook, label: 'Facebook', Icon: Facebook },
   { href: COMPANY.social.youtube, label: 'YouTube', Icon: YouTube },
 ]
 
@@ -30,21 +32,21 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="dark" style={{ paddingTop: 'clamp(44px,6vw,72px)' }}>
+    <footer className="dark" style={{ paddingTop: 'clamp(28px,3.4vw,44px)' }}>
       <div className="wrap">
         <div
           className="grid"
-          style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: 32, paddingBottom: 40 }}
+          style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 'clamp(18px,2.4vw,28px)', paddingBottom: 'clamp(20px,2.6vw,28px)' }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <img src="/images/logo-mark-light.png" alt="" style={{ height: 38 }} />
               <img src="/images/logo-text-light.png" alt="Crest Range Properties" style={{ height: 30 }} />
             </div>
-            <p className="muted" style={{ fontSize: 14, maxWidth: '34ch', margin: 0 }}>
+            <p className="muted" style={{ fontSize: 13.5, maxWidth: '34ch', margin: 0 }}>
               {t.aboutH}
             </p>
-            <div className="row" style={{ gap: 10, marginTop: 18 }}>
+            <div className="row" style={{ gap: 8, marginTop: 14 }}>
               {SOCIALS.map(({ href, label, Icon }) => (
                 <a
                   key={label}
@@ -62,10 +64,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 14 }}>
+            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 10 }}>
               {t.footExplore}
             </h4>
-            <div className="stack" style={{ gap: 9 }}>
+            <div className="stack" style={{ gap: 7 }}>
               {explore.map(([to, label]) => (
                 <Link key={to} to={to} style={{ color: 'var(--on-dark)', fontSize: 14 }}>
                   {label}
@@ -75,10 +77,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 14 }}>
+            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 10 }}>
               {t.footCompany}
             </h4>
-            <div className="stack" style={{ gap: 9 }}>
+            <div className="stack" style={{ gap: 7 }}>
               {company.map(([to, label]) => (
                 <Link key={to} to={to} style={{ color: 'var(--on-dark)', fontSize: 14 }}>
                   {label}
@@ -88,7 +90,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 14 }}>
+            <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 10 }}>
               {t.contactH}
             </h4>
             {/* Address and hours always render on separate lines, never run together. */}
@@ -123,7 +125,7 @@ export default function Footer() {
           className="row"
           style={{
             borderTop: '1px solid var(--dark-line)',
-            paddingBlock: 18,
+            paddingBlock: 12,
             justifyContent: 'space-between',
             fontSize: 13,
             gap: 14,

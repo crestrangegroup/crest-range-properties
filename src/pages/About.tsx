@@ -1,13 +1,25 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
-import { ROUTES } from '../routes'
+import { ROUTES, TEAM_ANCHOR } from '../routes'
 import { TESTIMONIALS } from '../data/content'
+import { TEAM } from '../data/team'
 import Carousel from '../components/Carousel'
 import PageHead from '../components/PageHead'
-import { COMPANY } from '../data/company'
+import { COMPANY, waLink, telLink, mailLink } from '../data/company'
+import { Phone, Mail, WhatsApp } from '../components/Icons'
 
 export default function About() {
-  const { t, tTestimonial, addressLines } = useI18n()
+  const { t, tTestimonial, addressLines, role } = useI18n()
+  const { hash } = useLocation()
+
+  // Team lives on this page now, so #team has to be scrolled to manually:
+  // the browser only auto-jumps for anchors present on first paint.
+  useEffect(() => {
+    if (hash !== `#${TEAM_ANCHOR}`) return
+    const el = document.getElementById(TEAM_ANCHOR)
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }, [hash])
 
   return (
     <>
@@ -24,9 +36,9 @@ export default function About() {
           </p>
 
           <div className="row" style={{ gap: 12, marginTop: 28 }}>
-            <Link className="btn btn-primary btn-inline" to={ROUTES.team}>
+            <a className="btn btn-primary btn-inline" href={`#${TEAM_ANCHOR}`}>
               {t.footTeam}
-            </Link>
+            </a>
             <Link className="btn btn-outline btn-inline" to={ROUTES.contact}>
               {t.navContact}
             </Link>
@@ -80,6 +92,64 @@ export default function About() {
               )
             })}
           </Carousel>
+        </div>
+      </section>
+
+      {/* Our Team - merged in from the former standalone /team route. The
+          header's About dropdown and the footer both anchor here. */}
+      <section
+        className="section"
+        id={TEAM_ANCHOR}
+        style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)', scrollMarginTop: 'calc(var(--header-h) + 12px)' }}
+      >
+        <div className="wrap">
+          <p className="kicker">{t.footTeam}</p>
+          <h2 className="h2" style={{ maxWidth: '20ch' }}>
+            {t.teamH}
+          </h2>
+          <p className="lede" style={{ marginTop: 16 }}>
+            {t.teamP}
+          </p>
+
+          <div className="grid grid-3" style={{ marginTop: 40 }}>
+            {TEAM.map((m) => (
+              <article key={m.id} className="card" style={{ alignItems: 'center', textAlign: 'center', padding: 28 }}>
+                <img
+                  src={m.photo}
+                  alt={m.name}
+                  loading="lazy"
+                  width={132}
+                  height={132}
+                  style={{ width: 132, height: 132, borderRadius: '50%', objectFit: 'cover' }}
+                />
+                {/* Real names are never translated or transliterated. */}
+                <h3 className="h3" style={{ fontSize: 20, marginTop: 18 }}>
+                  {m.name}
+                </h3>
+                <p className="muted" style={{ fontSize: 13.5, margin: '8px 0 18px', minHeight: '2.6em' }}>
+                  {role(m.id)}
+                </p>
+                <div className="icon-row" style={{ justifyContent: 'center' }}>
+                  <a className="icon-btn" href={telLink(m.phone)} aria-label={`${t.callBtn} ${m.name}`} title={t.callBtn}>
+                    <Phone size={16} />
+                  </a>
+                  <a className="icon-btn" href={mailLink(`Enquiry for ${m.name}`)} aria-label={`${t.emailBtn} ${m.name}`} title={t.emailBtn}>
+                    <Mail size={16} />
+                  </a>
+                  <a
+                    className="icon-btn"
+                    href={waLink(`Hello ${m.name}, I'd like to speak with you about a property.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${t.whatsBtn} ${m.name}`}
+                    title={t.whatsBtn}
+                  >
+                    <WhatsApp size={16} />
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 

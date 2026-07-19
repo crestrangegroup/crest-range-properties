@@ -4,17 +4,17 @@ import { useI18n } from '../i18n/I18nProvider'
 import { useListings } from '../lib/ListingsProvider'
 import { byId } from '../data/team'
 import { ROUTES } from '../routes'
-import { fmtPrice, fmtSqft } from '../lib/format'
+import { fmtPrice } from '../lib/format'
 import { COMPANY, waLink, telLink, mailLink } from '../data/company'
 import ListingCard from '../components/ListingCard'
-import Barcode from '../components/Barcode'
 import PageHead from '../components/PageHead'
 import { NameFields } from '../components/forms/Fields'
 import { DateField } from '../components/forms/Fields'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
 import { submitLead } from '../lib/leads'
-import { ArrowLeft, Bed, Bath, Area, Pin, Phone, Mail, WhatsApp, Check } from '../components/Icons'
+import { ArrowLeft, Pin, Phone, Mail, WhatsApp, Check, QrMatrix } from '../components/Icons'
+import SpecRow from '../components/SpecRow'
 import NotFound from './NotFound'
 
 export default function PropertyDetail() {
@@ -132,20 +132,8 @@ export default function PropertyDetail() {
           <div className="split split-sidebar">
             <div className="stack" style={{ gap: 34 }}>
               <div>
-                <div className="row" style={{ gap: 26, paddingBottom: 20, borderBottom: '1px solid var(--line)' }}>
-                  {listing.beds > 0 && (
-                    <span className="row" style={{ gap: 8 }}>
-                      <Bed size={17} /> {listing.beds}
-                    </span>
-                  )}
-                  {listing.baths > 0 && (
-                    <span className="row" style={{ gap: 8 }}>
-                      <Bath size={17} /> {listing.baths}
-                    </span>
-                  )}
-                  <span className="row" style={{ gap: 8 }}>
-                    <Area size={17} /> {fmtSqft(listing.sqft)}
-                  </span>
+                <div className="row" style={{ gap: 20, paddingBottom: 20, borderBottom: '1px solid var(--line)' }}>
+                  <SpecRow listing={listing} size={17} gap={22} />
                   <span style={{ fontFamily: 'var(--serif)', fontSize: 26, marginInlineStart: 'auto' }} dir="ltr">
                     {fmtPrice(listing)}
                   </span>
@@ -301,23 +289,29 @@ export default function PropertyDetail() {
               </div>
 
               <div className="card" style={{ padding: 20 }}>
-                <h2 className="label" style={{ fontFamily: 'var(--sans)' }}>
-                  {t.verifiedH}
-                </h2>
-                <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>
-                  {t.verifiedP}
-                </p>
-                {/* Placeholder barcode - decorative, not scannable. See Barcode.tsx. */}
-                <div
-                  style={{
-                    marginTop: 14,
-                    padding: '8px 10px',
-                    background: '#fff',
-                    border: '1px solid var(--line-strong)',
-                    borderRadius: 'var(--radius)',
-                  }}
-                >
-                  <Barcode value={listing.permit} height={46} />
+                {/* QR placeholder sits inline to the left of the heading.
+                    Decorative only, not scannable - see the warning on
+                    QrMatrix in Icons.tsx. */}
+                <div className="row" style={{ gap: 12, alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                  <div
+                    style={{
+                      padding: 3,
+                      background: '#fff',
+                      border: '1px solid var(--line-strong)',
+                      borderRadius: 2,
+                      flex: 'none',
+                    }}
+                  >
+                    <QrMatrix size={36} />
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <h2 className="label" style={{ fontFamily: 'var(--sans)' }}>
+                      {t.verifiedH}
+                    </h2>
+                    <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>
+                      {t.verifiedP}
+                    </p>
+                  </div>
                 </div>
                 <p style={{ fontSize: 13, marginTop: 10 }}>
                   {t.permitNo} <span dir="ltr">{listing.permit}</span>

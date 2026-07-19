@@ -20,12 +20,16 @@ export const COMPANY = {
   /** Hours are rendered on separate lines, never run together. */
   hoursLines: ['Monday–Saturday, 9:00–18:00', 'Viewings by appointment, seven days'],
   mapQuery: 'Zig Zag Towers, Al Zahiya, Abu Dhabi',
+  /** Display order is set in Footer.tsx: LinkedIn, Instagram, TikTok, Threads,
+   *  Facebook, YouTube. */
   social: {
+    linkedin: 'https://www.linkedin.com/company/crest-range-properties-llc/',
     instagram: 'https://www.instagram.com/crestrangeproperties',
-    facebook: 'https://www.facebook.com/crestrangeproperties',
-    linkedin: 'https://www.linkedin.com/company/crestrangeproperties',
     tiktok: 'https://www.tiktok.com/@crestrangeproperties',
-    youtube: 'https://www.youtube.com/@crestrangeproperties',
+    threads: 'https://www.threads.com/@crestrangeproperties',
+    facebook: 'https://www.facebook.com/crestrangeproperties',
+    // The trailing dot is part of the channel handle, not a typo.
+    youtube: 'https://www.youtube.com/@Crestrangeproperties.',
   },
 } as const
 

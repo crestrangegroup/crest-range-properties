@@ -2,10 +2,11 @@ import { Link } from 'react-router-dom'
 import type { Listing } from '../data/listings'
 import { ROUTES } from '../routes'
 import { useI18n } from '../i18n/I18nProvider'
-import { fmtPrice, fmtSqft } from '../lib/format'
+import { fmtPrice } from '../lib/format'
 import { byId } from '../data/team'
 import { waLink, telLink, mailLink } from '../data/company'
-import { Bed, Bath, Area, Pin, Phone, Mail, WhatsApp } from './Icons'
+import { Pin, Phone, Mail, WhatsApp } from './Icons'
+import SpecRow from './SpecRow'
 
 export default function ListingCard({ listing }: { listing: Listing }) {
   const { t, tListing } = useI18n()
@@ -36,22 +37,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           <span>{l.area}</span>
         </div>
 
-        {/* Commercial units have no bed/bath count - show only what applies. */}
-        <div className="row muted" style={{ gap: 16, fontSize: 13.5 }}>
-          {listing.beds > 0 && (
-            <span className="row" style={{ gap: 6 }}>
-              <Bed size={15} /> {listing.beds}
-            </span>
-          )}
-          {listing.baths > 0 && (
-            <span className="row" style={{ gap: 6 }}>
-              <Bath size={15} /> {listing.baths}
-            </span>
-          )}
-          <span className="row" style={{ gap: 6 }}>
-            <Area size={15} /> {fmtSqft(listing.sqft)}
-          </span>
-        </div>
+        <SpecRow listing={listing} size={15} gap={14} className="muted" style={{ fontSize: 13.5 }} />
 
         <div style={{ fontFamily: 'var(--serif)', fontSize: 21, marginTop: 'auto', paddingTop: 8 }}>
           {fmtPrice(listing)}

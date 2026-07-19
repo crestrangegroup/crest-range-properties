@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -13,7 +13,6 @@ import Listings from './pages/Listings'
 import PropertyDetail from './pages/PropertyDetail'
 import Sell from './pages/Sell'
 import About from './pages/About'
-import Team from './pages/Team'
 import Services from './pages/Services'
 import Proposal from './pages/Proposal'
 import Contact from './pages/Contact'
@@ -24,12 +23,15 @@ import NotFound from './pages/NotFound'
 /** Reset scroll on navigation, but leave hard refreshes and back/forward alone
  *  so the browser can restore the previous scroll position itself. */
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const navType = (window.performance?.getEntriesByType?.('navigation')?.[0] as any)?.type
   useEffect(() => {
     if (navType === 'reload') return
+    // A hash target owns the scroll position (e.g. /about#team), so don't
+    // yank the page back to the top and fight the anchor.
+    if (hash) return
     window.scrollTo(0, 0)
-  }, [pathname, navType])
+  }, [pathname, hash, navType])
   return null
 }
 
@@ -51,7 +53,8 @@ export default function App() {
             <Route path={ROUTES.propertyPattern} element={<PropertyDetail />} />
             <Route path={ROUTES.sell} element={<Sell />} />
             <Route path={ROUTES.about} element={<About />} />
-            <Route path={ROUTES.team} element={<Team />} />
+            {/* Team merged into About; keep the old URL working. */}
+            <Route path={ROUTES.teamLegacy} element={<Navigate to={ROUTES.team} replace />} />
             <Route path={ROUTES.services} element={<Services />} />
             <Route path={ROUTES.proposal} element={<Proposal />} />
             <Route path={ROUTES.contact} element={<Contact />} />

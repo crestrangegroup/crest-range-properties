@@ -243,11 +243,40 @@
   }
 }
 
-@media (max-width: 420px) {
-  .hdr-logo img.word {
-    height: 26px;
+/* Below the burger breakpoint the logo is the only thing competing for the bar,
+   so give it more presence rather than leaving it desktop-sized next to a lone
+   menu button. */
+@media (max-width: 1140px) {
+  .hdr-in {
+    min-height: 68px;
+    gap: 12px;
   }
   .hdr-logo img.mark {
-    height: 32px;
+    height: 48px;
+  }
+  .hdr-logo img.word {
+    height: 40px;
+  }
+}
+
+@media (max-width: 420px) {
+  .hdr-logo {
+    gap: 8px;
+  }
+  .hdr-logo img.mark {
+    height: 42px;
+  }
+  .hdr-logo img.word {
+    height: 34px;
+  }
+}
+
+@media (max-width: 340px) {
+  /* Keep the wordmark and the burger from colliding on the narrowest phones. */
+  .hdr-logo img.mark {
+    height: 36px;
+  }
+  .hdr-logo img.word {
+    height: 28px;
   }
 }

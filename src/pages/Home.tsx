@@ -186,13 +186,18 @@ export default function Home() {
             {HOODS.map((raw) => {
               const h = tHood(raw)
               return (
-                <Link key={raw.slug} className="hood" to={`${ROUTES.listings}?community=${encodeURIComponent(raw.name)}`}>
+                /* Not a link: no dedicated guide page exists yet. The "Guide"
+                   label below is purely visual. */
+                <div key={raw.slug} className="hood">
                   <img src={raw.photo} alt={h.name} loading="lazy" />
                   <span className="cap">
                     <h3>{h.name}</h3>
                     <p>{h.blurb}</p>
+                    <span className="hood-guide" aria-hidden>
+                      {t.guide} <span aria-hidden>→</span>
+                    </span>
                   </span>
-                </Link>
+                </div>
               )
             })}
           </div>

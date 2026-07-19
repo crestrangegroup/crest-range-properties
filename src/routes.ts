@@ -1,6 +1,9 @@
 // Every page has its own real URL. These constants are the single source of
 // truth so links, redirects and active-nav checks can never drift apart.
 
+/** Element id of the team section on the About page. */
+export const TEAM_ANCHOR = 'team'
+
 export const ROUTES = {
   home: '/',
   listings: '/listings',
@@ -10,7 +13,10 @@ export const ROUTES = {
   property: (slug: string) => `/property/${slug}`,
   propertyPattern: '/property/:slug',
   about: '/about',
-  team: '/team',
+  /** Team is a section of the About page, not a page of its own. */
+  team: '/about#team',
+  /** Kept as a redirect so older links and any shared URLs still resolve. */
+  teamLegacy: '/team',
   services: '/services',
   /** Unlisted page hosting the Property Management proposal form. */
   proposal: '/services/request-a-proposal',

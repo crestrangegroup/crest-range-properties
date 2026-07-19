@@ -146,6 +146,54 @@ export const TikTok = ({ size = 17, className }: P) => (
   </svg>
 )
 
+export const Threads = ({ size = 17, className }: P) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false" className={className}>
+    <path d="M16.5 11.4c-.1 0-.2-.1-.3-.1-.2-3.2-1.9-5-4.8-5a4.7 4.7 0 0 0-4 1.9l1.7 1.2a2.6 2.6 0 0 1 2.3-1.1c.9 0 1.5.3 1.9.8.3.4.5.9.6 1.5a11 11 0 0 0-2.4-.1c-2.5.1-4.1 1.6-4 3.6a3.2 3.2 0 0 0 1.2 2.4 3.8 3.8 0 0 0 2.5.8c1.3 0 2.3-.5 3-1.4.5-.7.8-1.6 1-2.7.6.4 1 .9 1.2 1.5.3.9.4 2.3-.8 3.5-1 1-2.3 1.5-4.1 1.5-2 0-3.6-.7-4.6-1.9-1-1.2-1.5-2.9-1.5-5.1s.5-3.9 1.5-5.1c1-1.2 2.5-1.9 4.6-1.9 2.1 0 3.6.7 4.6 2 .5.6.9 1.4 1.1 2.4l2-.5c-.3-1.2-.8-2.3-1.5-3.2-1.4-1.7-3.5-2.6-6.2-2.6-2.6 0-4.7.9-6.2 2.6C4.8 6.6 4 9 4 12s.8 5.4 2.3 7.1c1.5 1.7 3.6 2.6 6.2 2.6 2.3 0 4.2-.6 5.6-1.9 1.8-1.7 1.8-3.9 1.2-5.3-.4-1-1.2-1.8-2.3-2.4zm-4.6 3.9c-.8 0-1.6-.4-1.7-1.2 0-.6.4-1.3 1.9-1.4h.5c.6 0 1.1 0 1.6.1-.2 2.1-1.2 2.5-2.3 2.5z" />
+  </svg>
+)
+
+export const QrMatrix = ({ size = 36, className }: P) => {
+  // Decorative placeholder QR-style matrix. NOT a real QR code and NOT
+  // scannable - it encodes nothing at all. It sits next to the words "Scan to
+  // verify this listing", so replace it with a real encoder (or soften that
+  // copy) before launch.
+  // Fixed 21x21 module grid with the three finder squares of a real symbol.
+  const M = 21
+  const finder = (ox: number, oy: number) => [
+    <rect key={`f${ox}${oy}`} x={ox} y={oy} width={7} height={7} fill="none" stroke="var(--ink)" strokeWidth={1} />,
+    <rect key={`c${ox}${oy}`} x={ox + 2} y={oy + 2} width={3} height={3} fill="var(--ink)" />,
+  ]
+  const inFinder = (x: number, y: number) =>
+    (x < 8 && y < 8) || (x > M - 9 && y < 8) || (x < 8 && y > M - 9)
+  const cells = []
+  for (let y = 0; y < M; y++) {
+    for (let x = 0; x < M; x++) {
+      if (inFinder(x, y)) continue
+      // Deterministic pattern so the matrix never changes between renders.
+      if (((x * 7 + y * 13 + ((x * y) % 5)) % 3) === 0) {
+        cells.push(<rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill="var(--ink)" />)
+      }
+    }
+  }
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox={`-1 -1 ${M + 2} ${M + 2}`}
+      role="img"
+      aria-label="Decorative permit QR placeholder"
+      style={{ display: 'block', flex: 'none' }}
+    >
+      <rect x={-1} y={-1} width={M + 2} height={M + 2} fill="#fff" />
+      {cells}
+      {finder(0, 0)}
+      {finder(M - 7, 0)}
+      {finder(0, M - 7)}
+    </svg>
+  )
+}
+
 export const YouTube = ({ size = 17, className }: P) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false" className={className}>
     <path d="M23 12s0-3.4-.4-5a2.6 2.6 0 0 0-1.8-1.8C19.1 4.7 12 4.7 12 4.7s-7.1 0-8.8.5A2.6 2.6 0 0 0 1.4 7C1 8.6 1 12 1 12s0 3.4.4 5a2.6 2.6 0 0 0 1.8 1.8c1.7.5 8.8.5 8.8.5s7.1 0 8.8-.5a2.6 2.6 0 0 0 1.8-1.8c.4-1.6.4-5 .4-5ZM9.8 15.3V8.7l5.7 3.3Z" />

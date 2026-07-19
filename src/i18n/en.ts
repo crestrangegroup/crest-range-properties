@@ -23,6 +23,10 @@ export const EN = {
   subscribedMsg: '✓ You’re in. First briefing lands this Sunday.',
 
   tagSell: 'Sell', tagRent: 'Rent',
+  // Spec row labels. Singular/plural pairs so "1 Bedroom" reads correctly.
+  bedroom: 'Bedroom', bedrooms: 'Bedrooms',
+  bathroom: 'Bathroom', bathrooms: 'Bathrooms',
+  sqftLabel: 'Sq Ft',
   listingsH: 'Properties in Abu Dhabi', updatedToday: 'updated today', allPill: 'All',
   mapView: 'Map view', pinView: 'View listing', propsWord: 'properties',
   noResults: 'No properties match those filters yet.', clearFilters: 'Clear filters',
@@ -49,7 +53,7 @@ export const EN = {
   back: 'Back', videoTour: 'Video walkthrough', tour3d: '360° virtual tour',
   aboutProp: 'About the property', amenitiesH: 'Amenities', primeH: 'Prime location',
   reachAgent: 'Reach the agent', callBtn: 'Call', emailBtn: 'Email', whatsBtn: 'WhatsApp',
-  bookH: 'Book a private viewing', bookSub: 'Confirmed within 15 minutes, 7 days a week.',
+  bookH: 'Book a private viewing', bookSub: 'Confirmed within 60 minutes, 7 days a week.',
   bookBtn: 'Confirm viewing', bookedH: 'Viewing requested',
   bookedP: 'A specialist will confirm your slot shortly.',
   mortH: 'Mortgage calculator', monthly: 'Estimated monthly payment',
@@ -78,7 +82,7 @@ export const EN = {
   formPhone: 'Mobile', formEmail: 'Email', formProp: 'Property details', formMsg: 'Message',
   formOther: 'Tell us more', formDate: 'Preferred date',
   formSend: 'Send request', formSentH: 'Request received',
-  formSentP: 'We’ll come back to you within one business day.',
+  formSentP: 'We’ll come back to you within 60 minutes.',
   inputsEn: 'Please type in English',
   formRequired: 'Please complete the required fields.',
   propIntro: 'Tell us about your property and we’ll send a tailored management proposal within one business day.',
