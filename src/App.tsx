@@ -27,9 +27,11 @@ function ScrollToTop() {
   const navType = (window.performance?.getEntriesByType?.('navigation')?.[0] as any)?.type
   useEffect(() => {
     if (navType === 'reload') return
-    // A hash target owns the scroll position (e.g. /about#team), so don't
-    // yank the page back to the top and fight the anchor.
-    if (hash) return
+    // A hash target owns the scroll position (e.g. /about#team), so don't yank
+    // the page back to the top and fight the anchor. Check window.location as
+    // well as the router: on a full page load the router's hash came back
+    // empty here, which let this scroll stomp the anchor.
+    if (hash || window.location.hash) return
     window.scrollTo(0, 0)
   }, [pathname, hash, navType])
   return null

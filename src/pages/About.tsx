@@ -21,22 +21,35 @@ export default function About() {
   // pointing at the wrong offset. So re-assert the position for a short window
   // until the target actually settles under the header.
   useEffect(() => {
-    if (hash !== `#${TEAM_ANCHOR}`) return
-    let frame = 0
-    const deadline = Date.now() + 1500
+    // Read window.location directly rather than the router's hash: on a full
+    // page load the router reported an empty hash here, so both this and
+    // ScrollToTop mis-fired and the page stayed at the top.
+    // Read window.location rather than only the router's hash, so this works
+    // on a full page load as well as in-app navigation.
+    if (window.location.hash !== `#${TEAM_ANCHOR}`) return
 
+    // Staged re-asserts rather than a requestAnimationFrame loop: React's
+    // mount/cleanup/remount cycle cancelled the rAF before it ever fired, so
+    // the page silently stayed at the top. Timeouts survive that, and the
+    // repeats absorb the layout shift from imagery above this section loading
+    // in after mount.
     const settle = () => {
       const el = document.getElementById(TEAM_ANCHOR)
       if (!el) return
-      const top = el.getBoundingClientRect().top
-      // Header height plus the section's scroll-margin; anything outside this
-      // band means the layout shifted under us.
-      if (Math.abs(top - 88) > 24) el.scrollIntoView({ block: 'start' })
-      if (Date.now() < deadline) frame = requestAnimationFrame(settle)
+      // Header height plus the section's scroll-margin. Outside this band means
+      // the layout moved under us, so re-assert.
+      if (Math.abs(el.getBoundingClientRect().top - 88) > 24) {
+        el.scrollIntoView({ block: 'start' })
+      }
     }
-    frame = requestAnimationFrame(settle)
 
-    return () => cancelAnimationFrame(frame)
+    const timers = [0, 60, 180, 400, 800, 1400].map((d) => window.setTimeout(settle, d))
+    window.addEventListener('load', settle)
+
+    return () => {
+      timers.forEach(clearTimeout)
+      window.removeEventListener('load', settle)
+    }
   }, [hash])
 
   return (
