@@ -13,12 +13,30 @@ export default function About() {
   const { t, tTestimonial, addressLines, role } = useI18n()
   const { hash } = useLocation()
 
-  // Team lives on this page now, so #team has to be scrolled to manually:
-  // the browser only auto-jumps for anchors present on first paint.
+  // Team lives on this page now, so #team has to be scrolled to manually: the
+  // browser only auto-jumps for anchors present on first paint.
+  //
+  // A single scroll is not enough. Lazy-loaded imagery above the section keeps
+  // resolving after mount, which grows the page and leaves the earlier scroll
+  // pointing at the wrong offset. So re-assert the position for a short window
+  // until the target actually settles under the header.
   useEffect(() => {
     if (hash !== `#${TEAM_ANCHOR}`) return
-    const el = document.getElementById(TEAM_ANCHOR)
-    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    let frame = 0
+    const deadline = Date.now() + 1500
+
+    const settle = () => {
+      const el = document.getElementById(TEAM_ANCHOR)
+      if (!el) return
+      const top = el.getBoundingClientRect().top
+      // Header height plus the section's scroll-margin; anything outside this
+      // band means the layout shifted under us.
+      if (Math.abs(top - 88) > 24) el.scrollIntoView({ block: 'start' })
+      if (Date.now() < deadline) frame = requestAnimationFrame(settle)
+    }
+    frame = requestAnimationFrame(settle)
+
+    return () => cancelAnimationFrame(frame)
   }, [hash])
 
   return (
