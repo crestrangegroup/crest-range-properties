@@ -25,8 +25,9 @@
   --pad-x: clamp(16px, 4vw, 56px);
   /* Content column. The design export used 1240px, which leaves ~340px of dead
      margin each side at 1920. Widened so wide desktops actually get used, while
-     still capping line length. Prose stays narrow via .lede / .legal. */
-  --maxw: 1600px;
+     staying tight enough to read as considered rather than stretched on large
+     monitors. Prose stays narrower still via .lede / .wrap.legal. */
+  --maxw: 1440px;
   --radius: 3px;
   --header-h: 76px;
 }

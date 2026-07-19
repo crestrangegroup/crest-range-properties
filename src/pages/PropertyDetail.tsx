@@ -7,6 +7,7 @@ import { ROUTES } from '../routes'
 import { fmtPrice, fmtSqft } from '../lib/format'
 import { COMPANY, waLink, telLink, mailLink } from '../data/company'
 import ListingCard from '../components/ListingCard'
+import Barcode from '../components/Barcode'
 import PageHead from '../components/PageHead'
 import { NameFields } from '../components/forms/Fields'
 import { DateField } from '../components/forms/Fields'
@@ -306,7 +307,19 @@ export default function PropertyDetail() {
                 <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>
                   {t.verifiedP}
                 </p>
-                <p style={{ fontSize: 13, marginTop: 8 }}>
+                {/* Placeholder barcode - decorative, not scannable. See Barcode.tsx. */}
+                <div
+                  style={{
+                    marginTop: 14,
+                    padding: '8px 10px',
+                    background: '#fff',
+                    border: '1px solid var(--line-strong)',
+                    borderRadius: 'var(--radius)',
+                  }}
+                >
+                  <Barcode value={listing.permit} height={46} />
+                </div>
+                <p style={{ fontSize: 13, marginTop: 10 }}>
                   {t.permitNo} <span dir="ltr">{listing.permit}</span>
                 </p>
               </div>
