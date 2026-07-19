@@ -187,6 +187,38 @@
 }
 
 /* newsletter */
+
+/* Gold bar with dark text, rather than the dark-section treatment used
+   elsewhere on the page. */
+.news-bar {
+  background: var(--gold-bright);
+  color: var(--ink);
+}
+
+/* The confirmation was gold-on-dark; on the gold bar it has to go dark or it
+   disappears into the background. */
+.news-bar .news-done {
+  color: var(--ink);
+}
+
+/* Black button with white text, in title case rather than the site-wide
+   uppercase button treatment.
+   Selector is `.btn.btn-invert`, not `.btn-invert`: styles.css is bundled after
+   this file, so at equal specificity `.btn` wins and the button renders
+   transparent and uppercase. */
+.btn.btn-invert {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0.03em;
+}
+.btn.btn-invert:hover {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
 .news {
   display: flex;
   align-items: center;

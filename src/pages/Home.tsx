@@ -240,13 +240,13 @@ export default function Home() {
       </section>
 
       {/* 6 - Newsletter */}
-      <section className="dark">
+      <section className="news-bar">
         <div className="wrap news">
-          <h2 className="h3" style={{ color: '#fff', margin: 0, maxWidth: '28ch' }}>
+          <h2 className="h3" style={{ color: 'var(--ink)', margin: 0, maxWidth: '28ch' }}>
             {t.newsH}
           </h2>
           {subscribed ? (
-            <p className="row" style={{ color: 'var(--gold-bright)', gap: 8, margin: 0 }}>
+            <p className="row news-done" style={{ gap: 8, margin: 0 }}>
               <Check size={17} />
               {t.subscribedMsg}
             </p>
@@ -262,7 +262,7 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button className="btn btn-gold" type="submit">
+              <button className="btn btn-invert" type="submit">
                 {t.subscribe}
               </button>
             </form>
