@@ -128,16 +128,6 @@
   }
 }
 
-/* section heading row */
-.sec-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-bottom: clamp(22px, 3vw, 36px);
-}
-
 /* neighbourhood tiles */
 .hood {
   position: relative;
@@ -203,9 +193,9 @@
 
 /* Black button with white text, in title case rather than the site-wide
    uppercase button treatment.
-   Selector is `.btn.btn-invert`, not `.btn-invert`: styles.css is bundled after
-   this file, so at equal specificity `.btn` wins and the button renders
-   transparent and uppercase. */
+   Selector is `.btn.btn-invert`, not `.btn-invert`, so it wins on specificity
+   rather than on bundle order. styles.css now loads first (see main.tsx), but
+   keeping the compound form makes the override independent of load order. */
 .btn.btn-invert {
   background: var(--ink);
   color: #fff;

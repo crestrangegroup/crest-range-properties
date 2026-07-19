@@ -145,6 +145,19 @@ h4 {
   max-width: 62ch;
 }
 
+/* Section heading row. Lives here, not in a page stylesheet: it is used by
+   Home, Sell, About and the property detail page, and defining it in home.css
+   meant the same class was declared in two files, so which margin won depended
+   on bundle order. */
+.sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(22px, 3vw, 36px);
+}
+
 .grid {
   display: grid;
   gap: clamp(16px, 2.2vw, 28px);

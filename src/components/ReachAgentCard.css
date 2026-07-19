@@ -66,8 +66,8 @@
 }
 
 /* All three actions share one compact icon + label treatment. Compound
-   selectors because styles.css bundles after this file, so a bare
-   .btn-compact would lose to .btn on source order. */
+   selectors so the override wins on specificity rather than on bundle order;
+   a bare .btn-compact would tie with .btn and depend on load order. */
 .agent-actions .btn.btn-compact {
   flex: 1 1 0;
   min-width: 0;
