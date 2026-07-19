@@ -306,7 +306,13 @@ h4 {
 }
 
 /* Subtle centred logo watermark on listing photography. */
-.watermark {
+/* Selector is `.card-media img.watermark`, not `.watermark`: the watermark is
+   an <img> inside .card-media, and `.card-media img` (specificity 0,1,1) beat a
+   bare `.watermark` (0,1,0). The photo's `width/height: 100%` therefore won and
+   the mark stretched across the entire image instead of sitting small in the
+   centre. `height: auto` is essential - without it the mark is stretched to the
+   full photo height even when the width is right. */
+.card-media img.watermark {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -314,6 +320,21 @@ h4 {
   opacity: 0.22;
   pointer-events: none;
   width: 72px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Size variants, as classes rather than inline styles so they stay overridable. */
+.card-media img.watermark-lg {
+  width: 110px;
+}
+.card-media img.watermark-sm {
+  width: 64px;
+}
+
+/* The watermark must not scale with the photo on card hover. */
+.card:hover .card-media img.watermark {
+  transform: translate(-50%, -50%);
 }
 
 .icon-row {
@@ -410,6 +431,16 @@ h4 {
 
 .muted {
   color: var(--ink-mute);
+}
+
+/* Numerals mixed with Latin or neutral characters ("480+", "60 min", "AED 1,200")
+   must be isolated from the surrounding paragraph direction. Without this, RTL
+   bidi reordering renders them reversed: "+480" and "min 60". `isolate` stops
+   the run participating in the parent's bidi ordering; `direction: ltr` fixes
+   the order inside it. Digits themselves stay Western in every language. */
+.num {
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .sr-only {

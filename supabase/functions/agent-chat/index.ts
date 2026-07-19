@@ -170,7 +170,14 @@ Deno.serve(async (req: Request) => {
       return json({ error: 'ANTHROPIC_API_KEY is not configured' }, 503)
     }
 
-    const { mode, sessionId, history = [], detail = '', returningHint = null } = await req.json()
+    const {
+      mode,
+      sessionId,
+      history = [],
+      detail = '',
+      returningHint = null,
+      avoidEcho = '',
+    } = await req.json()
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -198,11 +205,15 @@ Deno.serve(async (req: Request) => {
       const hint = returningHint
         ? `\nThis browser has chatted before. Possible prior name: "${returningHint.name}", prior topic: "${returningHint.summary}". Treat this as a soft hint only. Ask to verify before claiming to recognise them.`
         : ''
+      // The Concierge's last line, so James can deliberately not echo it.
+      const echo = avoidEcho
+        ? `\nThe Concierge's final message to this visitor was: "${avoidEcho}". You are a different person picking up the same conversation, so do NOT reuse its phrasing, structure or opinion. If it already praised the area or quoted a price, do not repeat either. Say something it did not say: move the conversation forward with a concrete next step or a specific question.`
+        : ''
       reply = await callAnthropic(apiKey, {
         model: MODEL,
         max_tokens: 300,
         thinking: { type: 'disabled' },
-        system: `${AGENT_SYSTEM}${hint}`,
+        system: `${AGENT_SYSTEM}${hint}${echo}`,
         messages: [
           {
             role: 'user',

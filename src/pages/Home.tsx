@@ -147,7 +147,8 @@ export default function Home() {
       <section className="stats" aria-label={t.statHomes}>
         {STATS.map((s) => (
           <div key={s.key}>
-            <div className="v">{s.value}</div>
+            {/* Isolated: in Arabic these otherwise render as "+480" / "min 60". */}
+            <div className="v num">{s.value}</div>
             <div className="k">{t[s.key]}</div>
           </div>
         ))}

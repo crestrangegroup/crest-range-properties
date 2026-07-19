@@ -108,14 +108,14 @@ export default function PropertyDetail() {
         <div className="split split-gallery">
           <div className="card-media" style={{ aspectRatio: '16 / 11', borderRadius: 'var(--radius)' }}>
             <img src={listing.photo} alt={l.title} width={1200} height={825} />
-            <img className="watermark" src="/images/logo-mark-light.png" alt="" aria-hidden style={{ width: 110 }} />
+            <img className="watermark watermark-lg" src="/images/logo-mark-light.png" alt="" aria-hidden />
             <span className="tag">{listing.purpose === 'rent' ? t.tagRent : t.tagSell}</span>
           </div>
           <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr)', gap: 12 }}>
             {listing.gallery.map((g, i) => (
               <div key={g} className="card-media" style={{ aspectRatio: '16 / 10', borderRadius: 'var(--radius)' }}>
                 <img src={g} alt={`${l.title} ${i + 2}`} loading="lazy" />
-                <img className="watermark" src="/images/logo-mark-light.png" alt="" aria-hidden style={{ width: 64 }} />
+                <img className="watermark watermark-sm" src="/images/logo-mark-light.png" alt="" aria-hidden />
               </div>
             ))}
           </div>

@@ -1,7 +1,12 @@
 .crc-bubble {
   position: fixed;
   inset-inline-end: 20px;
-  bottom: 20px;
+  /* Lifted clear of the footer while it is on screen, so the launcher never
+     sits on top of the contact details (it was covering the email address).
+     --chat-lift is maintained in AgentLiveChat.tsx. */
+  bottom: calc(20px + var(--chat-lift, 0px));
+  /* Deliberately not transitioned: this value is driven by scroll position, so
+     animating it makes the launcher lag behind the page as you scroll. */
   z-index: 90;
   display: inline-flex;
   align-items: center;

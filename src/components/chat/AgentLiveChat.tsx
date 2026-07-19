@@ -16,6 +16,32 @@ export default function AgentLiveChat() {
     if (el) el.scrollTop = el.scrollHeight
   }, [c.msgs, c.typing, c.isOpen])
 
+  // Lift the launcher above the footer while the footer is on screen, so it
+  // never covers the contact details. Only the collapsed bubble moves: the open
+  // window is tall and raising it would push its header off screen.
+  useEffect(() => {
+    const root = document.documentElement
+
+    // Deliberately not throttled with requestAnimationFrame: rAF is suspended
+    // while a document is hidden, which silently disables this. A single
+    // getBoundingClientRect per scroll event is cheap enough.
+    const update = () => {
+      const footer = document.querySelector('footer')
+      if (!footer) return
+      const overlap = Math.max(0, window.innerHeight - footer.getBoundingClientRect().top)
+      root.style.setProperty('--chat-lift', `${Math.round(overlap)}px`)
+    }
+
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+      root.style.removeProperty('--chat-lift')
+    }
+  }, [])
+
   if (!c.isOpen) {
     return (
       <button className="crc-bubble" onClick={c.open} style={{ position: 'fixed' }}>

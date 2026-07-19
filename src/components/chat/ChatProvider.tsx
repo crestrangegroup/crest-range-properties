@@ -237,10 +237,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     window.setTimeout(async () => {
       const detail = summary.current || lastUserDetail(msgs)
       const knownLead = readLeads().slice(-1)[0]
+      // James must not repeat the Concierge's phrasing. Without seeing that
+      // line he produced near-identical openers ("good choice, plenty of
+      // options") immediately after the Concierge said the same thing.
+      const lastConciergeLine = [...msgs].reverse().find((m) => m.who === 'c')?.text ?? ''
       const res = await invokeFn<{ reply?: string }>('agent-chat', {
         mode: 'agent-open',
         sessionId: sessionId.current,
         detail,
+        avoidEcho: lastConciergeLine,
         // A returning browser is a hint only. The agent verifies before ever
         // claiming to recognise anyone.
         returningHint: knownLead ? { name: knownLead.name, summary: knownLead.summary } : null,
@@ -292,16 +297,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           return
         }
 
-        pushBot(phase === 'agent' ? 'a' : 'c', res.reply)
-
         if (res.connect && phase === 'concierge') {
           summary.current = res.summary || lastUserDetail(next)
-          setTimeout(() => {
-            pushBot('c', EN.connecting)
-            setPhase('waiting')
-            persist(next, 'waiting', Date.now() + AGENT_WAIT_MS)
-            joinT.current = window.setTimeout(() => joinAgent(), AGENT_WAIT_MS)
-          }, 700)
+          // One message, not an acknowledgement followed by a near-identical
+          // connecting line. Only append the wait if the model didn't already
+          // say it, so the visitor is never told the timing twice.
+          const alreadySaysWait = /\bminutes?\b/i.test(res.reply)
+          pushBot('c', alreadySaysWait ? res.reply : `${res.reply} ${EN.connecting}`)
+          setPhase('waiting')
+          persist(next, 'waiting', Date.now() + AGENT_WAIT_MS)
+          joinT.current = window.setTimeout(() => joinAgent(), AGENT_WAIT_MS)
+        } else {
+          pushBot(phase === 'agent' ? 'a' : 'c', res.reply)
         }
         bumpIdle()
       })()
