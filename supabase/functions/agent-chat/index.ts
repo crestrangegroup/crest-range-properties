@@ -316,6 +316,26 @@ Deno.serve(async (req: Request) => {
           .select('id')
           .single()
         if (lead?.id) await supabase.from('chat_sessions').update({ lead_id: lead.id }).eq('id', sid)
+
+        // Notify the team. The chat was creating lead rows but never sending
+        // any email, so a chat lead only existed if someone opened the queue.
+        // Fire and forget: a failed notification must not break the reply.
+        void fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'lead_notification',
+            data: {
+              name: visitorName || 'Website visitor',
+              mobile: visitorPhone || '-',
+              summary: summary || detail || 'Agent Live Chat conversation',
+              source: 'Agent Live Chat',
+            },
+          }),
+        }).catch((e) => console.error('[agent-chat] notify failed', e))
       }
     }
 

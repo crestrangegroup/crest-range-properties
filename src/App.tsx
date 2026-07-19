@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CustomCursor from './components/CustomCursor'
@@ -24,16 +24,27 @@ import NotFound from './pages/NotFound'
  *  so the browser can restore the previous scroll position itself. */
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
-  const navType = (window.performance?.getEntriesByType?.('navigation')?.[0] as any)?.type
+  // The navigation entry describes how the DOCUMENT was loaded, and it never
+  // changes afterwards. Reading it per navigation meant that once a visitor
+  // hard-refreshed any page, its type stayed "reload" for the rest of the SPA
+  // session, so this bailed out of every later click and left them on the
+  // previous page's scroll offset. That is why clicking About landed mid-page.
+  // It is only meaningful for the very first run, so latch it there.
+  const first = useRef(true)
   useEffect(() => {
-    if (navType === 'reload') return
+    const wasReload =
+      first.current &&
+      (window.performance?.getEntriesByType?.('navigation')?.[0] as any)?.type === 'reload'
+    first.current = false
+    // On a genuine hard refresh, leave the browser's restored position alone.
+    if (wasReload) return
     // A hash target owns the scroll position (e.g. /about#team), so don't yank
     // the page back to the top and fight the anchor. Check window.location as
     // well as the router: on a full page load the router's hash came back
     // empty here, which let this scroll stomp the anchor.
     if (hash || window.location.hash) return
     window.scrollTo(0, 0)
-  }, [pathname, hash, navType])
+  }, [pathname, hash])
   return null
 }
 

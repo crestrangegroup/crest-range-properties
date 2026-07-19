@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../routes'
 import { useI18n } from '../i18n/I18nProvider'
 import { COMPANY, mailLink, telLink } from '../data/company'
+import { useChat } from './chat/ChatProvider'
 import { Instagram, Facebook, LinkedIn, TikTok, Threads, YouTube } from './Icons'
 
 /** Fixed display order: LinkedIn, Instagram, TikTok, Threads, Facebook, YouTube. */
@@ -16,6 +17,7 @@ const SOCIALS = [
 
 export default function Footer() {
   const { t, addressLines, hoursLines } = useI18n()
+  const { open: openChat } = useChat()
   const year = new Date().getFullYear()
 
   const explore: [string, string][] = [
@@ -73,6 +75,25 @@ export default function Footer() {
                   {label}
                 </Link>
               ))}
+              {/* Fifth item, below Sell. Not a route: it opens the chat widget,
+                  exactly like the header button, so it is a button styled to
+                  sit with the links rather than a Link to nowhere. */}
+              <button
+                type="button"
+                onClick={openChat}
+                style={{
+                  font: 'inherit',
+                  fontSize: 14,
+                  color: 'var(--on-dark)',
+                  background: 'none',
+                  border: 0,
+                  padding: 0,
+                  textAlign: 'start',
+                  cursor: 'pointer',
+                }}
+              >
+                {t.chatCta}
+              </button>
             </div>
           </div>
 
