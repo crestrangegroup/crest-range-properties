@@ -23,7 +23,10 @@
     -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --pad-x: clamp(16px, 4vw, 56px);
-  --maxw: 1280px;
+  /* Content column. The design export used 1240px, which leaves ~340px of dead
+     margin each side at 1920. Widened so wide desktops actually get used, while
+     still capping line length. Prose stays narrow via .lede / .legal. */
+  --maxw: 1600px;
   --radius: 3px;
   --header-h: 76px;
 }

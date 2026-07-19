@@ -6,14 +6,16 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Full-bleed, matching the design export: the header has no max-width, so the
+   logo sits against the left edge and the nav against the right at any width.
+   Capping this to the content column was what made the site read as a narrow
+   document floating in the viewport. */
 .hdr-in {
   display: flex;
   align-items: center;
   gap: 18px;
   min-height: var(--header-h);
   padding-inline: var(--pad-x);
-  max-width: var(--maxw);
-  margin-inline: auto;
 }
 
 .hdr-logo {

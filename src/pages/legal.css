@@ -1,6 +1,10 @@
 /* Legal pages are always rendered in English, left to right, even when the
-   surrounding site is in Arabic. */
-.legal {
+   surrounding site is in Arabic.
+
+   The selector is `.wrap.legal`, not `.legal`: these elements carry both
+   classes, and a bare `.legal` loses to `.wrap` on source order, which let
+   legal prose stretch to the full content column (~180 characters per line). */
+.wrap.legal {
   max-width: 760px;
   direction: ltr;
   text-align: left;
