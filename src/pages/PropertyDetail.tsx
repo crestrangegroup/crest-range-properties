@@ -2,24 +2,23 @@ import { FormEvent, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { useListings } from '../lib/ListingsProvider'
-import { byId } from '../data/team'
 import { ROUTES } from '../routes'
 import { fmtPrice } from '../lib/format'
-import { COMPANY, waLink, telLink, mailLink } from '../data/company'
 import ListingCard from '../components/ListingCard'
+import ReachAgentCard from '../components/ReachAgentCard'
 import PageHead from '../components/PageHead'
 import { NameFields } from '../components/forms/Fields'
 import { DateField } from '../components/forms/Fields'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
 import { submitLead } from '../lib/leads'
-import { ArrowLeft, Pin, Phone, Mail, WhatsApp, Check, QrMatrix } from '../components/Icons'
+import { ArrowLeft, Pin, Phone, Check, QrMatrix } from '../components/Icons'
 import SpecRow from '../components/SpecRow'
 import NotFound from './NotFound'
 
 export default function PropertyDetail() {
   const { slug } = useParams()
-  const { t, tListing, role } = useI18n()
+  const { t, tListing } = useI18n()
 
   const { listings, loading } = useListings()
   const listing = listings.find((l) => l.slug === slug)
@@ -61,7 +60,6 @@ export default function PropertyDetail() {
   if (!listing) return loading ? null : <NotFound />
 
   const l = tListing(listing)
-  const agent = byId(listing.agent)
   const enquiry = `Hello Crest Range, I'd like details on "${listing.title}" (${listing.addr}).`
 
   const onBook = async (e: FormEvent) => {
@@ -222,41 +220,7 @@ export default function PropertyDetail() {
 
             {/* Sidebar */}
             <aside className="stack" style={{ gap: 20, position: 'sticky', top: 'calc(var(--header-h) + 16px)' }}>
-              <div className="card" style={{ padding: 22 }}>
-                <h2 className="h3" style={{ fontSize: 19 }}>
-                  {t.reachAgent}
-                </h2>
-                <div className="row" style={{ gap: 13, marginTop: 16 }}>
-                  <img
-                    src={agent.photo}
-                    alt={agent.name}
-                    width={62}
-                    height={62}
-                    style={{ width: 62, height: 62, borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                  <div>
-                    <strong style={{ fontSize: 15 }}>{agent.name}</strong>
-                    <div className="muted" style={{ fontSize: 13 }}>
-                      {role(agent.id)}
-                    </div>
-                  </div>
-                </div>
-                {/* Order is Email, Call, WhatsApp. */}
-                <div className="stack" style={{ gap: 8, marginTop: 18 }}>
-                  <a className="btn btn-outline" href={mailLink(listing.title)}>
-                    <Mail size={15} />
-                    {t.emailBtn}
-                  </a>
-                  <a className="btn btn-outline" href={telLink(agent.phone)}>
-                    <Phone size={15} />
-                    {t.callBtn}
-                  </a>
-                  <a className="btn btn-wa" href={waLink(enquiry)} target="_blank" rel="noopener noreferrer">
-                    <WhatsApp size={15} />
-                    {t.whatsBtn}
-                  </a>
-                </div>
-              </div>
+              <ReachAgentCard agentId={listing.agent} subject={listing.title} enquiry={enquiry} />
 
               <div className="card" style={{ padding: 22 }}>
                 <h2 className="h3" style={{ fontSize: 19 }}>

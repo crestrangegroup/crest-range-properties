@@ -37,5 +37,10 @@ export const waLink = (text?: string) =>
   `https://wa.me/${COMPANY.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 
 export const telLink = (n: string) => `tel:${n}`
+
+/** Human-readable form of a raw tel number, e.g. +97125466332 -> +971 2 546 6332.
+ *  Falls back to the raw value if it isn't one of the company numbers. */
+export const displayPhone = (tel: string) =>
+  COMPANY.phones.find((p) => p.tel === tel)?.display ?? tel
 export const mailLink = (subject?: string) =>
   `mailto:${COMPANY.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`

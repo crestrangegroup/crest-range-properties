@@ -1,0 +1,97 @@
+/* Compact "Reach the agent" card: kicker, agent identity, plain-text phone,
+   then one row of equally weighted actions. */
+
+.agent-card {
+  padding: 16px;
+}
+
+.agent-kicker {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+.agent-id {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 12px;
+}
+
+.agent-photo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.agent-name {
+  display: block;
+  font-size: 14.5px;
+  line-height: 1.25;
+}
+
+/* Uppercase gold, not the muted sentence case it replaced. */
+.agent-role {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+/* Plain-text number, in addition to the Call button. */
+.agent-phone {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ink);
+  direction: ltr;
+}
+.agent-phone:hover {
+  color: var(--gold);
+}
+
+.agent-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+/* All three actions share one compact icon + label treatment. Compound
+   selectors because styles.css bundles after this file, so a bare
+   .btn-compact would lose to .btn on source order. */
+.agent-actions .btn.btn-compact {
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 5px;
+  padding: 9px 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.agent-actions .btn.btn-compact svg {
+  flex: none;
+}
+
+/* On the narrowest phones the three labels stop fitting: at 320px "WhatsApp"
+   was being clipped inside its button. Reclaim the space from padding and
+   letter-spacing rather than truncating the label or stacking the row. */
+@media (max-width: 380px) {
+  .agent-actions {
+    gap: 4px;
+  }
+  .agent-actions .btn.btn-compact {
+    padding: 9px 2px;
+    letter-spacing: 0.01em;
+    font-size: 10px;
+  }
+}
