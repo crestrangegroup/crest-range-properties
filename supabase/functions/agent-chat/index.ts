@@ -99,6 +99,7 @@ You have just taken over from the Concierge. Do not greet the visitor again and 
 Continue naturally on the actual topic for two or three exchanges before asking for the visitor's name (for example "May I know your name, please?"). Never ask abruptly or immediately.
 Once you know their name, use it naturally but not in every message.
 Ask for a mobile number when it fits naturally, framed as a reason ("so I can have someone call you"). Ask for email only if it comes up naturally.
+You are already speaking to the visitor, so the handoff has happened. Leave connect false; it is not yours to set.
 If you are told a returning visitor may have spoken to us before, treat that as a soft hint only, never as proof. Ask to verify, for example "Have we spoken before? Can I get your name and number, just to check our records?" Only confirm you recognise them once the name and number they give actually match the stored record. If they do not match, treat it as a brand new conversation and never claim to recognise them.
 When the name and number DO match the stored record, say so warmly and carry the earlier context forward by referring to what they were looking at last time, then ask whether they are still after the same thing. Never say you cannot find their number when a matching record was provided to you.
 
@@ -117,7 +118,7 @@ const REPLY_SCHEMA = {
     },
     connect: {
       type: 'boolean',
-      description: 'True only when the visitor has accepted an offer to be connected to an agent.',
+      description: 'True only when the visitor has accepted an offer to be connected to an agent. Only the Concierge may set this. Once James is speaking the handoff has already happened, so it must stay false.',
     },
     summary: {
       type: 'string',
@@ -304,8 +305,23 @@ Deno.serve(async (req: Request) => {
         })
         .eq('id', sid)
 
-      // Once a visitor is handed to an agent, the conversation becomes a lead.
-      if (connect) {
+      // ---- lead row: exactly one per conversation.
+      //
+      // `connect` means "the visitor accepted the handoff", which is a
+      // Concierge-phase event. But it lives in the shared reply schema and the
+      // model kept returning true on ordinary agent-phase turns too, so every
+      // turn minted another lead row and another email. One real conversation
+      // produced eight. Hence both guards: only the Concierge may open a lead,
+      // and only if this session does not already have one.
+      const { data: sess } = await supabase
+        .from('chat_sessions')
+        .select('lead_id, notified_at, visitor_name, visitor_phone, summary')
+        .eq('id', sid)
+        .single()
+
+      let leadId: string | null = sess?.lead_id ?? null
+
+      if (connect && mode === 'concierge' && !leadId) {
         const { data: lead } = await supabase
           .from('leads')
           .insert({
@@ -315,27 +331,76 @@ Deno.serve(async (req: Request) => {
           })
           .select('id')
           .single()
-        if (lead?.id) await supabase.from('chat_sessions').update({ lead_id: lead.id }).eq('id', sid)
+        leadId = lead?.id ?? null
+        if (leadId) await supabase.from('chat_sessions').update({ lead_id: leadId }).eq('id', sid)
+      }
 
-        // Notify the team. The chat was creating lead rows but never sending
-        // any email, so a chat lead only existed if someone opened the queue.
-        // Fire and forget: a failed notification must not break the reply.
-        void fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'lead_notification',
-            data: {
-              name: visitorName || 'Website visitor',
-              mobile: visitorPhone || '-',
-              summary: summary || detail || 'Agent Live Chat conversation',
-              source: 'Agent Live Chat',
-            },
-          }),
-        }).catch((e) => console.error('[agent-chat] notify failed', e))
+      // Keep the visitor's details on the session as James learns them, so the
+      // notification below can be sent with real contact details rather than
+      // the placeholders that were available at handoff time.
+      const name = visitorName || sess?.visitor_name || ''
+      const phone = visitorPhone || sess?.visitor_phone || ''
+      if ((visitorName && visitorName !== sess?.visitor_name) ||
+          (visitorPhone && visitorPhone !== sess?.visitor_phone)) {
+        await supabase
+          .from('chat_sessions')
+          .update({ visitor_name: name || null, visitor_phone: phone || null })
+          .eq('id', sid)
+        if (leadId) {
+          await supabase
+            .from('leads')
+            .update({ first_name: name || null, phone: phone || null })
+            .eq('id', leadId)
+        }
+      }
+
+      // ---- notification: exactly one per conversation, and only once it is
+      // worth sending. Waiting for contact details (or for the visitor to say
+      // goodbye) is what stops the empty "Name: - Mobile: -" emails: at handoff
+      // James has not asked for a name yet, so there is nothing to report.
+      const worthSending = Boolean(name && phone) || closing
+      if (leadId && !sess?.notified_at && worthSending) {
+        // Claim the notification first. If two turns race, only the one whose
+        // conditional update matches an un-notified row proceeds.
+        const { data: claimed } = await supabase
+          .from('chat_sessions')
+          .update({ notified_at: new Date().toISOString() })
+          .eq('id', sid)
+          .is('notified_at', null)
+          .select('id')
+
+        if (claimed?.length) {
+          // Awaited, NOT fire-and-forget. The edge isolate is torn down as soon
+          // as the handler returns, which was killing the request before its
+          // body flushed: send-email received no body, fell back to an empty
+          // data object, and mailed out a notification with every field "-".
+          try {
+            const res = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+                'content-type': 'application/json',
+              },
+              body: JSON.stringify({
+                type: 'lead_notification',
+                data: {
+                  name: name || 'Website visitor',
+                  mobile: phone || '-',
+                  summary: summary || sess?.summary || detail || 'Agent Live Chat conversation',
+                  source: 'Agent Live Chat',
+                },
+              }),
+            })
+            if (!res.ok) {
+              console.error('[agent-chat] notify rejected', res.status, await res.text())
+              // Release the claim so a later turn can retry.
+              await supabase.from('chat_sessions').update({ notified_at: null }).eq('id', sid)
+            }
+          } catch (e) {
+            console.error('[agent-chat] notify failed', e)
+            await supabase.from('chat_sessions').update({ notified_at: null }).eq('id', sid)
+          }
+        }
       }
     }
 
