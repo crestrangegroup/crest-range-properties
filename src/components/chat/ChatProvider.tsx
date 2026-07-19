@@ -86,6 +86,47 @@ const readLeads = (): StoredLead[] => {
   }
 }
 
+/** Digits only, so "058 554 1822", "0585541822" and "+971585541822" all match. */
+export const normalisePhone = (raw: string) => String(raw || '').replace(/\D/g, '').slice(-9)
+
+/**
+ * Persist a visitor record so a later visit can be recognised. This is the half
+ * that was missing: readLeads() existed and was passed to the agent, but nothing
+ * ever wrote a record, so every returning visitor looked brand new and James
+ * correctly but unhelpfully said he could not find their number.
+ */
+function saveLead(entry: StoredLead) {
+  if (!entry.name || !normalisePhone(entry.phone)) return
+  try {
+    const all = readLeads().filter((l) => normalisePhone(l.phone) !== normalisePhone(entry.phone))
+    all.push(entry)
+    // Keep the store small; only recent visitors are worth recognising.
+    localStorage.setItem(LEADS_KEY, JSON.stringify(all.slice(-5)))
+  } catch {
+    /* storage unavailable - recognition simply won't work, nothing breaks */
+  }
+}
+
+/** Word-set similarity, used to catch near-duplicate agent lines. */
+function similarity(a: string, b: string) {
+  const words = (s: string) =>
+    new Set(
+      s
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter((w) => w.length > 2),
+    )
+  const A = words(a)
+  const B = words(b)
+  if (!A.size || !B.size) return 0
+  let shared = 0
+  A.forEach((w) => {
+    if (B.has(w)) shared++
+  })
+  return shared / Math.max(A.size, B.size)
+}
+
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [minimized, setMinimized] = useState(false)
@@ -103,6 +144,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const idle2 = useRef<number>()
   const idle3 = useRef<number>()
   const joinT = useRef<number>()
+  /** True once the session has ended. Gates every timer and late async reply. */
+  const closed = useRef(false)
+  /** The stored record this visitor appears to match, sent to the agent to verify. */
+  const matchedVisitor = useRef<StoredLead | null>(null)
   const pick = useRef(0)
   const openRef = useRef(isOpen)
   openRef.current = isOpen
@@ -158,9 +203,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const clean = enforceCopyRules(text)
       if (!clean) return
       setMsgs((cur) => {
-        // Never send the identical sentence twice in a row - rephrase instead.
-        const recentBot = cur.filter((m) => m.who === 'a' || m.who === 'c').slice(-4).map((m) => m.text)
-        const final = recentBot.includes(clean) ? REPHRASE[pick.current++ % REPHRASE.length] : clean
+        // Similarity, not string equality. The old exact-match check missed the
+        // real failure: short affirmatives ("yes", "ok cool") made James restate
+        // the same callback promise with a word or two changed, which slipped
+        // through unchanged three times in one conversation.
+        const recentBot = cur.filter((m) => m.who === 'a' || m.who === 'c').slice(-5).map((m) => m.text)
+        const isNearDuplicate = recentBot.some((prev) => similarity(prev, clean) >= 0.7)
+        const final = isNearDuplicate ? REPHRASE[pick.current++ % REPHRASE.length] : clean
         const next = [...cur, { who, text: final }]
         persist(next, phase)
         return next
@@ -174,7 +223,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     ;[idle1, idle2, idle3].forEach((r) => r.current && clearTimeout(r.current))
   }
 
+  /**
+   * Ends the session without clearing the transcript, so the visitor can still
+   * read the goodbye. Once this runs nothing may speak again: every timer is
+   * cancelled and `closed` gates the idle timers and any in-flight reply that
+   * lands afterwards.
+   *
+   * This is what was missing. A conversational close ("bye, you can close the
+   * chat") only produced a farewell message; the idle timer was still armed
+   * behind it, so three minutes later James asked "Just checking you are still
+   * around" - an instant tell that nobody was really there.
+   */
+  const finishSession = useCallback(() => {
+    closed.current = true
+    clearIdle()
+    if (joinT.current) clearTimeout(joinT.current)
+    setTyping(false)
+    setBusy(false)
+  }, [])
+
   const endConversation = useCallback(() => {
+    closed.current = true
     clearIdle()
     if (joinT.current) clearTimeout(joinT.current)
     try {
@@ -197,7 +266,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   /** 3 minutes silent -> check in. 1 more minute -> closing line. Then close. */
   const bumpIdle = useCallback(() => {
     clearIdle()
+    // A closed session never re-arms. Without this, any reply that resolved
+    // after the close would call bumpIdle and quietly restart the whole cycle.
+    if (closed.current) return
     idle1.current = window.setTimeout(() => {
+      if (closed.current) return
       setMsgs((cur) => {
         if (!cur.some((m) => m.who === 'u')) return cur
         const who: Who = phase === 'agent' ? 'a' : 'c'
@@ -207,6 +280,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         return next
       })
       idle2.current = window.setTimeout(() => {
+        if (closed.current) return
         const who: Who = phase === 'agent' ? 'a' : 'c'
         setMsgs((cur) => {
           const next = [...cur, { who, text: CLOSINGS[pick.current++ % CLOSINGS.length] }]
@@ -232,11 +306,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   }
 
   const joinAgent = useCallback(() => {
+    if (closed.current) return
     setPhase('agent')
     setTyping(true) // typing indicator is shown for James only, never the Concierge
-    window.setTimeout(async () => {
+    joinT.current = window.setTimeout(async () => {
+      if (closed.current) return
       const detail = summary.current || lastUserDetail(msgs)
       const knownLead = readLeads().slice(-1)[0]
+      matchedVisitor.current = knownLead ?? null
       // James must not repeat the Concierge's phrasing. Without seeing that
       // line he produced near-identical openers ("good choice, plenty of
       // options") immediately after the Concierge said the same thing.
@@ -248,9 +325,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         avoidEcho: lastConciergeLine,
         // A returning browser is a hint only. The agent verifies before ever
         // claiming to recognise anyone.
-        returningHint: knownLead ? { name: knownLead.name, summary: knownLead.summary } : null,
+        // The phone must travel with the hint. Without it James had a name but
+        // no number to check against, so when a real returning customer gave
+        // his number he answered "I do not see that number matching our
+        // records" - the exact opposite of recognition.
+        returningHint: knownLead
+          ? { name: knownLead.name, phone: knownLead.phone, summary: knownLead.summary }
+          : null,
         history: msgs,
       })
+      if (closed.current) return
       setTyping(false)
       pushBot(
         'a',
@@ -266,6 +350,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const body = text.trim()
       if (!body) return
       const next: Msg[] = [...msgs, { who: 'u', text: body }]
+      // The visitor typing revives a session that had ended, so a closed chat
+      // can be picked back up deliberately - just never on its own.
+      closed.current = false
       setMsgs(next)
       setInput('')
       setBusy(true)
@@ -281,13 +368,35 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
       if (phase === 'agent') setTyping(true)
       ;(async () => {
-        const res = await invokeFn<{ reply?: string; connect?: boolean; summary?: string; sessionId?: string }>(
-          'agent-chat',
-          { mode: phase === 'agent' ? 'agent' : 'concierge', sessionId: sessionId.current, history: next },
-        )
+        const res = await invokeFn<{
+          reply?: string
+          connect?: boolean
+          summary?: string
+          sessionId?: string
+          closing?: boolean
+          visitorName?: string
+          visitorPhone?: string
+        }>('agent-chat', {
+          mode: phase === 'agent' ? 'agent' : 'concierge',
+          sessionId: sessionId.current,
+          history: next,
+          knownVisitor: matchedVisitor.current,
+        })
+        // A reply that lands after the visitor closed the chat must not speak.
+        if (closed.current) return
         if (res?.sessionId) sessionId.current = res.sessionId
         setTyping(false)
         setBusy(false)
+
+        // Remember this visitor so a later visit can be recognised.
+        if (res?.visitorName && res?.visitorPhone) {
+          saveLead({
+            name: res.visitorName,
+            phone: res.visitorPhone,
+            summary: res.summary || summary.current || lastUserDetail(next),
+            at: Date.now(),
+          })
+        }
 
         if (!res?.reply) {
           pushBot(
@@ -310,13 +419,22 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         } else {
           pushBot(phase === 'agent' ? 'a' : 'c', res.reply)
         }
+
+        // The model signalled this reply is a farewell. End the session here
+        // rather than leaving idle timers armed behind the goodbye.
+        if (res.closing) {
+          finishSession()
+          return
+        }
         bumpIdle()
       })()
     },
-    [msgs, phase, persist, pushBot, bumpIdle, joinAgent],
+    [msgs, phase, persist, pushBot, bumpIdle, joinAgent, finishSession],
   )
 
   const open = useCallback(() => {
+    // Reopening is a deliberate act by the visitor, so it revives the session.
+    closed.current = false
     setIsOpen(true)
     setMinimized(false)
     setUnread(0)

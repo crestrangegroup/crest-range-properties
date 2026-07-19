@@ -99,7 +99,14 @@ You have just taken over from the Concierge. Do not greet the visitor again and 
 Continue naturally on the actual topic for two or three exchanges before asking for the visitor's name (for example "May I know your name, please?"). Never ask abruptly or immediately.
 Once you know their name, use it naturally but not in every message.
 Ask for a mobile number when it fits naturally, framed as a reason ("so I can have someone call you"). Ask for email only if it comes up naturally.
-If you are told a returning visitor may have spoken to us before, treat that as a soft hint only, never as proof. Ask to verify, for example "Have we spoken before? Can I get your name and number, just to check our records?" Only confirm you recognise them once the name and number they give actually match the stored record. If they do not match, treat it as a brand new conversation and never claim to recognise them.`
+If you are told a returning visitor may have spoken to us before, treat that as a soft hint only, never as proof. Ask to verify, for example "Have we spoken before? Can I get your name and number, just to check our records?" Only confirm you recognise them once the name and number they give actually match the stored record. If they do not match, treat it as a brand new conversation and never claim to recognise them.
+When the name and number DO match the stored record, say so warmly and carry the earlier context forward by referring to what they were looking at last time, then ask whether they are still after the same thing. Never say you cannot find their number when a matching record was provided to you.
+
+Short replies: when the visitor answers with a brief acknowledgement such as "yes", "ok", "ok cool", "sure" or "thanks", they are agreeing, not asking you to repeat yourself. Do not restate the callback promise, the timeframe or anything you have already said in this conversation. Move forward with one new, specific thing, or simply acknowledge briefly and stop. Never send a message that is a paraphrase of one you have already sent.
+
+Endings: when the visitor says something warm or final such as "thanks, you have been great", "appreciate it", "have a good evening", "bye" or "you can close the chat", acknowledge what they actually said before anything else. Respond to the warmth genuinely and in your own words, vary how you do it, then close. Do not jump straight to a stock sign-off, and do not ask another question once they have clearly finished.
+Set closing to true on that final farewell message so the session ends cleanly and nothing follows it.
+Whenever you know the visitor's name and mobile number, return them in visitorName and visitorPhone so we can recognise them if they come back.`
 
 const REPLY_SCHEMA = {
   type: 'object',
@@ -116,8 +123,21 @@ const REPLY_SCHEMA = {
       type: 'string',
       description: "One sentence quoting the visitor's actual request in their own words. Empty unless connect is true.",
     },
+    closing: {
+      type: 'boolean',
+      description:
+        'True only when this reply is a farewell and the conversation is finished. The client ends the session and cancels all idle timers, so nothing can speak after it.',
+    },
+    visitorName: {
+      type: 'string',
+      description: "The visitor's name if they have given it, otherwise empty.",
+    },
+    visitorPhone: {
+      type: 'string',
+      description: "The visitor's mobile number exactly as they gave it, otherwise empty.",
+    },
   },
-  required: ['reply', 'connect', 'summary'],
+  required: ['reply', 'connect', 'summary', 'closing', 'visitorName', 'visitorPhone'],
   additionalProperties: false,
 } as const
 
@@ -177,6 +197,7 @@ Deno.serve(async (req: Request) => {
       detail = '',
       returningHint = null,
       avoidEcho = '',
+      knownVisitor = null,
     } = await req.json()
 
     const supabase = createClient(
@@ -198,13 +219,27 @@ Deno.serve(async (req: Request) => {
     let reply = ''
     let connect = false
     let summary = ''
+    let closing = false
+    let visitorName = ''
+    let visitorPhone = ''
+
+    /** Digits only, so "058 554 1822" and "+971585541822" compare equal. */
+    const digits = (s: unknown) => String(s || '').replace(/\D/g, '').slice(-9)
+
+    // The stored record for this browser, given to James on EVERY agent turn -
+    // not only at handoff. The number is included so that when the visitor
+    // types it he can actually compare and confirm the match.
+    const record = knownVisitor || returningHint
+    const known = record?.name
+      ? `\nOur records for this browser show a previous visitor named "${record.name}"${
+          record.phone ? ` with mobile number "${record.phone}" (digits ${digits(record.phone)})` : ''
+        }, who was previously interested in: "${record.summary || 'not recorded'}". This is a soft hint, not proof. Ask them to confirm their name and number. If what they give matches this record (compare phone numbers by their last 9 digits, ignoring spaces and country code), confirm you recognise them and refer back to what they were looking at. If it does not match, treat them as new.`
+      : ''
 
     if (mode === 'agent-open') {
       // James's opening line must reflect the visitor's most recent real input,
       // never a generic placeholder.
-      const hint = returningHint
-        ? `\nThis browser has chatted before. Possible prior name: "${returningHint.name}", prior topic: "${returningHint.summary}". Treat this as a soft hint only. Ask to verify before claiming to recognise them.`
-        : ''
+      const hint = known
       // The Concierge's last line, so James can deliberately not echo it.
       const echo = avoidEcho
         ? `\nThe Concierge's final message to this visitor was: "${avoidEcho}". You are a different person picking up the same conversation, so do NOT reuse its phrasing, structure or opinion. If it already praised the area or quoted a price, do not repeat either. Say something it did not say: move the conversation forward with a concrete next step or a specific question.`
@@ -230,7 +265,7 @@ Deno.serve(async (req: Request) => {
         max_tokens: 512,
         thinking: { type: 'disabled' },
         output_config: { format: { type: 'json_schema', schema: REPLY_SCHEMA }, effort: 'low' },
-        system: mode === 'agent' ? AGENT_SYSTEM : CONCIERGE_SYSTEM,
+        system: mode === 'agent' ? `${AGENT_SYSTEM}${known}` : CONCIERGE_SYSTEM,
         messages,
       })
       try {
@@ -238,6 +273,9 @@ Deno.serve(async (req: Request) => {
         reply = parsed.reply ?? ''
         connect = Boolean(parsed.connect)
         summary = parsed.summary ?? ''
+        closing = Boolean(parsed.closing)
+        visitorName = parsed.visitorName ?? ''
+        visitorPhone = parsed.visitorPhone ?? ''
       } catch {
         // If the model returned prose rather than JSON, use it as the reply
         // rather than dropping the turn entirely.
@@ -281,7 +319,7 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    return json({ reply, connect, summary, sessionId: sid })
+    return json({ reply, connect, summary, closing, visitorName, visitorPhone, sessionId: sid })
   } catch (err) {
     console.error('[agent-chat]', err)
     return json({ error: String(err) }, 500)
