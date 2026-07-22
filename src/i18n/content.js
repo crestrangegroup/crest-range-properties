@@ -1,4 +1,10 @@
 // Crest Range Properties — content translations (listings/hoods/articles/testimonials)
+//
+// NOTE: the `testi` arrays below are STALE and currently UNUSED. They translate a
+// previous 3-item placeholder set. As of content batch Item 9 the site shows the
+// seven real Company-Profile testimonials in English only (see I18nProvider
+// `tTestimonial`), pending a sign-off + translation pass. Do not wire `testi`
+// back in until it is repopulated with the seven real quotes per language.
 export const CONTENT = {
 ar: {
 listings: {

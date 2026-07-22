@@ -7,7 +7,8 @@ export const EN = {
   chatCta: 'Agent Live Chat',
 
   heroK: 'Abu Dhabi · Private Brokerage',
-  heroH: 'Own the address everyone wants.',
+  // The official company tagline, replacing the previous headline entirely.
+  heroH: 'Finding Home Away from Home',
   heroP: 'Villas, penthouses and high-yield investments across Abu Dhabi’s most coveted communities — sold and let faster, at the numbers you want.',
 
   searchBtn: 'Search properties', fCommunity: 'Community', fType: 'Property type',
@@ -21,6 +22,21 @@ export const EN = {
   insightsK: 'From our desk', insightsH: 'Market insights',
   newsH: 'Weekly Abu Dhabi market intel. No noise.', subscribe: 'Subscribe',
   subscribedMsg: '✓ You’re in. First briefing lands this Sunday.',
+
+  // Item 4: "Why Crest Range Properties" — five pillars, exact copy.
+  whyK: 'Why us',
+  whyH: 'Why Crest Range Properties',
+  whyPillars: [
+    { name: 'Local Expertise', desc: 'With a deep understanding of Abu Dhabi’s real estate landscape, we provide insightful advice and market knowledge.' },
+    { name: 'Client-Centric Approach', desc: 'Our clients’ satisfaction is paramount. We work closely with you to understand your Real Estate goals and exceed your expectations.' },
+    { name: 'Integrity and Transparency', desc: 'Crest Range Properties upholds the highest ethical standards, ensuring transparency in all our dealings.' },
+    { name: 'Innovation', desc: 'We embrace technological advancements to streamline processes; making property transactions efficient and convenient for our clients.' },
+    { name: 'Professional Team', desc: 'Our dedicated team of Real Estate Professionals is committed to excellence, continuously improving their skills and staying updated with industry trends.' },
+  ] as ReadonlyArray<{ name: string; desc: string }>,
+
+  // Item 8: Our Partners.
+  partnersK: 'Trusted by',
+  partnersH: 'Our partners',
 
   tagSell: 'Sell', tagRent: 'Rent',
   // Spec row labels. Singular/plural pairs so "1 Bedroom" reads correctly.
@@ -53,7 +69,7 @@ export const EN = {
   back: 'Back', videoTour: 'Video walkthrough', tour3d: '360° virtual tour',
   aboutProp: 'About the property', amenitiesH: 'Amenities', primeH: 'Prime location',
   reachAgent: 'Reach the agent', callBtn: 'Call', emailBtn: 'Email', whatsBtn: 'WhatsApp',
-  bookH: 'Book a private viewing', bookSub: 'Confirmed within 60 minutes, 7 days a week.',
+  bookH: 'Book a private viewing', bookSub: 'Confirmed within 15 minutes, 7 days a week.',
   bookBtn: 'Confirm viewing', bookedH: 'Viewing requested',
   bookedP: 'A specialist will confirm your slot shortly.',
   mortH: 'Mortgage calculator', monthly: 'Estimated monthly payment',
@@ -64,14 +80,34 @@ export const EN = {
   relatedH: 'Related properties', notFoundH: 'We could not find that property.',
 
   aboutK: 'Our story', aboutH: 'A boutique brokerage built on repeat clients.',
-  aboutP1: 'Crest Range Properties is a private brokerage in Al Zahiya, Abu Dhabi, working across sales, leasing and property management. We keep the client list short and the standards high — most of our business comes from people we have already served.',
+  // Item 2: About intro, replaced word-for-word from the Company Profile.
+  aboutP1: 'Crest Range Properties LLC is a dynamic and forward-thinking Real Estate Company based in the vibrant city of Abu Dhabi. Established in 2020, our Company has swiftly grown to become a prominent player in the local Real Estate Market, thanks to our unwavering commitment to excellence and our extensive portfolio of Leasing, Property Management, and Real Estate Sales Services.',
   testiH: 'Clients who closed with us',
+
+  // Item 3: Founder's Welcome Message.
+  welcomeK: 'Welcome',
+  welcomeP: 'We believe that every client deserves personalized attention and a tailor-made solution. Your goals are our goals, and your success is our success. As the Founder of Crest Range Properties, I take pride in the unwavering commitment of our team to uphold the highest standards of integrity, transparency, and professionalism. We are here to guide you through every step of your Real Estate journey, ensuring that your experience with us is not only successful but also enjoyable. Our commitment to “Finding Home Away from Home” extends beyond the properties we offer. It is about creating lasting relationships. We are excited to be part of your story and to help you find your perfect place in this world.',
+  welcomeName: 'Olatubosun Fatoki',
+  welcomeRole: 'Founder',
+
+  // Item 6: Vision & Mission.
+  vmK: 'What drives us',
+  visionH: 'Vision',
+  visionP: 'Envisioning the Crest of Excellence: At Crest Range Properties, we aspire to redefine the real estate experience by crafting a world where every property holds a unique story, every transaction is a journey, and every dream finds its home. Our vision is to be the beacon of innovation, integrity, and inclusivity in the Real Estate landscape, forging lasting connections with our clients, partners and communities.',
+  missionH: 'Mission',
+  missionP: 'Empowering Individuals and Families to Achieve Their Real Estate Goals. We are committed to transparency, professionalism, and innovation to help you find your dream home or investment opportunity. Our core values of excellence and integrity guide us in every transaction, making us a reliable partner on your Real Estate journey. Join us in building a future where your Real Estate goals are not only accomplished but also celebrated.',
 
   svcK: 'What we do', svcH: 'Three disciplines. One standard.',
   s1Name: 'Sales', s2Name: 'Leasing', s3Name: 'Property Management',
-  s1Desc: 'Off-market access, precise pricing and negotiation that protects your number — for buyers and sellers across Abu Dhabi.',
-  s2Desc: 'From listing to key handover in days, not weeks — tenants vetted, cheques structured, contracts done right.',
-  s3Desc: 'Your asset managed like our own: maintenance, collections and reporting you never have to chase.',
+  // Item 7 detailed service descriptions. s1 = Sales, s2 = Leasing, s3 = Property Management.
+  s1Desc:
+    'Crest Range Properties is the ideal partner for those looking to buy or sell real estate in the UAE — from distinguished residences to commercial addresses. Much of what we sell never reaches the portals: our buyers see it first, and our sellers avoid the noise. Pricing counsel is grounded in six years of island-community data, and every negotiation is handled as if the money were our own.',
+  /* VERIFY: "six years of island-community data" — pending client confirmation */
+  s2Desc:
+    'Crest Range Properties offers a versatile collection of residential, commercial, and mixed-use properties, with tenant representation and landlord letting handled end to end. For tenants — often arriving from abroad — we translate communities, commutes, and contracts into plain language. For landlords, we find the right tenant rather than the fastest one, guiding the process from first viewing to signed Tawtheeq.',
+  s3Desc:
+    'Over the years, our property management services have focused on offering a tailored experience to our clientele, landlords, and tenants. For owners at home and abroad, we run the property so you don’t have to — rent collection, maintenance, inspections, tenant relations, and annual reporting, delivered without drama. Over 140 units are under our management today, most of them owned by clients who first leased or bought through us.',
+  /* VERIFY: "over 140 units" — pending client confirmation */
   included: 'What’s included', sCtaChat: 'Chat with a live agent now', sCtaForm: 'Request a proposal',
   s1B: ['Pricing & comparable analysis', 'Off-market buyer network', 'Offer negotiation & closing', 'Ownership transfer coordination'],
   s2B: ['Tenant sourcing & vetting', 'Tawtheeq contract handling', 'Cheque structuring', 'Renewals & move-in coordination'],
@@ -82,7 +118,7 @@ export const EN = {
   formPhone: 'Mobile', formEmail: 'Email', formProp: 'Property details', formMsg: 'Message',
   formOther: 'Tell us more', formDate: 'Preferred date',
   formSend: 'Send request', formSentH: 'Request received',
-  formSentP: 'We’ll come back to you within 60 minutes.',
+  formSentP: 'We’ll come back to you within 15 minutes.',
   inputsEn: 'Please type in English',
   formRequired: 'Please complete the required fields.',
   propIntro: 'Tell us about your property and we’ll send a tailored management proposal within one business day.',
@@ -90,14 +126,20 @@ export const EN = {
   teamH: 'The people behind Crest Range',
   teamP: 'A compact senior team — every client works directly with a decision-maker.',
 
-  contactH: 'Talk to Crest Range', addrH: 'Office', phoneH: 'Phone', emailH: 'Email',
+  // Item B: the Contact page H1 (and About contact block). The footer's
+  // contact-column heading is a separate key (footContact) that stays "Contact".
+  contactH: 'Talk to Crest Range Properties', addrH: 'Office', phoneH: 'Phone', emailH: 'Email',
   hoursH: 'Hours', followH: 'Follow',
   // Newline-separated so the address and hours always render on their own lines.
   addrVal: 'Office F6-01, Zig Zag Towers\nAl Zahiya (Tourist Club Area)\nOpposite Abu Dhabi Mall\nAbu Dhabi, UAE',
-  hoursVal: 'Monday–Saturday, 9:00–18:00\nViewings by appointment, seven days',
+  // Item 10 (hours) + Item 11 (viewings line: em dash, numeral 7).
+  hoursVal: 'Monday – Friday, 10:00 AM – 6:00 PM\nViewings by appointment—7 days a week',
   permitNo: 'Permit no.',
 
-  footExplore: 'Explore', footCompany: 'Company', footTeam: 'Our team',
+  // Item 1.5: team bio pages.
+  bioBack: 'Back to team', bioAbout: 'About', teamMemberH: 'Team member',
+
+  footExplore: 'Explore', footCompany: 'Company', footContact: 'Contact', footTeam: 'Our team',
   rights: 'All rights reserved.', footTerms: 'Terms & Conditions', footPrivacy: 'Privacy Policy',
   langMore: 'More languages', legalNote: 'Legal pages are provided in English.',
 
@@ -113,13 +155,18 @@ export const EN = {
 
   city: 'Abu Dhabi', mapLayer: 'Google Maps · live listings layer',
 
+  // Item 1: titles updated to match the official Company Profile. Names that
+  // are not mentioned in the brief (fatoki, dimka, njeri) keep their titles.
   roles: {
     fatoki: 'Founder & Managing Partner / Consultant',
     dimka: 'HR & Administrative Manager | Compliance Officer',
-    abe: 'Leasing Executive',
+    abe: 'Leasing Manager',
     njeri: 'Leasing Agent',
-    okafor: 'Senior Leasing Agent',
-    duruoha: 'Sales & Business Development Manager',
+    okafor: 'Senior Real Estate Officer',
+    duruoha: 'Sales Manager',
+    smith: 'Leasing Officer',
+    // Gift Ofejiro: final designation pending from client.
+    gift: 'Designation coming soon',
   },
 }
 

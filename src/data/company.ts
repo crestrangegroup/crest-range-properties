@@ -17,8 +17,10 @@ export const COMPANY = {
   whatsapp: '971547053421',
   email: 'info@crestrangeproperties.com',
   website: 'www.crestrangeproperties.com',
-  /** Hours are rendered on separate lines, never run together. */
-  hoursLines: ['Monday–Saturday, 9:00–18:00', 'Viewings by appointment, seven days'],
+  /** Hours are rendered on separate lines, never run together.
+   *  The footer and Contact page read these from i18n (t.hoursVal); this stays
+   *  in sync as the canonical English source. */
+  hoursLines: ['Monday – Friday, 10:00 AM – 6:00 PM', 'Viewings by appointment—7 days a week'],
   mapQuery: 'Zig Zag Towers, Al Zahiya, Abu Dhabi',
   /** Display order is set in Footer.tsx: LinkedIn, Instagram, TikTok, Threads,
    *  Facebook, YouTube. */

@@ -106,12 +106,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         return { ...h, name: areas[h.name] || h.name, blurb: blurb || h.blurb }
       },
       tArticle: (a) => ({ ...a, ...(bundle.articles?.[a.slug] ?? {}) }),
-      // `testi` is a positional array of { q, role }. The client's name (`who`)
-      // is a real personal name and is never translated.
-      tTestimonial: (x, i) => {
-        const tr = bundle.testi?.[i]
-        return tr ? { ...x, q: tr.q, role: tr.role } : x
-      },
+      // The seven real testimonials (content batch Item 9) are English-only for
+      // now; a translation pass follows sign-off. Until then every language
+      // shows the original English quote, never a stale translation of the
+      // previous placeholder set. Client names are never translated.
+      tTestimonial: (x, _i) => x,
     }
   }, [lang, dir])
 
