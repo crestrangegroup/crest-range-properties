@@ -12,6 +12,7 @@ import { Phone, Mail, WhatsApp } from '../components/Icons'
 export default function About() {
   const { t, tTestimonial, addressLines, role } = useI18n()
   const { hash } = useLocation()
+  const founder = TEAM.find((m) => m.id === 'fatoki') || TEAM[0]
 
   // Team lives on this page now, so #team has to be scrolled to manually: the
   // browser only auto-jumps for anchors present on first paint.
@@ -77,6 +78,61 @@ export default function About() {
         </div>
       </section>
 
+      {/* Item 3: Founder's Welcome — two columns, tinted to stand apart from the
+          plain intro above. Headshot on one side, message on the other. */}
+      <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+        <div className="wrap">
+          <div className="split" style={{ alignItems: 'center', gap: 'clamp(24px,4vw,52px)' }}>
+            <div style={{ flex: 'none' }}>
+              <img
+                src={founder.photo}
+                alt={founder.name}
+                width={300}
+                height={340}
+                style={{ width: '100%', maxWidth: 300, aspectRatio: '5 / 6', objectFit: 'cover', borderRadius: 8 }}
+              />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <p className="kicker">{t.welcomeK}</p>
+              <blockquote style={{ margin: 0 }}>
+                <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(17px,1.4vw,20px)', lineHeight: 1.6 }}>
+                  {t.welcomeP}
+                </p>
+                <footer style={{ marginTop: 18 }}>
+                  {/* Real names are never translated or transliterated. */}
+                  <strong style={{ display: 'block' }}>{t.welcomeName}</strong>
+                  <span className="muted" style={{ fontSize: 13.5 }}>
+                    {t.welcomeRole}
+                  </span>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Item 6: Vision & Mission. */}
+      <section className="section">
+        <div className="wrap">
+          <p className="kicker">{t.vmK}</p>
+          <div className="grid grid-2" style={{ marginTop: 20 }}>
+            {[
+              [t.visionH, t.visionP],
+              [t.missionH, t.missionP],
+            ].map(([h, p]) => (
+              <div key={h} className="card" style={{ padding: 28, gap: 12 }}>
+                <h2 className="h3" style={{ fontSize: 22 }}>
+                  {h}
+                </h2>
+                <p className="muted" style={{ margin: 0, fontSize: 15.5, lineHeight: 1.65 }}>
+                  {p}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="wrap">
           <div className="grid grid-3">
@@ -104,7 +160,7 @@ export default function About() {
           <div className="sec-head">
             <h2 className="h2">{t.testiH}</h2>
           </div>
-          <Carousel intervalMs={9000} visible={2} label={t.testiH}>
+          <Carousel intervalMs={9000} visible={3} label={t.testiH}>
             {TESTIMONIALS.map((raw, i) => {
               const c = tTestimonial(raw, i)
               return (
@@ -145,18 +201,44 @@ export default function About() {
           <div className="grid grid-3" style={{ marginTop: 40 }}>
             {TEAM.map((m) => (
               <article key={m.id} className="card" style={{ alignItems: 'center', textAlign: 'center', padding: 28 }}>
-                <img
-                  src={m.photo}
-                  alt={m.name}
-                  loading="lazy"
-                  width={132}
-                  height={132}
-                  style={{ width: 132, height: 132, borderRadius: '50%', objectFit: 'cover' }}
-                />
-                {/* Real names are never translated or transliterated. */}
-                <h3 className="h3" style={{ fontSize: 20, marginTop: 18 }}>
-                  {m.name}
-                </h3>
+                {/* Item 1.5: photo + name link to the member's dedicated bio page. */}
+                <Link to={ROUTES.teamMember(m.id)} aria-label={m.name} style={{ display: 'block', color: 'inherit' }}>
+                  {m.photo && !m.comingSoon ? (
+                    <img
+                      src={m.photo}
+                      alt={m.name}
+                      loading="lazy"
+                      width={132}
+                      height={132}
+                      style={{ width: 132, height: 132, borderRadius: '50%', objectFit: 'cover', display: 'block', margin: '0 auto' }}
+                    />
+                  ) : (
+                    // Gift Ofejiro: photo pending — neutral placeholder, never a broken image.
+                    <div
+                      aria-hidden
+                      style={{
+                        width: 132,
+                        height: 132,
+                        borderRadius: '50%',
+                        margin: '0 auto',
+                        background: 'var(--bg)',
+                        border: '1px solid var(--line)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'var(--serif)',
+                        fontSize: 34,
+                        color: 'var(--gold)',
+                      }}
+                    >
+                      {m.name.split(/\s+/).slice(0, 2).map((w) => w[0]).join('')}
+                    </div>
+                  )}
+                  {/* Real names are never translated or transliterated. */}
+                  <h3 className="h3" style={{ fontSize: 20, marginTop: 18 }}>
+                    {m.name}
+                  </h3>
+                </Link>
                 <p className="muted" style={{ fontSize: 13.5, margin: '8px 0 18px', minHeight: '2.6em' }}>
                   {role(m.id)}
                 </p>

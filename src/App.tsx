@@ -13,6 +13,7 @@ import Listings from './pages/Listings'
 import PropertyDetail from './pages/PropertyDetail'
 import Sell from './pages/Sell'
 import About from './pages/About'
+import TeamBio from './pages/TeamBio'
 import Services from './pages/Services'
 import Proposal from './pages/Proposal'
 import Contact from './pages/Contact'
@@ -66,7 +67,9 @@ export default function App() {
             <Route path={ROUTES.propertyPattern} element={<PropertyDetail />} />
             <Route path={ROUTES.sell} element={<Sell />} />
             <Route path={ROUTES.about} element={<About />} />
-            {/* Team merged into About; keep the old URL working. */}
+            {/* Per-member bio pages (content batch Item 1.5). */}
+            <Route path={ROUTES.teamMemberPattern} element={<TeamBio />} />
+            {/* Team section is merged into About; keep the old /team URL working. */}
             <Route path={ROUTES.teamLegacy} element={<Navigate to={ROUTES.team} replace />} />
             <Route path={ROUTES.services} element={<Services />} />
             <Route path={ROUTES.proposal} element={<Proposal />} />

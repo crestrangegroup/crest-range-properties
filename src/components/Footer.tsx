@@ -3,16 +3,20 @@ import { ROUTES } from '../routes'
 import { useI18n } from '../i18n/I18nProvider'
 import { COMPANY, mailLink, telLink } from '../data/company'
 import { useChat } from './chat/ChatProvider'
-import { Instagram, Facebook, LinkedIn, TikTok, Threads, YouTube } from './Icons'
+import { InstagramColor, Facebook, LinkedIn, TikTok, Threads, YouTube } from './Icons'
 
-/** Fixed display order: LinkedIn, Instagram, TikTok, Threads, Facebook, YouTube. */
+/** Fixed display order: LinkedIn, Instagram, TikTok, Threads, Facebook, YouTube.
+ *  Item C: real brand colors, footer only. Rendered as white chips so every
+ *  brand glyph (including the black TikTok/Threads marks) stays legible on the
+ *  dark footer; Instagram carries its own gradient. `color` feeds the glyph via
+ *  currentColor. This treatment is intentionally scoped here and nowhere else. */
 const SOCIALS = [
-  { href: COMPANY.social.linkedin, label: 'LinkedIn', Icon: LinkedIn },
-  { href: COMPANY.social.instagram, label: 'Instagram', Icon: Instagram },
-  { href: COMPANY.social.tiktok, label: 'TikTok', Icon: TikTok },
-  { href: COMPANY.social.threads, label: 'Threads', Icon: Threads },
-  { href: COMPANY.social.facebook, label: 'Facebook', Icon: Facebook },
-  { href: COMPANY.social.youtube, label: 'YouTube', Icon: YouTube },
+  { href: COMPANY.social.linkedin, label: 'LinkedIn', Icon: LinkedIn, color: '#0A66C2' },
+  { href: COMPANY.social.instagram, label: 'Instagram', Icon: InstagramColor, color: undefined },
+  { href: COMPANY.social.tiktok, label: 'TikTok', Icon: TikTok, color: '#010101' },
+  { href: COMPANY.social.threads, label: 'Threads', Icon: Threads, color: '#010101' },
+  { href: COMPANY.social.facebook, label: 'Facebook', Icon: Facebook, color: '#1877F2' },
+  { href: COMPANY.social.youtube, label: 'YouTube', Icon: YouTube, color: '#FF0000' },
 ]
 
 export default function Footer() {
@@ -49,7 +53,7 @@ export default function Footer() {
               {t.aboutH}
             </p>
             <div className="row" style={{ gap: 8, marginTop: 14 }}>
-              {SOCIALS.map(({ href, label, Icon }) => (
+              {SOCIALS.map(({ href, label, Icon, color }) => (
                 <a
                   key={label}
                   href={href}
@@ -57,7 +61,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   aria-label={label}
                   className="icon-btn"
-                  style={{ borderColor: 'var(--dark-line)', color: 'var(--on-dark)' }}
+                  style={{ background: '#fff', borderColor: 'transparent', color }}
                 >
                   <Icon size={16} />
                 </a>
@@ -112,7 +116,9 @@ export default function Footer() {
 
           <div>
             <h4 style={{ fontFamily: 'var(--sans)', fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--gold-bright)', marginBottom: 10 }}>
-              {t.contactH}
+              {/* Item B: footer contact heading stays "Contact"; the longer
+                  "Talk to Crest Range Properties" is the Contact page H1 (t.contactH). */}
+              {t.footContact}
             </h4>
             {/* Address and hours always render on separate lines, never run together. */}
             <address className="muted" style={{ fontStyle: 'normal', fontSize: 14, lineHeight: 1.75 }}>

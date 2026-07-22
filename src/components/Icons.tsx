@@ -128,6 +128,28 @@ export const Instagram = ({ size = 17, className }: P) => (
   </svg>
 )
 
+/** Instagram in its real brand gradient (footer). currentColor can't express a
+ *  gradient, so this variant carries its own <defs>. Unique gradient id per
+ *  render size keeps multiple instances from clashing. */
+export const InstagramColor = ({ size = 17, className }: P) => {
+  const gid = `ig-grad-${size}`
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden focusable="false" className={className}>
+      <defs>
+        <linearGradient id={gid} x1="2" y1="22" x2="22" y2="2" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#F58529" />
+          <stop offset="0.35" stopColor="#DD2A7B" />
+          <stop offset="0.7" stopColor="#8134AF" />
+          <stop offset="1" stopColor="#515BD4" />
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="20" height="20" rx="5" stroke={`url(#${gid})`} strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="4" stroke={`url(#${gid})`} strokeWidth="1.8" />
+      <circle cx="17.5" cy="6.5" r="1.2" fill={`url(#${gid})`} />
+    </svg>
+  )
+}
+
 export const Facebook = ({ size = 17, className }: P) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false" className={className}>
     <path d="M14 9h3V6h-3a4 4 0 0 0-4 4v2H8v3h2v7h3v-7h2.5l.5-3h-3v-2a1 1 0 0 1 1-1Z" />

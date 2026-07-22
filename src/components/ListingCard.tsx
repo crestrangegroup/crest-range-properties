@@ -8,7 +8,13 @@ import { waLink, telLink, mailLink } from '../data/company'
 import { Pin, Phone, Mail, WhatsApp } from './Icons'
 import SpecRow from './SpecRow'
 
-export default function ListingCard({ listing }: { listing: Listing }) {
+interface Props {
+  listing: Listing
+  /** Item F: show the ADREC permit number on the card (Listings/Buy/Rent grids). */
+  showPermit?: boolean
+}
+
+export default function ListingCard({ listing, showPermit = false }: Props) {
   const { t, tListing } = useI18n()
   // Translated copy for display; the original slug/price/agent stay canonical.
   const l = tListing(listing)
@@ -38,6 +44,12 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         </div>
 
         <SpecRow listing={listing} size={15} gap={14} className="muted" style={{ fontSize: 13.5 }} />
+
+        {showPermit && listing.permit && (
+          <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em' }}>
+            {t.permitNo} <span dir="ltr">{listing.permit}</span>
+          </div>
+        )}
 
         <div style={{ fontFamily: 'var(--serif)', fontSize: 21, marginTop: 'auto', paddingTop: 8 }}>
           {fmtPrice(listing)}

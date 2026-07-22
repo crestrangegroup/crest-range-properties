@@ -17,6 +17,9 @@ export const ROUTES = {
   team: '/about#team',
   /** Kept as a redirect so older links and any shared URLs still resolve. */
   teamLegacy: '/team',
+  /** Dedicated bio page per team member (content batch Item 1.5). */
+  teamMember: (id: string) => `/team/${id}`,
+  teamMemberPattern: '/team/:id',
   services: '/services',
   /** Unlisted page hosting the Property Management proposal form. */
   proposal: '/services/request-a-proposal',

@@ -28,7 +28,17 @@ export default function Listings({ forcedPurpose }: Props) {
     const next = new URLSearchParams(params)
     if (value) next.set(key, value)
     else next.delete(key)
+    // Changing a filter returns to the first page of the new result set.
+    next.delete('page')
     setParams(next, { replace: false })
+  }
+
+  const goPage = (n: number) => {
+    const next = new URLSearchParams(params)
+    if (n <= 1) next.delete('page')
+    else next.set('page', String(n))
+    setParams(next, { replace: false })
+    window.scrollTo(0, 0)
   }
 
   const results = useMemo(
@@ -46,6 +56,12 @@ export default function Listings({ forcedPurpose }: Props) {
 
   const title = forcedPurpose === 'sale' ? t.navBuy : forcedPurpose === 'rent' ? t.navRent : t.listingsH
 
+  // Item E: six per page, real pagination (shareable via ?page=N), not load-more.
+  const PER_PAGE = 6
+  const totalPages = Math.max(1, Math.ceil(results.length / PER_PAGE))
+  const page = Math.min(totalPages, Math.max(1, Number(params.get('page')) || 1))
+  const shown = results.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+
   return (
     <>
       <PageHead
@@ -57,8 +73,9 @@ export default function Listings({ forcedPurpose }: Props) {
         <div className="wrap">
           <p className="kicker">{t.city}</p>
           <h1 className="h2">{title}</h1>
+          {/* Item D: the "X properties" count was removed; "updated today" stays. */}
           <p className="lede" style={{ marginTop: 10 }}>
-            {results.length} {t.propsWord} · {t.updatedToday}
+            {t.updatedToday}
           </p>
 
           <div
@@ -143,11 +160,45 @@ export default function Listings({ forcedPurpose }: Props) {
       <section className="section">
         <div className="wrap">
           {results.length ? (
-            <div className="grid grid-3">
-              {results.map((l) => (
-                <ListingCard key={l.slug} listing={l} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-3">
+                {shown.map((l) => (
+                  // Item F: ADREC permit shown on the card in the listings grids.
+                  <ListingCard key={l.slug} listing={l} showPermit />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <nav className="pager" aria-label={`${title} pages`}>
+                  <button
+                    className="pager-btn"
+                    onClick={() => goPage(page - 1)}
+                    disabled={page === 1}
+                    aria-label="Previous page"
+                  >
+                    ‹
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                    <button
+                      key={n}
+                      className={`pager-btn${n === page ? ' on' : ''}`}
+                      onClick={() => goPage(n)}
+                      aria-current={n === page ? 'page' : undefined}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                  <button
+                    className="pager-btn"
+                    onClick={() => goPage(page + 1)}
+                    disabled={page === totalPages}
+                    aria-label="Next page"
+                  >
+                    ›
+                  </button>
+                </nav>
+              )}
+            </>
           ) : (
             <div className="stack" style={{ gap: 16, alignItems: 'flex-start' }}>
               <p className="lede">{t.noResults}</p>

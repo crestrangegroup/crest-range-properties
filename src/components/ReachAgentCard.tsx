@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { byId } from '../data/team'
+import { ROUTES } from '../routes'
 import { waLink, telLink, mailLink, displayPhone } from '../data/company'
 import { Mail, Phone, WhatsApp } from './Icons'
 import './ReachAgentCard.css'
@@ -29,7 +31,8 @@ export default function ReachAgentCard({ agentId, subject, enquiry }: Props) {
     <div className="card agent-card">
       <p className="agent-kicker">{t.reachAgent}</p>
 
-      <div className="agent-id">
+      {/* Item 1.5: agent identity links to the member's dedicated bio page. */}
+      <Link to={ROUTES.teamMember(agent.id)} className="agent-id" style={{ color: 'inherit' }}>
         <img
           className="agent-photo"
           src={agent.photo}
@@ -43,7 +46,7 @@ export default function ReachAgentCard({ agentId, subject, enquiry }: Props) {
           <strong className="agent-name">{agent.name}</strong>
           <div className="agent-role">{role(agent.id)}</div>
         </div>
-      </div>
+      </Link>
 
       <a className="agent-phone" href={telLink(agent.phone)}>
         {displayPhone(agent.phone)}

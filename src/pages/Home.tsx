@@ -4,7 +4,7 @@ import { useI18n } from '../i18n/I18nProvider'
 import { ROUTES } from '../routes'
 import { COMMUNITIES, PROPERTY_TYPES } from '../data/listings'
 import { useListings } from '../lib/ListingsProvider'
-import { HOODS, ARTICLES, HERO_IMAGES, STATS } from '../data/content'
+import { HOODS, ARTICLES, HERO_IMAGES, STATS, PARTNERS } from '../data/content'
 import ListingCard from '../components/ListingCard'
 import Carousel from '../components/Carousel'
 import { subscribeNewsletter } from '../lib/leads'
@@ -154,6 +154,33 @@ export default function Home() {
         ))}
       </section>
 
+      {/* 2b - Why Crest Range Properties (Item 4): after stats, before Featured. */}
+      <section className="section">
+        <div className="wrap">
+          <div className="sec-head">
+            <div>
+              <p className="kicker">{t.whyK}</p>
+              <h2 className="h2">{t.whyH}</h2>
+            </div>
+          </div>
+          <div className="grid grid-3">
+            {t.whyPillars.map((p, i) => (
+              <div key={p.name} className="card" style={{ padding: 26, gap: 10 }}>
+                <span style={{ fontFamily: 'var(--serif)', fontSize: 30, color: 'var(--gold)', lineHeight: 1 }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="h3" style={{ fontSize: 19 }}>
+                  {p.name}
+                </h3>
+                <p className="muted" style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6 }}>
+                  {p.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 3 - Featured listings carousel */}
       <section className="section">
         <div className="wrap">
@@ -236,6 +263,56 @@ export default function Home() {
                 </article>
               )
             })}
+          </Carousel>
+        </div>
+      </section>
+
+      {/* 5b - Our Partners (Item 8): logo carousel, before the newsletter/footer.
+          Logos are interim images from the Company Profile, pending official files. */}
+      <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+        <div className="wrap">
+          <div className="sec-head">
+            <div>
+              <p className="kicker">{t.partnersK}</p>
+              <h2 className="h2">{t.partnersH}</h2>
+            </div>
+          </div>
+          <Carousel intervalMs={3500} visible={5} label={t.partnersH}>
+            {PARTNERS.map((p) => (
+              <div
+                key={p.name}
+                className="partner-tile"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 96,
+                  margin: '0 8px',
+                  padding: '0 20px',
+                  background: '#fff',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
+                }}
+              >
+                <img
+                  src={p.logo}
+                  alt={p.name}
+                  loading="lazy"
+                  style={{ maxWidth: '100%', maxHeight: 56, width: 'auto', height: 'auto', objectFit: 'contain' }}
+                  onError={(e) => {
+                    // Interim asset missing: fall back to the partner name so the
+                    // carousel never shows a broken image.
+                    const el = e.currentTarget
+                    el.style.display = 'none'
+                    const label = el.nextElementSibling as HTMLElement | null
+                    if (label) label.style.display = 'block'
+                  }}
+                />
+                <span style={{ display: 'none', fontFamily: 'var(--serif)', fontSize: 18, color: 'var(--ink-mute)' }}>
+                  {p.name}
+                </span>
+              </div>
+            ))}
           </Carousel>
         </div>
       </section>
