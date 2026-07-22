@@ -2,7 +2,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { TEAM } from '../data/team'
 import { ROUTES, TEAM_ANCHOR } from '../routes'
-import { COMPANY, waLink, telLink, mailLink, displayPhone } from '../data/company'
+import { COMPANY, waLink, telLink, mailTo, displayPhone } from '../data/company'
 import { ArrowLeft, Phone, Mail, WhatsApp } from '../components/Icons'
 import PageHead from '../components/PageHead'
 
@@ -111,7 +111,7 @@ export default function TeamBio() {
 
               <div style={{ marginTop: 24, lineHeight: 1.9 }} className="muted">
                 <div>
-                  <a href={mailLink(`Enquiry for ${member.name}`)} style={{ color: 'inherit' }}>
+                  <a href={mailTo(member.email, `Enquiry for ${member.name}`)} style={{ color: 'inherit' }}>
                     {member.email}
                   </a>
                 </div>
@@ -128,7 +128,7 @@ export default function TeamBio() {
                   <Phone size={15} />
                   {t.callBtn}
                 </a>
-                <a className="btn btn-outline btn-inline" href={mailLink(`Enquiry for ${member.name}`)}>
+                <a className="btn btn-outline btn-inline" href={mailTo(member.email, `Enquiry for ${member.name}`)}>
                   <Mail size={15} />
                   {t.emailBtn}
                 </a>

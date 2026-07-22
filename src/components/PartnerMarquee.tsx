@@ -13,8 +13,9 @@ export default function PartnerMarquee() {
     <Marquee
       label={t.partnersH}
       durationSec={45}
+      className="partners-marquee"
       items={PARTNERS.map((p) => (
-        <div className="partner-item">
+        <div className={`partner-item${p.dark ? ' partner-item-dark' : ''}`}>
           <img
             src={p.logo}
             alt={p.name}

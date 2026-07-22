@@ -108,15 +108,15 @@ export const EN = {
   // Preview fix 11: "Sales" renamed to "Sales & Acquisition" (used for the
   // service heading and the above-the-fold strip).
   s1Name: 'Sales & Acquisition', s2Name: 'Leasing', s3Name: 'Property Management',
-  // Item 7 detailed service descriptions. s1 = Sales, s2 = Leasing, s3 = Property Management.
+  // Service descriptions: verbatim from the official Company Profile PDF (round 3
+  // reversal). The two earlier VERIFY-flagged claims are gone with the blended
+  // copy. s1 = Sales & Acquisition, s2 = Leasing, s3 = Property Management.
   s1Desc:
-    'Crest Range Properties is the ideal partner for those looking to buy or sell real estate in the UAE — from distinguished residences to commercial addresses. Much of what we sell never reaches the portals: our buyers see it first, and our sellers avoid the noise. Pricing counsel is grounded in six years of island-community data, and every negotiation is handled as if the money were our own.',
-  /* VERIFY: "six years of island-community data" — pending client confirmation */
+    'Crest Range Properties is the ideal partner for those looking to buy or sell real estate in the U.A.E. Our experienced sales professionals offer tailored solutions that match buyers with their dream properties and assist sellers in securing the best deals.',
   s2Desc:
-    'Crest Range Properties offers a versatile collection of residential, commercial, and mixed-use properties, with tenant representation and landlord letting handled end to end. For tenants — often arriving from abroad — we translate communities, commutes, and contracts into plain language. For landlords, we find the right tenant rather than the fastest one, guiding the process from first viewing to signed Tawtheeq.',
+    'Crest Range Properties offers a versatile collection of properties, including Residential, Commercial and Mixed Used Properties. Our team of leasing experts is dedicated to helping you find the perfect property to suit your needs. We provide comprehensive guidance to make the decision-making process simple and straightforward.',
   s3Desc:
-    'Over the years, our property management services have focused on offering a tailored experience to our clientele, landlords, and tenants. For owners at home and abroad, we run the property so you don’t have to — rent collection, maintenance, inspections, tenant relations, and annual reporting, delivered without drama. Over 140 units are under our management today, most of them owned by clients who first leased or bought through us.',
-  /* VERIFY: "over 140 units" — pending client confirmation */
+    'Over the years our property management services have focused on offering a tailored experience to our Clientele, Landlords and Tenants. Our property management team takes care of all aspects of property management, including maintenance, inspections, and tenant relations, giving property owners and tenants satisfactory service delivery.',
   included: 'What’s included', sCtaChat: 'Chat with a live agent now', sCtaForm: 'Request a proposal',
   s1B: ['Pricing & comparable analysis', 'Off-market buyer network', 'Offer negotiation & closing', 'Ownership transfer coordination'],
   s2B: ['Tenant sourcing & vetting', 'Tawtheeq contract handling', 'Cheque structuring', 'Renewals & move-in coordination'],
@@ -143,7 +143,7 @@ export const EN = {
 
   // Careers page (public-facing). New copy is English-first, pending sign-off.
   careersK: 'Careers at Crest Range Properties',
-  careersH: 'Finding home away from home — for our team, too.',
+  careersH: 'Finding Where You Belong',
   careersLead:
     'Crest Range Properties is a boutique Abu Dhabi brokerage where every person works close to the decision-making, the clients, and the outcome. We hire for character first: people who are curious about the market, generous with their time, and precise in their follow-through.',
   careersOpenH: 'Open roles',
@@ -211,13 +211,13 @@ export const EN = {
   roles: {
     fatoki: 'Founder & Managing Partner / Consultant',
     dimka: 'HR & Administrative Manager | Compliance Officer',
-    abe: 'Leasing Manager',
+    abe: 'Sales Executive & Leasing Manager',
     njeri: 'Leasing Agent',
     okafor: 'Senior Real Estate Officer',
     duruoha: 'Sales Manager',
     smith: 'Leasing Officer',
-    // Gift Ofejiro: final designation pending from client.
-    gift: 'Designation coming soon',
+    // Round 3: Gift Ofejiro's designation confirmed (photo still pending).
+    gift: 'Sales & Leasing Agent',
   },
 }
 

@@ -6,7 +6,7 @@ import { TESTIMONIALS } from '../data/content'
 import { TEAM } from '../data/team'
 import Carousel from '../components/Carousel'
 import PageHead from '../components/PageHead'
-import { COMPANY, waLink, telLink, mailLink } from '../data/company'
+import { COMPANY, waLink, telLink, mailTo } from '../data/company'
 import { Phone, Mail, WhatsApp } from '../components/Icons'
 
 export default function About() {
@@ -242,7 +242,7 @@ export default function About() {
                   <a className="icon-btn" href={telLink(m.phone)} aria-label={`${t.callBtn} ${m.name}`} title={t.callBtn}>
                     <Phone size={16} />
                   </a>
-                  <a className="icon-btn" href={mailLink(`Enquiry for ${m.name}`)} aria-label={`${t.emailBtn} ${m.name}`} title={t.emailBtn}>
+                  <a className="icon-btn" href={mailTo(m.email, `Enquiry for ${m.name}`)} aria-label={`${t.emailBtn} ${m.name}`} title={t.emailBtn}>
                     <Mail size={16} />
                   </a>
                   <a
@@ -262,26 +262,27 @@ export default function About() {
         </div>
       </section>
 
-      {/* Careers feature, item 4: "Work With Us" teaser, directly after the
-          team section. Whole banner links to the Careers page. */}
-      <section className="section">
+      {/* Careers feature, item 4 (redesigned in fix 19): premium dark two-column
+          teaser after the team section - copy + skyline photo, gold CTA. */}
+      <section className="section work-teaser-sec">
         <div className="wrap">
-          <Link to={ROUTES.careers} className="work-teaser card">
-            <div style={{ minWidth: 0 }}>
-              <p className="kicker" style={{ margin: 0 }}>
+          <div className="work-teaser">
+            <div className="work-teaser-copy">
+              <p className="kicker" style={{ margin: 0, color: 'var(--gold-bright)' }}>
                 {t.workK}
               </p>
-              <h2 className="h3" style={{ fontSize: 'clamp(21px,2.4vw,26px)', marginTop: 6 }}>
+              <h2 className="h2" style={{ color: 'var(--on-dark)', marginTop: 10 }}>
                 {t.workH}
               </h2>
-              <p className="muted" style={{ margin: '8px 0 0', fontSize: 15, maxWidth: '52ch' }}>
+              <p style={{ color: 'rgba(247,244,236,0.72)', margin: '14px 0 0', fontSize: 16, lineHeight: 1.6, maxWidth: '46ch' }}>
                 {t.workP}
               </p>
+              <Link to={ROUTES.careers} className="btn btn-gold btn-inline" style={{ marginTop: 24, alignSelf: 'flex-start' }}>
+                {t.workCta} <span aria-hidden>→</span>
+              </Link>
             </div>
-            <span className="btn btn-primary btn-inline work-teaser-cta">
-              {t.workCta} <span aria-hidden>→</span>
-            </span>
-          </Link>
+            <div className="work-teaser-photo" role="img" aria-label={t.workH} />
+          </div>
         </div>
       </section>
 

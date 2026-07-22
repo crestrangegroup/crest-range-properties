@@ -28,9 +28,10 @@ export const TEAM: TeamMember[] = [
     id: 'fatoki',
     name: 'Olatubosun Fatoki',
     photo: '/images/team/fatoki.png',
-    email: 'info@crestrangeproperties.com',
-    phone: MAIN_PHONE,
-    whatsapp: MOBILE,
+    // Round 3 team update: confirmed individual email + mobile.
+    email: 'bosun.f@crestrangeproperties.com',
+    phone: '+971547053421',
+    whatsapp: '+971547053421',
     // Third person, deliberately distinct in voice from his first-person
     // Founder's Message on the About page (preview fix 3).
     bio: 'When Olatubosun Fatoki arrived in Abu Dhabi, he searched — like so many of Crest Range Properties’ clients — for a home that felt like his own. The search was long, the advice was thin, and the process felt more like a transaction than a welcome. In 2020, he founded Crest Range Properties to be the firm he had needed: one that treats finding a home away from home as something considered, personal, and unhurried.\n\nSix years on, the firm advises residents, landlords, and institutions across Al Reem Island, Al Zahiya, Al Raha, and Khalifa City — in sales, leasing, and the long-term management of the properties entrusted to it.',
@@ -39,17 +40,19 @@ export const TEAM: TeamMember[] = [
     id: 'dimka',
     name: 'Zipporah Dimka',
     photo: '/images/team/dimka.png',
+    // Email is intentionally the shared info@ inbox (confirmed). Mobile shared
+    // with Henry Duruoha (0547053424) - confirmed correct, not an error.
     email: 'info@crestrangeproperties.com',
-    phone: MAIN_PHONE,
-    whatsapp: MOBILE,
+    phone: '+971547053424',
+    whatsapp: '+971547053424',
     bio: 'She is a dynamic and versatile professional who has been on an incredible journey through the realms of business. Armed with a degree in economics, she initially took off on her career in aviation, where she learned to navigate the core of people relations with precision and grace. She is a powerhouse of ideas and innovation. Her vibrant personality is as colorful as her dedication to the business of Real Estate. With a zest for life and an unwavering dedication to adding value wherever she treads, Zipporah is a dynamic force in both her professional and personal spheres.',
   },
   {
     id: 'duruoha',
     name: 'Henry Duruoha',
     photo: '/images/team/duruoha.png',
-    email: 'info@crestrangeproperties.com',
-    // Item 1.4: individual mobile.
+    // Mobile shared with Zipporah Dimka (0547053424) - confirmed correct.
+    email: 'henry.d@crestrangeproperties.com',
     phone: '+971547053424',
     whatsapp: '+971547053424',
     bio: 'Henry is a seasoned real estate sales manager with a deep-rooted understanding of the real estate landscape in Saadiyat Island, Muroor, Yas Island, and Abu Dhabi. His comprehensive knowledge of these areas, coupled with his passion for the industry, has made him a respected figure in the local real estate community. Henry’s passion for singing is the soundtrack of his life. In the world of property, Henry knows that finding a home is like hitting the perfect note in a song. His attention to detail and commitment to his clients reflect the same precision and care he puts into his singing.',
@@ -67,8 +70,7 @@ export const TEAM: TeamMember[] = [
     id: 'abe',
     name: 'Elizabeth Abe',
     photo: '/images/team/abe.png',
-    email: 'info@crestrangeproperties.com',
-    // Item 1.4: individual mobile.
+    email: 'Elizabeth.a@crestrangeproperties.com',
     phone: '+971547053423',
     whatsapp: '+971547053423',
     bio: 'Elizabeth is on a mission to redefine the perception of real estate agents. She firmly believes that the antiquated notion of agents as mere “roadside” intermediaries should be abolished. Instead, she views herself as a trusted advisor, a facilitator of dreams, and a guardian of her clients’ interests. Her dedication to breaking this stereotype and fostering a more transparent and client-centric real estate experience is the driving force behind her exceptional service. She is also a certified nurse, and this healthcare background has instilled in her a profound sense of empathy and service — qualities that seamlessly translate into her role as a real estate professional.',
@@ -98,11 +100,12 @@ export const TEAM: TeamMember[] = [
     id: 'gift',
     name: 'Gift Ofejiro',
     photo: '',
-    email: 'info@crestrangeproperties.com',
-    // Item 1.4: individual mobile supplied ahead of the photo/title.
+    email: 'gift.o@crestrangeproperties.com',
     phone: '+971547053586',
     whatsapp: '+971547053586',
     bio: '',
+    // Designation now confirmed (see i18n roles), but the photo is still
+    // pending from the client - keep the coming-soon placeholder photo state.
     comingSoon: true,
   },
 ]

@@ -59,24 +59,31 @@ export const TESTIMONIALS: Testimonial[] = [
 ]
 
 /** Item 8: partners shown in the logo marquee (Home + Services). `logo` points
- *  at the official high-resolution file supplied by the client. Order matches
- *  the brief. */
+ *  at the official high-resolution file supplied by the client.
+ *  `dark` marks a logo whose supplied file is a light mark on a solid dark
+ *  background (Huspy) - its tile is rendered dark so the mark stays visible. */
 export interface Partner {
   name: string
   logo: string
+  dark?: boolean
 }
 
+// Fixes round 3 (fix 22): 10-partner list. Kept ALDAR, Asteco, Property Finder,
+// Huspy, Q Holding; dropped PROVIS, dubizzle, Holo, Siadah; added Reportage,
+// Mudon, Object 1, Binghati, Ohana. All official hi-res files.
 export const PARTNERS: Partner[] = [
   { name: 'Property Finder', logo: '/images/partners/property-finder.png' },
-  { name: 'PROVIS', logo: '/images/partners/provis.png' },
+  { name: 'ALDAR', logo: '/images/partners/aldar.png' },
   // Asteco supplied an SVG; preferred over the PNG for crispness at any size.
   { name: 'Asteco', logo: '/images/partners/asteco.svg' },
-  { name: 'dubizzle', logo: '/images/partners/dubizzle.png' },
-  { name: 'Holo', logo: '/images/partners/holo.png' },
-  { name: 'Siadah Development', logo: '/images/partners/siadah.png' },
-  { name: 'ALDAR', logo: '/images/partners/aldar.png' },
+  { name: 'Reportage', logo: '/images/partners/reportage.png' },
   { name: 'Q Holding', logo: '/images/partners/q-holding.png' },
-  { name: 'Huspy', logo: '/images/partners/huspy.png' },
+  { name: 'Mudon', logo: '/images/partners/mudon.png' },
+  // Huspy's official file is a white wordmark on a solid black square.
+  { name: 'Huspy', logo: '/images/partners/huspy.png', dark: true },
+  { name: 'Binghati', logo: '/images/partners/binghati.png' },
+  { name: 'Object 1', logo: '/images/partners/object1.png' },
+  { name: 'Ohana', logo: '/images/partners/ohana.png' },
 ]
 
 /** Homepage hero rotation. Local files only - no external CDN at runtime. */

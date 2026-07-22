@@ -56,7 +56,9 @@ export default function Home() {
     setEmail('')
   }
 
-  const featured = listings.slice(0, 6)
+  // Preview fix 17: Home shows only 4 featured listings (the Listings/Buy/Rent
+  // pages keep full pagination).
+  const featured = listings.slice(0, 4)
 
   return (
     <>

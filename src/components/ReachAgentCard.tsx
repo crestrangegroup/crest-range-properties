@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { byId } from '../data/team'
 import { ROUTES } from '../routes'
-import { waLink, telLink, mailLink, displayPhone } from '../data/company'
+import { waLink, telLink, mailTo, displayPhone } from '../data/company'
 import { Mail, Phone, WhatsApp } from './Icons'
 import './ReachAgentCard.css'
 
@@ -54,7 +54,7 @@ export default function ReachAgentCard({ agentId, subject, enquiry }: Props) {
 
       {/* Order is Email, Call, WhatsApp. */}
       <div className="agent-actions">
-        <a className="btn btn-outline btn-compact" href={mailLink(subject)}>
+        <a className="btn btn-outline btn-compact" href={mailTo(agent.email, subject)}>
           <Mail size={13} />
           {t.emailBtn}
         </a>

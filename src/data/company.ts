@@ -41,8 +41,23 @@ export const waLink = (text?: string) =>
 export const telLink = (n: string) => `tel:${n}`
 
 /** Human-readable form of a raw tel number, e.g. +97125466332 -> +971 2 546 6332.
- *  Falls back to the raw value if it isn't one of the company numbers. */
-export const displayPhone = (tel: string) =>
-  COMPANY.phones.find((p) => p.tel === tel)?.display ?? tel
+ *  Company numbers use their curated display; any other UAE mobile (the team's
+ *  individual numbers) is grouped as +971 5X XXX XXXX. Falls back to raw. */
+export const displayPhone = (tel: string) => {
+  const known = COMPANY.phones.find((p) => p.tel === tel)?.display
+  if (known) return known
+  const d = tel.replace(/\D/g, '')
+  // +9715XXXXXXXX -> +971 5X XXX XXXX
+  if (d.length === 12 && d.startsWith('9715')) {
+    return `+971 ${d.slice(3, 5)} ${d.slice(5, 8)} ${d.slice(8)}`
+  }
+  return tel
+}
+
+/** mailto to the shared inbox. */
 export const mailLink = (subject?: string) =>
   `mailto:${COMPANY.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`
+
+/** mailto to a specific recipient (e.g. an individual team member). */
+export const mailTo = (email: string, subject?: string) =>
+  `mailto:${email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`

@@ -37,20 +37,26 @@ export default function Careers() {
     <>
       <PageHead title={t.navCareers} description={t.careersLead} />
 
-      {/* Hero */}
+      {/* Hero — copy beside a skyline photo (fix 20). */}
       <section className="section">
         <div className="wrap">
-          <p className="kicker">{t.careersK}</p>
-          <h1 className="h2" style={{ maxWidth: '20ch' }}>
-            {t.careersH}
-          </h1>
-          <p className="lede" style={{ marginTop: 18, maxWidth: '60ch' }}>
-            {t.careersLead}
-          </p>
+          <div className="careers-hero">
+            <div className="careers-hero-copy">
+              <p className="kicker">{t.careersK}</p>
+              <h1 className="h2" style={{ maxWidth: '15ch' }}>
+                {t.careersH}
+              </h1>
+              <p className="lede" style={{ marginTop: 18, maxWidth: '52ch' }}>
+                {t.careersLead}
+              </p>
+            </div>
+            <div className="careers-hero-photo" role="img" aria-label={t.careersK} />
+          </div>
         </div>
       </section>
 
-      {/* What it's like here — keeps the page rich even with no live vacancies. */}
+      {/* What it's like here — dark gold-numeral pillars (fix 20), so the page
+          stays rich even with no live vacancies. */}
       <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="wrap">
           <div className="sec-head">
@@ -58,16 +64,12 @@ export default function Careers() {
           </div>
           <div className="grid grid-3">
             {why.map(([h, p], i) => (
-              <div key={h} className="card" style={{ padding: 26, gap: 10 }}>
-                <span style={{ fontFamily: 'var(--serif)', fontSize: 30, color: 'var(--gold)', lineHeight: 1 }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+              <div key={h} className="careers-pillar">
+                <span className="careers-pillar-num">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="h3" style={{ fontSize: 19 }}>
                   {h}
                 </h3>
-                <p className="muted" style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6 }}>
-                  {p}
-                </p>
+                <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6 }}>{p}</p>
               </div>
             ))}
           </div>
@@ -97,7 +99,7 @@ export default function Careers() {
           ) : (
             <div className="stack" style={{ gap: 18 }}>
               {JOB_POSTINGS.map((job) => (
-                <article key={job.id} className="card" style={{ padding: 'clamp(22px,3vw,32px)', gap: 14 }}>
+                <article key={job.id} className="job-card" style={{ padding: 'clamp(22px,3vw,32px)', gap: 14 }}>
                   <div className="split" style={{ alignItems: 'start', gap: 'clamp(18px,3vw,40px)' }}>
                     <div style={{ minWidth: 0 }}>
                       <h3 className="h3" style={{ fontSize: 22 }}>
