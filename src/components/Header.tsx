@@ -85,6 +85,10 @@ export default function Header() {
                   <Link className="drop-item" to={ROUTES.team}>
                     {t.footTeam}
                   </Link>
+                  {/* Careers: separate route, not an anchor scroll. */}
+                  <Link className="drop-item" to={ROUTES.careers}>
+                    {t.navCareers}
+                  </Link>
                 </div>
               </div>
             )}
@@ -160,7 +164,7 @@ export default function Header() {
 
       <div className={`hdr-mobile${mobileOpen ? ' open' : ''}`}>
         <div className="group">
-          {[[ROUTES.home, t.navHome], [ROUTES.about, t.navAbout], [ROUTES.vision, t.navVision], [ROUTES.team, t.footTeam], [ROUTES.services, t.navServices], [ROUTES.contact, t.navContact]].map(
+          {[[ROUTES.home, t.navHome], [ROUTES.about, t.navAbout], [ROUTES.vision, t.navVision], [ROUTES.team, t.footTeam], [ROUTES.careers, t.navCareers], [ROUTES.services, t.navServices], [ROUTES.contact, t.navContact]].map(
             ([to, label]) => (
               <NavLink key={to} to={to} end={to === ROUTES.home} className={({ isActive }) => `m-link${isActive ? ' active' : ''}`}>
                 {label}

@@ -222,36 +222,8 @@ export default function PropertyDetail() {
             <aside className="stack" style={{ gap: 20, position: 'sticky', top: 'calc(var(--header-h) + 16px)' }}>
               <ReachAgentCard agentId={listing.agent} subject={listing.title} enquiry={enquiry} />
 
-              <div className="card" style={{ padding: 22 }}>
-                <h2 className="h3" style={{ fontSize: 19 }}>
-                  {t.bookH}
-                </h2>
-                <p className="muted" style={{ fontSize: 13.5, marginTop: 6 }}>
-                  {t.bookSub}
-                </p>
-                {booked ? (
-                  <div className="stack" style={{ gap: 8, marginTop: 16 }}>
-                    <p className="row" style={{ gap: 8, margin: 0, color: 'var(--gold)' }}>
-                      <Check size={17} />
-                      {t.bookedH}
-                    </p>
-                    <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>
-                      {t.bookedP}
-                    </p>
-                  </div>
-                ) : (
-                  <form className="stack" style={{ gap: 13, marginTop: 16 }} onSubmit={onBook}>
-                    <NameFields first={first} last={last} onFirst={setFirst} onLast={setLast} />
-                    <PhoneField code={code} phone={phone} onCode={setCode} onPhone={setPhone} required id="book-phone" />
-                    <DateField value={date} onChange={setDate} id="book-date" />
-                    {error && <p className="field-error">{error}</p>}
-                    <button className="btn btn-primary" type="submit">
-                      {t.bookBtn}
-                    </button>
-                  </form>
-                )}
-              </div>
-
+              {/* Preview fix 14: the Verified Listing badge sits above the
+                  "Book a private viewing" card (badge first, then the CTA). */}
               <div className="card" style={{ padding: 20 }}>
                 {/* QR placeholder sits inline to the left of the heading.
                     Decorative only, not scannable - see the warning on
@@ -280,6 +252,36 @@ export default function PropertyDetail() {
                 <p style={{ fontSize: 13, marginTop: 10 }}>
                   {t.permitNo} <span dir="ltr">{listing.permit}</span>
                 </p>
+              </div>
+
+              <div className="card" style={{ padding: 22 }}>
+                <h2 className="h3" style={{ fontSize: 19 }}>
+                  {t.bookH}
+                </h2>
+                <p className="muted" style={{ fontSize: 13.5, marginTop: 6 }}>
+                  {t.bookSub}
+                </p>
+                {booked ? (
+                  <div className="stack" style={{ gap: 8, marginTop: 16 }}>
+                    <p className="row" style={{ gap: 8, margin: 0, color: 'var(--gold)' }}>
+                      <Check size={17} />
+                      {t.bookedH}
+                    </p>
+                    <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>
+                      {t.bookedP}
+                    </p>
+                  </div>
+                ) : (
+                  <form className="stack" style={{ gap: 13, marginTop: 16 }} onSubmit={onBook}>
+                    <NameFields first={first} last={last} onFirst={setFirst} onLast={setLast} />
+                    <PhoneField code={code} phone={phone} onCode={setCode} onPhone={setPhone} required id="book-phone" />
+                    <DateField value={date} onChange={setDate} id="book-date" />
+                    {error && <p className="field-error">{error}</p>}
+                    <button className="btn btn-primary" type="submit">
+                      {t.bookBtn}
+                    </button>
+                  </form>
+                )}
               </div>
             </aside>
           </div>

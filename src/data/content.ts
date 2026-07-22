@@ -58,9 +58,9 @@ export const TESTIMONIALS: Testimonial[] = [
   { q: 'John was extraordinarily diligent, patient, and always looking after our interests to ensure we found a home that could accommodate our family. His assistance went well beyond showing apartments, townhouses and villas. There was a high amount of handholding required given we were new to the UAE and he was there every step of the way to guide us. Extremely patient, and I can’t say enough good things about the way he and his company operated — even after technically their job was completed!', who: 'Peter Travnicek', role: '' },
 ]
 
-/** Item 8: partners shown in the homepage logo carousel. `logo` points at an
- *  interim image extracted from the Company Profile, flagged to be swapped for
- *  an official high-resolution file. Order matches the brief. */
+/** Item 8: partners shown in the logo marquee (Home + Services). `logo` points
+ *  at the official high-resolution file supplied by the client. Order matches
+ *  the brief. */
 export interface Partner {
   name: string
   logo: string
@@ -69,7 +69,8 @@ export interface Partner {
 export const PARTNERS: Partner[] = [
   { name: 'Property Finder', logo: '/images/partners/property-finder.png' },
   { name: 'PROVIS', logo: '/images/partners/provis.png' },
-  { name: 'Asteco', logo: '/images/partners/asteco.png' },
+  // Asteco supplied an SVG; preferred over the PNG for crispness at any size.
+  { name: 'Asteco', logo: '/images/partners/asteco.svg' },
   { name: 'dubizzle', logo: '/images/partners/dubizzle.png' },
   { name: 'Holo', logo: '/images/partners/holo.png' },
   { name: 'Siadah Development', logo: '/images/partners/siadah.png' },

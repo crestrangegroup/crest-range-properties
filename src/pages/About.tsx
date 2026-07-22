@@ -262,6 +262,29 @@ export default function About() {
         </div>
       </section>
 
+      {/* Careers feature, item 4: "Work With Us" teaser, directly after the
+          team section. Whole banner links to the Careers page. */}
+      <section className="section">
+        <div className="wrap">
+          <Link to={ROUTES.careers} className="work-teaser card">
+            <div style={{ minWidth: 0 }}>
+              <p className="kicker" style={{ margin: 0 }}>
+                {t.workK}
+              </p>
+              <h2 className="h3" style={{ fontSize: 'clamp(21px,2.4vw,26px)', marginTop: 6 }}>
+                {t.workH}
+              </h2>
+              <p className="muted" style={{ margin: '8px 0 0', fontSize: 15, maxWidth: '52ch' }}>
+                {t.workP}
+              </p>
+            </div>
+            <span className="btn btn-primary btn-inline work-teaser-cta">
+              {t.workCta} <span aria-hidden>→</span>
+            </span>
+          </Link>
+        </div>
+      </section>
+
       <section className="section dark">
         <div className="wrap">
           <h2 className="h2" style={{ color: '#fff' }}>

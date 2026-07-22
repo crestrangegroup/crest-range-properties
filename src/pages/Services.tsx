@@ -4,6 +4,7 @@ import { useChat } from '../components/chat/ChatProvider'
 import { ROUTES } from '../routes'
 import { COMPANY, waLink, telLink, mailLink } from '../data/company'
 import { Phone, Mail, WhatsApp, Chat } from '../components/Icons'
+import PartnerMarquee from '../components/PartnerMarquee'
 import PageHead from '../components/PageHead'
 
 export default function Services() {
@@ -24,6 +25,15 @@ export default function Services() {
         <div className="wrap">
           <p className="kicker">{t.svcK}</p>
           <h1 className="h2">{t.svcH}</h1>
+          {/* Preview fix 12: above-the-fold services strip, directly under the
+              tagline. Premium spaced labels with hairline dividers. */}
+          <div className="svc-strip" aria-label={t.svcH}>
+            <span>{t.s1Name}</span>
+            <i aria-hidden />
+            <span>{t.s2Name}</span>
+            <i aria-hidden />
+            <span>{t.s3Name}</span>
+          </div>
         </div>
       </section>
 
@@ -97,6 +107,19 @@ export default function Services() {
           </div>
         </section>
       ))}
+
+      {/* Preview fix 13: Our Partners marquee, same component as the Home page. */}
+      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)' }}>
+        <div className="wrap">
+          <div className="sec-head">
+            <div>
+              <p className="kicker">{t.partnersK}</p>
+              <h2 className="h2">{t.partnersH}</h2>
+            </div>
+          </div>
+        </div>
+        <PartnerMarquee />
+      </section>
 
       {/* Dedicated WhatsApp CTA: small eyebrow, serif headline, outlined button. */}
       <section className="section dark">

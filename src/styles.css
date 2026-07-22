@@ -634,39 +634,58 @@ h4 {
   color: var(--ink);
 }
 
-/* ---------- preview fix 6: footer social icons ----------
+/* ---------- footer social icons (preview fix 6, refined in fix 10) ----------
    No white chip: each glyph sits on the dark footer inside a thin gold ring.
-   Inline `color` on each anchor sets the glyph colour (brand colour, or white
-   for the otherwise-black TikTok/Threads marks). */
+   Fix 10: the ring is a circle with a hairline (semi-transparent gold) border,
+   and hover fills it with a faint gold tint. Inline `color` on each anchor sets
+   the glyph colour (brand colour, or white for the black TikTok/Threads marks). */
 .footer-soc {
   background: transparent;
-  border: 1px solid var(--gold);
+  border: 1px solid rgba(154, 131, 10, 0.45);
+  border-radius: 50%;
+  transition: background 0.16s, border-color 0.16s;
 }
 .footer-soc:hover {
-  background: transparent;
-  border-color: var(--gold-bright);
+  background: rgba(242, 207, 20, 0.14);
+  border-color: rgba(242, 207, 20, 0.6);
 }
 
-/* ---------- preview fix 7: partners marquee ----------
-   The track holds the logo list twice; translateX(-50%) lands on an identical
-   frame, so the loop is seamless. Hover pauses it and zooms the hovered logo. */
-.partner-marquee {
+/* ---------- marquee (preview fixes 7, 13, 15) ----------
+   Generic continuous scroller. The track holds its items twice, so a
+   translateX(-50%) animation lands on an identical frame and loops seamlessly.
+   Hovering the region pauses it; items handle their own hover zoom. Duration is
+   set inline per instance (partners faster, listings slower). */
+.marquee {
   overflow: hidden;
   position: relative;
   margin-top: 24px;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.partner-track {
+.marquee-track {
   display: flex;
   width: max-content;
-  animation: partnerScroll 45s linear infinite;
+  animation-name: marqueeScroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
-.partner-marquee:hover .partner-track {
+.marquee:hover .marquee-track {
   animation-play-state: paused;
 }
-.partner-item {
+.marquee-cell {
   flex: none;
+}
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Partner logo tile. */
+.partner-item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -695,11 +714,71 @@ h4 {
   font-size: 18px;
   color: var(--ink-mute);
 }
-@keyframes partnerScroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+
+/* Services above-the-fold strip (preview fix 12): spaced uppercase labels with
+   hairline gold dividers, in the site's black/gold key. */
+.svc-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 30px);
+  margin-top: 22px;
+}
+.svc-strip span {
+  font-family: var(--sans);
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.svc-strip i {
+  width: 1px;
+  height: 20px;
+  background: var(--gold);
+  opacity: 0.55;
+  flex: none;
+}
+
+/* About "Work with us" teaser (Careers item 4): a premium, fully-clickable
+   banner with a gold edge, consistent with the other section treatments. */
+.work-teaser {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: clamp(24px, 3.5vw, 40px);
+  background: linear-gradient(120deg, var(--surface), #fff);
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--gold);
+  color: var(--ink);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.work-teaser:hover {
+  box-shadow: 0 18px 40px rgba(20, 18, 13, 0.12);
+  transform: translateY(-2px);
+}
+/* The whole banner is the link, so the inner CTA is purely visual. */
+.work-teaser-cta {
+  pointer-events: none;
+  flex: none;
+}
+
+/* Featured-listings marquee variant: wider cells, gentle zoom on hover. The
+   vertical padding gives the scaled card room so overflow:hidden never clips it. */
+.marquee-listings {
+  padding-block: 12px;
+}
+.marquee-listing {
+  width: 340px;
+  max-width: 82vw;
+  margin: 0 10px;
+  transition: transform 0.28s ease;
+}
+.marquee-listing:hover {
+  transform: scale(1.02);
+}
+.marquee-listing > .card {
+  height: 100%;
 }

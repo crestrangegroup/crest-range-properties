@@ -15,6 +15,7 @@ import Sell from './pages/Sell'
 import About from './pages/About'
 import TeamBio from './pages/TeamBio'
 import Services from './pages/Services'
+import Careers from './pages/Careers'
 import Proposal from './pages/Proposal'
 import Contact from './pages/Contact'
 import Terms from './pages/Terms'
@@ -72,6 +73,7 @@ export default function App() {
             {/* Team section is merged into About; keep the old /team URL working. */}
             <Route path={ROUTES.teamLegacy} element={<Navigate to={ROUTES.team} replace />} />
             <Route path={ROUTES.services} element={<Services />} />
+            <Route path={ROUTES.careers} element={<Careers />} />
             <Route path={ROUTES.proposal} element={<Proposal />} />
             <Route path={ROUTES.contact} element={<Contact />} />
             <Route path={ROUTES.terms} element={<Terms />} />

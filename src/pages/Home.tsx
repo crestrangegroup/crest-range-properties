@@ -4,15 +4,16 @@ import { useI18n } from '../i18n/I18nProvider'
 import { ROUTES } from '../routes'
 import { COMMUNITIES, PROPERTY_TYPES } from '../data/listings'
 import { useListings } from '../lib/ListingsProvider'
-import { HOODS, ARTICLES, HERO_IMAGES, STATS, PARTNERS } from '../data/content'
+import { HOODS, ARTICLES, HERO_IMAGES, STATS } from '../data/content'
 import ListingCard from '../components/ListingCard'
 import Carousel from '../components/Carousel'
+import Marquee from '../components/Marquee'
+import PartnerMarquee from '../components/PartnerMarquee'
 import { subscribeNewsletter } from '../lib/leads'
 import { Check } from '../components/Icons'
 import './home.css'
 
-/** Featured listings rotate briskly; market insights noticeably slower. */
-const LISTINGS_INTERVAL = 4500
+/** Market insights auto-advance; featured listings scroll as a marquee. */
 const INSIGHTS_INTERVAL = 11000
 const HERO_INTERVAL = 7000
 
@@ -193,12 +194,19 @@ export default function Home() {
               {t.viewAll}
             </Link>
           </div>
-          <Carousel intervalMs={LISTINGS_INTERVAL} visible={3} label={t.featuredH}>
-            {featured.map((l) => (
-              <ListingCard key={l.slug} listing={l} />
-            ))}
-          </Carousel>
         </div>
+        {/* Preview fix 15: featured listings scroll as a continuous marquee
+            (same behaviour as Our Partners), pausing and zooming on hover. */}
+        <Marquee
+          label={t.featuredH}
+          durationSec={55}
+          className="marquee-listings"
+          items={featured.map((l) => (
+            <div className="marquee-listing">
+              <ListingCard listing={l} />
+            </div>
+          ))}
+        />
       </section>
 
       {/* 4 - Neighbourhood guides */}
@@ -267,11 +275,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5b - Our Partners (Item 8 / preview fix 7): a continuous marquee that
-          scrolls infinitely and loops seamlessly (no snap-back). The list is
-          duplicated so translateX(-50%) returns to an identical frame. Hovering
-          pauses the marquee and zooms the hovered logo. Logos are interim images
-          from the Company Profile, pending official files. */}
+      {/* 5b - Our Partners (Item 8): official-logo marquee, shared with the
+          Services page via the PartnerMarquee component (preview fix 13). */}
       <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="wrap">
           <div className="sec-head">
@@ -281,28 +286,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="partner-marquee" role="region" aria-label={t.partnersH}>
-          <div className="partner-track">
-            {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <div className="partner-item" key={`${p.name}-${i}`} aria-hidden={i >= PARTNERS.length}>
-                <img
-                  src={p.logo}
-                  alt={i < PARTNERS.length ? p.name : ''}
-                  loading="lazy"
-                  onError={(e) => {
-                    // Interim asset missing: fall back to the partner name so the
-                    // marquee never shows a broken image.
-                    const el = e.currentTarget
-                    el.style.display = 'none'
-                    const label = el.nextElementSibling as HTMLElement | null
-                    if (label) label.style.display = 'block'
-                  }}
-                />
-                <span className="partner-fallback">{p.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PartnerMarquee />
       </section>
 
       {/* 6 - Newsletter */}

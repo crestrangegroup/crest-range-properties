@@ -24,6 +24,8 @@ export const ROUTES = {
   /** Dedicated bio page per team member (content batch Item 1.5). */
   teamMember: (id: string) => `/team/${id}`,
   teamMemberPattern: '/team/:id',
+  /** Public Careers page (admin-side posting management is a later batch). */
+  careers: '/careers',
   services: '/services',
   /** Unlisted page hosting the Property Management proposal form. */
   proposal: '/services/request-a-proposal',

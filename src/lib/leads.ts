@@ -1,6 +1,6 @@
 import { supabase, invokeFn } from './supabase'
 
-export type LeadKind = 'contact' | 'proposal' | 'viewing' | 'valuation' | 'newsletter' | 'callback'
+export type LeadKind = 'contact' | 'proposal' | 'viewing' | 'valuation' | 'newsletter' | 'callback' | 'career'
 
 export interface LeadPayload {
   kind: LeadKind
@@ -90,6 +90,7 @@ const SOURCE_LABEL: Record<LeadKind, string> = {
   valuation: 'Sell page valuation request',
   newsletter: 'Newsletter signup',
   callback: 'Callback request',
+  career: 'Careers application',
 }
 
 /** One line describing what the visitor actually asked for. */

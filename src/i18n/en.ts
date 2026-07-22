@@ -7,6 +7,8 @@ export const EN = {
   chatCta: 'Agent Live Chat',
   // Preview fix 5: second item in the header's About dropdown, above Our Team.
   navVision: 'Our Vision & Mission',
+  // Careers: third item in the About dropdown; links to the Careers page.
+  navCareers: 'Careers',
   // Preview fix 2: persistent affordance on team cards.
   viewProfile: 'View profile',
 
@@ -103,7 +105,9 @@ export const EN = {
   missionP: 'Empowering Individuals and Families to Achieve Their Real Estate Goals. We are committed to transparency, professionalism, and innovation to help you find your dream home or investment opportunity. Our core values of excellence and integrity guide us in every transaction, making us a reliable partner on your Real Estate journey. Join us in building a future where your Real Estate goals are not only accomplished but also celebrated.',
 
   svcK: 'What we do', svcH: 'Three disciplines. One standard.',
-  s1Name: 'Sales', s2Name: 'Leasing', s3Name: 'Property Management',
+  // Preview fix 11: "Sales" renamed to "Sales & Acquisition" (used for the
+  // service heading and the above-the-fold strip).
+  s1Name: 'Sales & Acquisition', s2Name: 'Leasing', s3Name: 'Property Management',
   // Item 7 detailed service descriptions. s1 = Sales, s2 = Leasing, s3 = Property Management.
   s1Desc:
     'Crest Range Properties is the ideal partner for those looking to buy or sell real estate in the UAE — from distinguished residences to commercial addresses. Much of what we sell never reaches the portals: our buyers see it first, and our sellers avoid the noise. Pricing counsel is grounded in six years of island-community data, and every negotiation is handled as if the money were our own.',
@@ -130,6 +134,48 @@ export const EN = {
 
   teamH: 'The people behind Crest Range Properties',
   teamP: 'A compact senior team — every client works directly with a decision-maker.',
+
+  // About page "Work With Us" teaser (Careers feature, item 4).
+  workK: 'Careers',
+  workH: 'Work with us',
+  workP: 'We are always glad to meet people who love this city and this work. Take a look at our Careers page for current openings.',
+  workCta: 'Visit Careers',
+
+  // Careers page (public-facing). New copy is English-first, pending sign-off.
+  careersK: 'Careers at Crest Range Properties',
+  careersH: 'Finding home away from home — for our team, too.',
+  careersLead:
+    'Crest Range Properties is a boutique Abu Dhabi brokerage where every person works close to the decision-making, the clients, and the outcome. We hire for character first: people who are curious about the market, generous with their time, and precise in their follow-through.',
+  careersOpenH: 'Open roles',
+  careersNoneH: 'No open roles right now',
+  careersNoneP:
+    'We are not actively hiring at the moment, but great people are always worth knowing. Introduce yourself below and we will reach out when the right seat opens up.',
+  careersWhyH: 'What it is like here',
+  careersWhy1H: 'Real ownership',
+  careersWhy1P: 'Small team, senior clients, and the room to run your own relationships from first call to signed contract.',
+  careersWhy2H: 'A market worth mastering',
+  careersWhy2P: 'Saadiyat, Yas, Al Reem and Al Raha, learned street by street, with mentors who have closed there for years.',
+  careersWhy3H: 'Grow with the firm',
+  careersWhy3P: 'We are building for the long term. The people who help build it grow into the roles that come next.',
+  // Sample posting (hardcoded until the admin panel manages real postings).
+  jobApply: 'Apply', jobApplyH: 'Apply for this role', jobLocation: 'Location', jobType: 'Type',
+  jobSampleTitle: 'Leasing Officer',
+  jobSampleLocation: 'Abu Dhabi (Al Zahiya office)',
+  jobSampleType: 'Full-time',
+  jobSampleSummary:
+    'Guide tenants and landlords through leasing across Abu Dhabi’s island communities — viewings, negotiation, Tawtheeq, and renewals — with the mentorship to become a market specialist.',
+  jobSampleBullets: [
+    'Manage leasing enquiries end to end, from first viewing to signed contract',
+    'Build lasting relationships with tenants and landlords',
+    'Know Al Reem, Al Raha, Saadiyat and Yas street by street',
+    'UAE real estate experience welcome but not required — we train for the rest',
+  ],
+  // Application form.
+  appName: 'Full name', appPhone: 'Mobile', appEmail: 'Email', appCv: 'CV / résumé',
+  appCvHint: 'PDF or Word, up to 10 MB',
+  appSend: 'Submit application', appSentH: 'Application received',
+  appSentP: 'Thank you. Our team will review your details and be in touch if there is a fit.',
+  appBack: 'Back to Careers',
 
   // Item B: the Contact page H1 (and About contact block). The footer's
   // contact-column heading is a separate key (footContact) that stays "Contact".
