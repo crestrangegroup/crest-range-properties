@@ -3,6 +3,8 @@
 
 /** Element id of the team section on the About page. */
 export const TEAM_ANCHOR = 'team'
+/** Element id of the Vision & Mission section on the About page (preview fix 5). */
+export const VISION_ANCHOR = 'vision'
 
 export const ROUTES = {
   home: '/',
@@ -15,6 +17,8 @@ export const ROUTES = {
   about: '/about',
   /** Team is a section of the About page, not a page of its own. */
   team: '/about#team',
+  /** Vision & Mission is a section of the About page (preview fix 5). */
+  vision: '/about#vision',
   /** Kept as a redirect so older links and any shared URLs still resolve. */
   teamLegacy: '/team',
   /** Dedicated bio page per team member (content batch Item 1.5). */

@@ -10,18 +10,19 @@ import SpecRow from './SpecRow'
 
 interface Props {
   listing: Listing
-  /** Item F: show the ADREC permit number on the card (Listings/Buy/Rent grids). */
-  showPermit?: boolean
 }
 
-export default function ListingCard({ listing, showPermit = false }: Props) {
+// Preview fix 9: the ADREC permit number now shows on every listing card
+// wherever it renders (Listings/Buy/Rent, Home featured, related, etc.), not
+// just the Listings grids. The earlier Home/Sell exclusion is reversed.
+export default function ListingCard({ listing }: Props) {
   const { t, tListing } = useI18n()
   // Translated copy for display; the original slug/price/agent stay canonical.
   const l = tListing(listing)
   const agent = byId(listing.agent)
   const url = ROUTES.property(listing.slug)
 
-  const enquiry = `Hello Crest Range, I'd like details on "${listing.title}" (${listing.addr}).`
+  const enquiry = `Hello Crest Range Properties, I'd like details on "${listing.title}" (${listing.addr}).`
 
   return (
     <article className="card">
@@ -45,7 +46,7 @@ export default function ListingCard({ listing, showPermit = false }: Props) {
 
         <SpecRow listing={listing} size={15} gap={14} className="muted" style={{ fontSize: 13.5 }} />
 
-        {showPermit && listing.permit && (
+        {listing.permit && (
           <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em' }}>
             {t.permitNo} <span dir="ltr">{listing.permit}</span>
           </div>

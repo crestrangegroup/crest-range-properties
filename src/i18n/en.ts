@@ -5,6 +5,10 @@ export const EN = {
   navHome: 'Home', navAbout: 'About', navServices: 'Services', navContact: 'Contact',
   navListings: 'Listings', navBuy: 'Buy', navRent: 'Rent', navSell: 'Sell',
   chatCta: 'Agent Live Chat',
+  // Preview fix 5: second item in the header's About dropdown, above Our Team.
+  navVision: 'Our Vision & Mission',
+  // Preview fix 2: persistent affordance on team cards.
+  viewProfile: 'View profile',
 
   heroK: 'Abu Dhabi · Private Brokerage',
   // The official company tagline, replacing the previous headline entirely.
@@ -51,11 +55,11 @@ export const EN = {
   sellP: '60 seconds, no obligation — backed by live Abu Dhabi transaction data. Below: what comparable homes are asking right now.',
   valBtn: 'Reveal my estimate', valEstToday: 'Estimated value today',
   valWant: 'Want the exact number?', reqCall: 'Request a call',
-  sellKicker: 'Sell with Crest Range',
+  sellKicker: 'Sell with Crest Range Properties',
   sellIntro: 'Sixty seconds, no obligation. Your estimate is backed by live Abu Dhabi transaction data — then a senior agent takes it from there.',
   valPanelH: 'Your instant valuation',
   valPanelP: 'Choose your community and size. We return a data-backed range in seconds — no forms, no obligation.',
-  sellWhyK: 'Why sell with Crest Range', sellWhyH: 'A track record, not a pitch.',
+  sellWhyK: 'Why sell with Crest Range Properties', sellWhyH: 'A track record, not a pitch.',
   sellWhyP: 'A boutique brokerage where most business comes from clients we have sold for before.',
   sellHowK: 'How it works', sellHowH: 'From valuation to keys, in four steps.',
   sellStep1: 'Valuation', sellStep1D: 'A precise, data-backed figure for your home — never a guess.',
@@ -84,8 +88,9 @@ export const EN = {
   aboutP1: 'Crest Range Properties LLC is a dynamic and forward-thinking Real Estate Company based in the vibrant city of Abu Dhabi. Established in 2020, our Company has swiftly grown to become a prominent player in the local Real Estate Market, thanks to our unwavering commitment to excellence and our extensive portfolio of Leasing, Property Management, and Real Estate Sales Services.',
   testiH: 'Clients who closed with us',
 
-  // Item 3: Founder's Welcome Message.
-  welcomeK: 'Welcome',
+  // Item 3 / preview fix 4: the section is titled "Founder's Message"
+  // (first-person), distinct from Fatoki's third-person bio page.
+  welcomeK: 'Founder’s Message',
   welcomeP: 'We believe that every client deserves personalized attention and a tailor-made solution. Your goals are our goals, and your success is our success. As the Founder of Crest Range Properties, I take pride in the unwavering commitment of our team to uphold the highest standards of integrity, transparency, and professionalism. We are here to guide you through every step of your Real Estate journey, ensuring that your experience with us is not only successful but also enjoyable. Our commitment to “Finding Home Away from Home” extends beyond the properties we offer. It is about creating lasting relationships. We are excited to be part of your story and to help you find your perfect place in this world.',
   welcomeName: 'Olatubosun Fatoki',
   welcomeRole: 'Founder',
@@ -123,7 +128,7 @@ export const EN = {
   formRequired: 'Please complete the required fields.',
   propIntro: 'Tell us about your property and we’ll send a tailored management proposal within one business day.',
 
-  teamH: 'The people behind Crest Range',
+  teamH: 'The people behind Crest Range Properties',
   teamP: 'A compact senior team — every client works directly with a decision-maker.',
 
   // Item B: the Contact page H1 (and About contact block). The footer's

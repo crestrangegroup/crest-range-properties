@@ -267,8 +267,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5b - Our Partners (Item 8): logo carousel, before the newsletter/footer.
-          Logos are interim images from the Company Profile, pending official files. */}
+      {/* 5b - Our Partners (Item 8 / preview fix 7): a continuous marquee that
+          scrolls infinitely and loops seamlessly (no snap-back). The list is
+          duplicated so translateX(-50%) returns to an identical frame. Hovering
+          pauses the marquee and zooms the hovered logo. Logos are interim images
+          from the Company Profile, pending official files. */}
       <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="wrap">
           <div className="sec-head">
@@ -277,43 +280,28 @@ export default function Home() {
               <h2 className="h2">{t.partnersH}</h2>
             </div>
           </div>
-          <Carousel intervalMs={3500} visible={5} label={t.partnersH}>
-            {PARTNERS.map((p) => (
-              <div
-                key={p.name}
-                className="partner-tile"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 96,
-                  margin: '0 8px',
-                  padding: '0 20px',
-                  background: '#fff',
-                  border: '1px solid var(--line)',
-                  borderRadius: 8,
-                }}
-              >
+        </div>
+        <div className="partner-marquee" role="region" aria-label={t.partnersH}>
+          <div className="partner-track">
+            {[...PARTNERS, ...PARTNERS].map((p, i) => (
+              <div className="partner-item" key={`${p.name}-${i}`} aria-hidden={i >= PARTNERS.length}>
                 <img
                   src={p.logo}
-                  alt={p.name}
+                  alt={i < PARTNERS.length ? p.name : ''}
                   loading="lazy"
-                  style={{ maxWidth: '100%', maxHeight: 56, width: 'auto', height: 'auto', objectFit: 'contain' }}
                   onError={(e) => {
                     // Interim asset missing: fall back to the partner name so the
-                    // carousel never shows a broken image.
+                    // marquee never shows a broken image.
                     const el = e.currentTarget
                     el.style.display = 'none'
                     const label = el.nextElementSibling as HTMLElement | null
                     if (label) label.style.display = 'block'
                   }}
                 />
-                <span style={{ display: 'none', fontFamily: 'var(--serif)', fontSize: 18, color: 'var(--ink-mute)' }}>
-                  {p.name}
-                </span>
+                <span className="partner-fallback">{p.name}</span>
               </div>
             ))}
-          </Carousel>
+          </div>
         </div>
       </section>
 

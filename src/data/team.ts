@@ -31,9 +31,9 @@ export const TEAM: TeamMember[] = [
     email: 'info@crestrangeproperties.com',
     phone: MAIN_PHONE,
     whatsapp: MOBILE,
-    // Fatoki's dedicated bio is pending; his page falls back to the Founder's
-    // Welcome message he authored in the Company Profile.
-    bio: '',
+    // Third person, deliberately distinct in voice from his first-person
+    // Founder's Message on the About page (preview fix 3).
+    bio: 'When Olatubosun Fatoki arrived in Abu Dhabi, he searched — like so many of Crest Range Properties’ clients — for a home that felt like his own. The search was long, the advice was thin, and the process felt more like a transaction than a welcome. In 2020, he founded Crest Range Properties to be the firm he had needed: one that treats finding a home away from home as something considered, personal, and unhurried.\n\nSix years on, the firm advises residents, landlords, and institutions across Al Reem Island, Al Zahiya, Al Raha, and Khalifa City — in sales, leasing, and the long-term management of the properties entrusted to it.',
   },
   {
     id: 'dimka',

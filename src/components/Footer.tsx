@@ -6,15 +6,16 @@ import { useChat } from './chat/ChatProvider'
 import { InstagramColor, Facebook, LinkedIn, TikTok, Threads, YouTube } from './Icons'
 
 /** Fixed display order: LinkedIn, Instagram, TikTok, Threads, Facebook, YouTube.
- *  Item C: real brand colors, footer only. Rendered as white chips so every
- *  brand glyph (including the black TikTok/Threads marks) stays legible on the
- *  dark footer; Instagram carries its own gradient. `color` feeds the glyph via
- *  currentColor. This treatment is intentionally scoped here and nowhere else. */
+ *  Preview fix 6: no white chip. Each icon sits directly on the dark footer
+ *  inside a thin gold ring (see .footer-soc). Brand-coloured glyphs (LinkedIn
+ *  blue, Instagram gradient, Facebook blue, YouTube red) read fine on dark; the
+ *  otherwise-black marks (TikTok, Threads) are rendered white so they stay
+ *  visible. `color` feeds the glyph via currentColor. Scoped to the footer. */
 const SOCIALS = [
   { href: COMPANY.social.linkedin, label: 'LinkedIn', Icon: LinkedIn, color: '#0A66C2' },
   { href: COMPANY.social.instagram, label: 'Instagram', Icon: InstagramColor, color: undefined },
-  { href: COMPANY.social.tiktok, label: 'TikTok', Icon: TikTok, color: '#010101' },
-  { href: COMPANY.social.threads, label: 'Threads', Icon: Threads, color: '#010101' },
+  { href: COMPANY.social.tiktok, label: 'TikTok', Icon: TikTok, color: '#ffffff' },
+  { href: COMPANY.social.threads, label: 'Threads', Icon: Threads, color: '#ffffff' },
   { href: COMPANY.social.facebook, label: 'Facebook', Icon: Facebook, color: '#1877F2' },
   { href: COMPANY.social.youtube, label: 'YouTube', Icon: YouTube, color: '#FF0000' },
 ]
@@ -60,8 +61,8 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="icon-btn"
-                  style={{ background: '#fff', borderColor: 'transparent', color }}
+                  className="icon-btn footer-soc"
+                  style={{ color }}
                 >
                   <Icon size={16} />
                 </a>

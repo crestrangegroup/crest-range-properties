@@ -618,3 +618,88 @@ h4 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- preview fix 2: team card "View profile" affordance ----------
+   Always visible (not hover-only) so it reads as clickable on touch too. */
+.view-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold);
+}
+.view-profile:hover {
+  color: var(--ink);
+}
+
+/* ---------- preview fix 6: footer social icons ----------
+   No white chip: each glyph sits on the dark footer inside a thin gold ring.
+   Inline `color` on each anchor sets the glyph colour (brand colour, or white
+   for the otherwise-black TikTok/Threads marks). */
+.footer-soc {
+  background: transparent;
+  border: 1px solid var(--gold);
+}
+.footer-soc:hover {
+  background: transparent;
+  border-color: var(--gold-bright);
+}
+
+/* ---------- preview fix 7: partners marquee ----------
+   The track holds the logo list twice; translateX(-50%) lands on an identical
+   frame, so the loop is seamless. Hover pauses it and zooms the hovered logo. */
+.partner-marquee {
+  overflow: hidden;
+  position: relative;
+  margin-top: 24px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.partner-track {
+  display: flex;
+  width: max-content;
+  animation: partnerScroll 45s linear infinite;
+}
+.partner-marquee:hover .partner-track {
+  animation-play-state: paused;
+}
+.partner-item {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 96px;
+  margin: 0 10px;
+  padding: 0 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.partner-item img {
+  max-width: 100%;
+  max-height: 56px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+.partner-item:hover img {
+  transform: scale(1.12);
+}
+.partner-fallback {
+  display: none;
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--ink-mute);
+}
+@keyframes partnerScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

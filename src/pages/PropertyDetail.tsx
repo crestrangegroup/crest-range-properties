@@ -60,7 +60,7 @@ export default function PropertyDetail() {
   if (!listing) return loading ? null : <NotFound />
 
   const l = tListing(listing)
-  const enquiry = `Hello Crest Range, I'd like details on "${listing.title}" (${listing.addr}).`
+  const enquiry = `Hello Crest Range Properties, I'd like details on "${listing.title}" (${listing.addr}).`
 
   const onBook = async (e: FormEvent) => {
     e.preventDefault()

@@ -25,8 +25,9 @@ export default function TeamBio() {
   if (!member) return <Navigate to={ROUTES.team} replace />
 
   const title = role(member.id)
-  // Fatoki has no separate bio yet; his own Founder's Welcome message stands in.
-  const bio = member.bio || (member.id === 'fatoki' ? t.welcomeP : '')
+  // Every member with a supplied bio uses it; a member still pending one (Gift)
+  // falls through to the coming-soon note below.
+  const bio = member.bio || ''
   const enquiry = `Hello ${member.name}, I'd like to speak with you about a property.`
 
   return (
@@ -97,7 +98,8 @@ export default function TeamBio() {
               </p>
 
               {bio ? (
-                <p className="lede" style={{ marginTop: 20, fontSize: 16.5 }}>
+                // pre-line so paragraph breaks in the bio text are preserved.
+                <p className="lede" style={{ marginTop: 20, fontSize: 16.5, whiteSpace: 'pre-line' }}>
                   {bio}
                 </p>
               ) : (

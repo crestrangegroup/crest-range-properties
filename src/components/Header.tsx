@@ -77,6 +77,11 @@ export default function Header() {
                   <Link className="drop-item" to={ROUTES.about}>
                     {t.navAbout}
                   </Link>
+                  {/* Preview fix 5: order matches the page's section order
+                      (Founder's Message → Vision & Mission → Team). */}
+                  <Link className="drop-item" to={ROUTES.vision}>
+                    {t.navVision}
+                  </Link>
                   <Link className="drop-item" to={ROUTES.team}>
                     {t.footTeam}
                   </Link>
@@ -155,7 +160,7 @@ export default function Header() {
 
       <div className={`hdr-mobile${mobileOpen ? ' open' : ''}`}>
         <div className="group">
-          {[[ROUTES.home, t.navHome], [ROUTES.about, t.navAbout], [ROUTES.team, t.footTeam], [ROUTES.services, t.navServices], [ROUTES.contact, t.navContact]].map(
+          {[[ROUTES.home, t.navHome], [ROUTES.about, t.navAbout], [ROUTES.vision, t.navVision], [ROUTES.team, t.footTeam], [ROUTES.services, t.navServices], [ROUTES.contact, t.navContact]].map(
             ([to, label]) => (
               <NavLink key={to} to={to} end={to === ROUTES.home} className={({ isActive }) => `m-link${isActive ? ' active' : ''}`}>
                 {label}

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
-import { ROUTES, TEAM_ANCHOR } from '../routes'
+import { ROUTES, TEAM_ANCHOR, VISION_ANCHOR } from '../routes'
 import { TESTIMONIALS } from '../data/content'
 import { TEAM } from '../data/team'
 import Carousel from '../components/Carousel'
@@ -14,8 +14,9 @@ export default function About() {
   const { hash } = useLocation()
   const founder = TEAM.find((m) => m.id === 'fatoki') || TEAM[0]
 
-  // Team lives on this page now, so #team has to be scrolled to manually: the
-  // browser only auto-jumps for anchors present on first paint.
+  // Team and Vision & Mission are sections of this page, so their anchors
+  // (#team, #vision) have to be scrolled to manually: the browser only
+  // auto-jumps for anchors present on first paint.
   //
   // A single scroll is not enough. Lazy-loaded imagery above the section keeps
   // resolving after mount, which grows the page and leaves the earlier scroll
@@ -25,9 +26,8 @@ export default function About() {
     // Read window.location directly rather than the router's hash: on a full
     // page load the router reported an empty hash here, so both this and
     // ScrollToTop mis-fired and the page stayed at the top.
-    // Read window.location rather than only the router's hash, so this works
-    // on a full page load as well as in-app navigation.
-    if (window.location.hash !== `#${TEAM_ANCHOR}`) return
+    const targetId = window.location.hash.replace(/^#/, '')
+    if (targetId !== TEAM_ANCHOR && targetId !== VISION_ANCHOR) return
 
     // Staged re-asserts rather than a requestAnimationFrame loop: React's
     // mount/cleanup/remount cycle cancelled the rAF before it ever fired, so
@@ -35,7 +35,7 @@ export default function About() {
     // repeats absorb the layout shift from imagery above this section loading
     // in after mount.
     const settle = () => {
-      const el = document.getElementById(TEAM_ANCHOR)
+      const el = document.getElementById(targetId)
       if (!el) return
       // Header height plus the section's scroll-margin. Outside this band means
       // the layout moved under us, so re-assert.
@@ -111,8 +111,8 @@ export default function About() {
         </div>
       </section>
 
-      {/* Item 6: Vision & Mission. */}
-      <section className="section">
+      {/* Item 6: Vision & Mission. Anchor target for the About dropdown (fix 5). */}
+      <section className="section" id={VISION_ANCHOR} style={{ scrollMarginTop: 'calc(var(--header-h) + 12px)' }}>
         <div className="wrap">
           <p className="kicker">{t.vmK}</p>
           <div className="grid grid-2" style={{ marginTop: 20 }}>
@@ -133,26 +133,9 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
-        <div className="wrap">
-          <div className="grid grid-3">
-            {[
-              [t.s1Name, t.s1Desc],
-              [t.s2Name, t.s2Desc],
-              [t.s3Name, t.s3Desc],
-            ].map(([name, desc]) => (
-              <div key={name}>
-                <h3 className="h3" style={{ marginBottom: 10 }}>
-                  {name}
-                </h3>
-                <p className="muted" style={{ margin: 0, fontSize: 15 }}>
-                  {desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Preview fix 1: the Sales / Leasing / Property Management descriptions
+          live only on the Services page. The former duplicate block here has
+          been removed. */}
 
       {/* Testimonials are a rotating carousel, never a static grid. */}
       <section className="section">
@@ -239,9 +222,22 @@ export default function About() {
                     {m.name}
                   </h3>
                 </Link>
-                <p className="muted" style={{ fontSize: 13.5, margin: '8px 0 18px', minHeight: '2.6em' }}>
+                <p className="muted" style={{ fontSize: 13.5, margin: '8px 0 10px', minHeight: '2.6em' }}>
                   {role(m.id)}
                 </p>
+                {/* Preview fix 2: always-visible affordance that the card opens a
+                    full bio page. Hidden for members still in a coming-soon
+                    state (no profile to open yet). */}
+                {!m.comingSoon && (
+                  <Link
+                    to={ROUTES.teamMember(m.id)}
+                    className="view-profile"
+                    style={{ marginBottom: 16 }}
+                    aria-label={`${t.viewProfile}: ${m.name}`}
+                  >
+                    {t.viewProfile} <span aria-hidden>→</span>
+                  </Link>
+                )}
                 <div className="icon-row" style={{ justifyContent: 'center' }}>
                   <a className="icon-btn" href={telLink(m.phone)} aria-label={`${t.callBtn} ${m.name}`} title={t.callBtn}>
                     <Phone size={16} />

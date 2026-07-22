@@ -149,10 +149,13 @@ export default function Contact() {
         </div>
       </section>
 
+      {/* Preview fix 8: center and zoom on the office (Zig Zag Towers) with a
+          marker, rather than a wide city view. output=embed drops a pin on the
+          geocoded query; the specific building name + z=17 keeps it tight. */}
       <section aria-label={t.addrH} style={{ height: 'clamp(280px,42vw,440px)' }}>
         <iframe
           title={`${COMPANY.name} on Google Maps`}
-          src={`https://maps.google.com/maps?q=${encodeURIComponent(COMPANY.mapQuery)}&z=16&output=embed`}
+          src={`https://www.google.com/maps?q=${encodeURIComponent(COMPANY.mapQuery)}&z=17&output=embed`}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           style={{ border: 0, width: '100%', height: '100%', display: 'block' }}

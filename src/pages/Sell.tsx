@@ -233,7 +233,7 @@ export default function Sell() {
               <Chat size={15} />
               {t.sCtaChat}
             </button>
-            <a className="btn btn-wa on-dark btn-inline" href={waLink('Hello Crest Range, I would like a valuation.')} target="_blank" rel="noopener noreferrer">
+            <a className="btn btn-wa on-dark btn-inline" href={waLink('Hello Crest Range Properties, I would like a valuation.')} target="_blank" rel="noopener noreferrer">
               <WhatsApp size={15} />
               {t.whatsBtn}
             </a>

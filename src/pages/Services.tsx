@@ -75,7 +75,7 @@ export default function Services() {
                     </button>
                     <a
                       className="btn btn-wa btn-inline"
-                      href={waLink(`Hello Crest Range, I'd like to talk about ${d.name}.`)}
+                      href={waLink(`Hello Crest Range Properties, I'd like to talk about ${d.name}.`)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -109,7 +109,7 @@ export default function Services() {
           </h2>
           <a
             className="btn btn-wa on-dark btn-inline"
-            href={waLink('Hello Crest Range, I have a question.')}
+            href={waLink('Hello Crest Range Properties, I have a question.')}
             target="_blank"
             rel="noopener noreferrer"
             style={{ marginTop: 8 }}

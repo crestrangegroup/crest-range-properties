@@ -163,8 +163,7 @@ export default function Listings({ forcedPurpose }: Props) {
             <>
               <div className="grid grid-3">
                 {shown.map((l) => (
-                  // Item F: ADREC permit shown on the card in the listings grids.
-                  <ListingCard key={l.slug} listing={l} showPermit />
+                  <ListingCard key={l.slug} listing={l} />
                 ))}
               </div>
 
