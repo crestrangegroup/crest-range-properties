@@ -297,7 +297,7 @@ export default function About() {
                 {t.workCta} <span aria-hidden>→</span>
               </Link>
             </div>
-            <div className="work-teaser-photo" role="img" aria-label={t.workH} />
+            <img className="work-teaser-photo" src="/images/hero/dubai-marina-skyline.jpg" alt={t.workH} loading="lazy" />
           </div>
         </div>
       </section>

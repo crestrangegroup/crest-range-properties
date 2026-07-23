@@ -108,10 +108,11 @@ export default function Services() {
         </section>
       ))}
 
-      {/* Preview fix 13: Our Partners marquee, same component as the Home page. */}
-      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)' }}>
+      {/* Preview fix 13: Our Partners marquee, same component as the Home page.
+          Fix 37: compact padding to keep the section short. */}
+      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
         <div className="wrap">
-          <div className="sec-head">
+          <div className="sec-head" style={{ marginBottom: 6 }}>
             <div>
               <p className="kicker">{t.partnersK}</p>
               <h2 className="h2">{t.partnersH}</h2>

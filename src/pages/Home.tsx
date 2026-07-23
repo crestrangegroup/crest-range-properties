@@ -279,10 +279,12 @@ export default function Home() {
       </section>
 
       {/* 5b - Our Partners (Item 8): official-logo marquee, shared with the
-          Services page via the PartnerMarquee component (preview fix 13). */}
-      <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+          Services page via the PartnerMarquee component (preview fix 13).
+          Fix 37: compact padding so the section height matches the shortened
+          "Talk to Crest Range Properties" band. */}
+      <section style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
         <div className="wrap">
-          <div className="sec-head">
+          <div className="sec-head" style={{ marginBottom: 6 }}>
             <div>
               <p className="kicker">{t.partnersK}</p>
               <h2 className="h2">{t.partnersH}</h2>

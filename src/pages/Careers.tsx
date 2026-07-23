@@ -40,7 +40,7 @@ export default function Careers() {
                 {t.careersLead}
               </p>
             </div>
-            <div className="careers-hero-photo" role="img" aria-label={t.careersK} />
+            <img className="careers-hero-photo" src="/images/hero/dubai-marina-skyline.jpg" alt={t.careersK} loading="lazy" />
           </div>
         </div>
       </section>

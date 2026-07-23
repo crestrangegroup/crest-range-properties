@@ -705,6 +705,10 @@ h4 {
 /* Partners marquee: exactly 5 logos visible in the viewport at a time
    (preview fix 18). The marquee is full-bleed, so a 20vw cell = one fifth of
    the viewport. Each tile fills its cell. */
+.partners-marquee {
+  /* Fix 37: tighter top gap so the section stays short. */
+  margin-top: 10px;
+}
 .partners-marquee .marquee-cell {
   width: 20vw;
   padding: 0 10px;
@@ -715,15 +719,16 @@ h4 {
   align-items: center;
   justify-content: center;
   /* Fix 37: white tile is 30% narrower than its cell, centered (more gap
-     between tiles). Taller so the enlarged logos fit without clipping. */
+     between tiles). Tall enough for the enlarged logos. */
   width: 70%;
   margin: 0 auto;
-  height: 132px;
-  padding: 0 10px;
+  height: 134px;
+  padding: 0 8px;
   background: #fff;
-  /* Fix 38: no border on any tile (all 10 consistent). */
-  border: 0;
-  border-radius: 8px;
+  /* Fix 38 (reversed): keep a consistent border on all 10 tiles. */
+  border: 1px solid var(--line);
+  /* Fix 42: softer, more premium rounded corners. */
+  border-radius: 14px;
   box-sizing: border-box;
 }
 .partner-item img {
@@ -788,20 +793,20 @@ h4 {
   flex-direction: column;
   justify-content: center;
 }
+/* Fix 41: real <img>, shown in full (no cover-crop). object-fit: contain is a
+   safety net so the photo is never cropped or distorted even if a container
+   forces a height. */
 .work-teaser-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  align-self: center;
+  object-fit: contain;
   border-radius: 10px;
-  min-height: 260px;
-  background-image: linear-gradient(180deg, rgba(20, 18, 13, 0.15), rgba(20, 18, 13, 0.45)),
-    url('/images/hero/dubai-marina-skyline.png');
-  background-size: cover;
-  background-position: center;
 }
 @media (max-width: 760px) {
   .work-teaser {
     grid-template-columns: 1fr;
-  }
-  .work-teaser-photo {
-    min-height: 180px;
   }
 }
 
@@ -905,14 +910,14 @@ h4 {
   align-items: center;
   gap: clamp(24px, 4vw, 52px);
 }
+/* Fix 41: real <img>, shown in full (no cover-crop). */
 .careers-hero-photo {
-  align-self: stretch;
-  min-height: 300px;
+  display: block;
+  width: 100%;
+  height: auto;
+  align-self: center;
+  object-fit: contain;
   border-radius: 10px;
-  background-image: linear-gradient(180deg, rgba(20, 18, 13, 0.1), rgba(20, 18, 13, 0.4)),
-    url('/images/hero/dubai-marina-skyline.png');
-  background-size: cover;
-  background-position: center;
 }
 /* Dark gold-numeral pillars for "what it is like here". */
 .careers-pillar {
@@ -949,9 +954,6 @@ h4 {
 @media (max-width: 760px) {
   .careers-hero {
     grid-template-columns: 1fr;
-  }
-  .careers-hero-photo {
-    min-height: 200px;
   }
 }
 

@@ -71,9 +71,10 @@ export const TESTIMONIALS: Testimonial[] = [
 export interface Partner {
   name: string
   logo: string
-  /** Round 6 (fix 37): explicit rendered max-height in px. Default is 68.
-   *  PF +30% (88); Reportage/Binghati/Object 1 +50% (102); Ohana +50%+20% (122);
-   *  Q Holding stays 68 but its file was cropped so it fills the tile. */
+  /** Round 8 (fix 37): explicit rendered max-height in px. Default is 68.
+   *  PF +30% (88); Binghati/Reportage/Object 1 +80% (122); Q Holding +50% (102,
+   *  uncropped file); Ohana +70% (116). Very wide logos may be limited by the
+   *  narrower tile width before reaching these heights. */
   h?: number
 }
 
@@ -82,14 +83,14 @@ export const PARTNERS: Partner[] = [
   { name: 'ALDAR', logo: '/images/partners/aldar.png' },
   // Asteco supplied an SVG; preferred over the PNG for crispness at any size.
   { name: 'Asteco', logo: '/images/partners/asteco.svg' },
-  { name: 'Reportage', logo: '/images/partners/reportage.png', h: 102 },
-  { name: 'Q Holding', logo: '/images/partners/q-holding.png' },
+  { name: 'Reportage', logo: '/images/partners/reportage.png', h: 122 },
+  { name: 'Q Holding', logo: '/images/partners/q-holding.png', h: 102 },
   { name: 'Mudon', logo: '/images/partners/mudon.png' },
   // Round 4: black-on-transparent wordmark (was white-on-black last round).
   { name: 'Huspy', logo: '/images/partners/huspy.svg' },
-  { name: 'Binghati', logo: '/images/partners/binghati.png', h: 102 },
-  { name: 'Object 1', logo: '/images/partners/object1.png', h: 102 },
-  { name: 'Ohana', logo: '/images/partners/ohana.png', h: 122 },
+  { name: 'Binghati', logo: '/images/partners/binghati.png', h: 122 },
+  { name: 'Object 1', logo: '/images/partners/object1.png', h: 122 },
+  { name: 'Ohana', logo: '/images/partners/ohana.png', h: 116 },
 ]
 
 /** Homepage hero rotation. Local files only - no external CDN at runtime. */
