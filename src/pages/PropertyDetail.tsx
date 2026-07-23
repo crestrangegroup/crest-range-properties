@@ -12,6 +12,7 @@ import { DateField } from '../components/forms/Fields'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
 import { submitLead } from '../lib/leads'
+import { byId } from '../data/team'
 import { ArrowLeft, Pin, Phone, Check, QrMatrix } from '../components/Icons'
 import SpecRow from '../components/SpecRow'
 import NotFound from './NotFound'
@@ -60,7 +61,8 @@ export default function PropertyDetail() {
   if (!listing) return loading ? null : <NotFound />
 
   const l = tListing(listing)
-  const enquiry = `Hello Crest Range Properties, I'd like details on "${listing.title}" (${listing.addr}).`
+  // Fix 45: address the listing's agent by name in the WhatsApp/enquiry message.
+  const enquiry = `Hello ${byId(listing.agent).name}, I'd like details on "${listing.title}" (${listing.addr}).`
 
   const onBook = async (e: FormEvent) => {
     e.preventDefault()

@@ -95,18 +95,17 @@ export const TEAM: TeamMember[] = [
     bio: 'Prince Smith is the reliable, versatile professional you need in real estate. Starting his sales career early, he honed a sharp instinct for spotting opportunities and closing deals. Whether he’s helping clients find their dream homes or cheering on his favorite F1 team, Prince brings unmatched energy and focus to everything he does. Beyond work, Prince values quality time with his family, a commitment that reflects in his interactions with clients and colleagues, treating them like part of his extended family. Whether you’re looking to buy, sell, or simply explore Abu Dhabi’s market, Prince is ready to guide you through every step with care and precision.',
   },
   {
-    // Item 1.3: new member #8 — photo and final designation pending from client.
-    // Held in a coming-soon state; must not publish live without a photo.
+    // Round 10: photo and designation now supplied, so Gift is a full member.
     id: 'gift',
     name: 'Gift Ofejiro',
-    photo: '',
+    photo: '/images/team/gift.png',
     email: 'gift.o@crestrangeproperties.com',
     phone: '+971547053586',
     whatsapp: '+971547053586',
+    // Written bio still pending from the client; the bio page shows her photo,
+    // designation and contact actions, with a "profile coming soon" note in
+    // place of the paragraph until copy is supplied.
     bio: '',
-    // Designation now confirmed (see i18n roles), but the photo is still
-    // pending from the client - keep the coming-soon placeholder photo state.
-    comingSoon: true,
   },
 ]
 

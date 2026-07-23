@@ -280,8 +280,8 @@ export default function About() {
 
       {/* Careers feature, item 4 (redesigned in fix 19): premium dark two-column
           teaser after the team section - copy + skyline photo, gold CTA. */}
-      {/* Fix 43: section height reduced ~30% (0.7 x the default section padding). */}
-      <section className="section work-teaser-sec" style={{ paddingBlock: 'clamp(34px,4.9vw,67px)' }}>
+      {/* Fix 43: -30% then Fix 46: halved again (0.35 x the default section padding). */}
+      <section className="section work-teaser-sec" style={{ paddingBlock: 'clamp(17px,2.45vw,34px)' }}>
         <div className="wrap">
           <div className="work-teaser">
             <div className="work-teaser-copy">

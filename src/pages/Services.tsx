@@ -123,8 +123,9 @@ export default function Services() {
       </section>
 
       {/* Dedicated WhatsApp CTA: small eyebrow, serif headline, outlined button.
-          Fix 40: distinct band tone so it doesn't blend into the footer. */}
-      <section className="section dark cta-band">
+          Fix 40: distinct band tone so it doesn't blend into the footer.
+          Fix 47: height halved (0.5 x the default section padding). */}
+      <section className="section dark cta-band" style={{ paddingBlock: 'clamp(24px,3.5vw,48px)' }}>
         <div className="wrap stack" style={{ alignItems: 'center', textAlign: 'center', gap: 14 }}>
           <p className="kicker" style={{ color: 'var(--gold-bright)', margin: 0 }}>
             {t.waEyebrow}
