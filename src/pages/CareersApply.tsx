@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useState } from 'react'
+import { FormEvent, ReactNode, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { ROUTES } from '../routes'
@@ -10,7 +10,7 @@ import {
   SALARY_EXPECTATIONS,
   NOTICE_PERIODS,
 } from '../data/careers'
-import { COUNTRY_NAMES } from '../data/nationalities'
+import { NATIONALITIES } from '../data/nationalities'
 import { submitLead } from '../lib/leads'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
@@ -90,8 +90,23 @@ function SelectField({
  *  lead + notification); the CV file itself is still deferred to the admin
  *  batch (Storage + Edge Function). */
 export default function CareersApply() {
-  const { t, careerOpt } = useI18n()
+  const { t, careerOpt, lang } = useI18n()
   const navigate = useNavigate()
+
+  // Nationality labels come from the browser's standard localized country names
+  // (Intl.DisplayNames) for the active language, sorted for that language. The
+  // submitted value stays the canonical English name so lead data is unaffected.
+  const nationalities = useMemo(() => {
+    let loc: Intl.DisplayNames | null = null
+    try {
+      loc = new Intl.DisplayNames([lang], { type: 'region' })
+    } catch {
+      loc = null
+    }
+    return NATIONALITIES.map((n) => ({ value: n.name, label: (loc && loc.of(n.code)) || n.name })).sort(
+      (a, b) => a.label.localeCompare(b.label, lang),
+    )
+  }, [lang])
   const [params] = useSearchParams()
   const roleId = params.get('role') || 'general'
   const roleTitle = roleId === 'general' ? '' : t[JOB_POSTINGS.find((j) => j.id === roleId)?.titleKey ?? 'jobSampleTitle']
@@ -207,7 +222,15 @@ export default function CareersApply() {
                 <IconInput id="ap-last" label={t.formLast} icon={<User size={15} />} value={last} onChange={setLast} autoComplete="family-name" />
                 <IconInput id="ap-email" label={t.appEmail} icon={<Mail size={15} />} value={email} onChange={setEmail} type="email" autoComplete="email" dir="ltr" />
                 <PhoneField code={code} phone={phone} onCode={setCode} onPhone={setPhone} required id="ap-phone" />
-                <SelectField id="ap-nat" label={t.appNationality} value={nationality} onChange={setNationality} options={COUNTRY_NAMES} placeholder={t.appSelect} />
+                <div className="field">
+                  <label className="label" htmlFor="ap-nat">{t.appNationality}</label>
+                  <select id="ap-nat" className="select" value={nationality} onChange={(e) => setNationality(e.target.value)}>
+                    <option value="">{t.appSelect}</option>
+                    {nationalities.map((n) => (
+                      <option key={n.value} value={n.value}>{n.label}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Section: Application details */}
