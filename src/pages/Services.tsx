@@ -121,8 +121,9 @@ export default function Services() {
         <PartnerMarquee />
       </section>
 
-      {/* Dedicated WhatsApp CTA: small eyebrow, serif headline, outlined button. */}
-      <section className="section dark">
+      {/* Dedicated WhatsApp CTA: small eyebrow, serif headline, outlined button.
+          Fix 40: distinct band tone so it doesn't blend into the footer. */}
+      <section className="section dark cta-band">
         <div className="wrap stack" style={{ alignItems: 'center', textAlign: 'center', gap: 14 }}>
           <p className="kicker" style={{ color: 'var(--gold-bright)', margin: 0 }}>
             {t.waEyebrow}

@@ -792,7 +792,7 @@ h4 {
   border-radius: 10px;
   min-height: 260px;
   background-image: linear-gradient(180deg, rgba(20, 18, 13, 0.15), rgba(20, 18, 13, 0.45)),
-    url('/images/hero/al-reem-island.jpg');
+    url('/images/hero/dubai-marina-skyline.png');
   background-size: cover;
   background-position: center;
 }
@@ -874,6 +874,14 @@ h4 {
   font-size: 13px;
 }
 
+/* Fix 40: CTA bands that sit directly above the dark footer get a warmer,
+   slightly lighter dark tone plus a gold hairline, so they read as a distinct
+   section instead of blending into the footer. */
+.cta-band {
+  background: var(--dark-2);
+  border-bottom: 1px solid rgba(154, 131, 10, 0.55);
+}
+
 /* About contact band (fix 36): heading, address and CTA spread across one row
    so a shorter section still reads full. Stacks on narrow screens. */
 .about-contact-row {
@@ -902,7 +910,7 @@ h4 {
   min-height: 300px;
   border-radius: 10px;
   background-image: linear-gradient(180deg, rgba(20, 18, 13, 0.1), rgba(20, 18, 13, 0.4)),
-    url('/images/hero/emirates-palace.jpg');
+    url('/images/hero/dubai-marina-skyline.png');
   background-size: cover;
   background-position: center;
 }

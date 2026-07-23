@@ -209,7 +209,7 @@ export default function Sell() {
         </div>
       </section>
 
-      <section className="section dark">
+      <section className="section dark cta-band">
         <div className="wrap stack" style={{ gap: 16, alignItems: 'flex-start' }}>
           <h2 className="h2" style={{ color: '#fff' }}>
             {t.sellCtaH}
