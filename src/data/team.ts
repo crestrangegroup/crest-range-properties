@@ -102,10 +102,7 @@ export const TEAM: TeamMember[] = [
     email: 'gift.o@crestrangeproperties.com',
     phone: '+971547053586',
     whatsapp: '+971547053586',
-    // Written bio still pending from the client; the bio page shows her photo,
-    // designation and contact actions, with a "profile coming soon" note in
-    // place of the paragraph until copy is supplied.
-    bio: '',
+    bio: 'Before transitioning into real estate full-time, Gift built her career in the world of professional modeling, where confidence, presentation, and building genuine connections were at the heart of everything she did. Today, she brings that same passion and people-first approach to helping clients find the perfect place to call home. With a keen eye for detail and a commitment to exceptional service, Gift believes that every property journey should feel effortless, personal, and exciting. Whether you’re searching for your first home or your next investment, she’s dedicated to making the experience as rewarding as the destination.',
   },
 ]
 
