@@ -282,7 +282,7 @@ export default function Home() {
           Services page via the PartnerMarquee component (preview fix 13).
           Fix 37: compact padding so the section height matches the shortened
           "Talk to Crest Range Properties" band. */}
-      <section style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
+      <section style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)', paddingBlock: 'clamp(16px,2vw,22px)' }}>
         <div className="wrap">
           <div className="sec-head" style={{ marginBottom: 6 }}>
             <div>

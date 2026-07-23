@@ -110,7 +110,7 @@ export default function Services() {
 
       {/* Preview fix 13: Our Partners marquee, same component as the Home page.
           Fix 37: compact padding to keep the section short. */}
-      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
+      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(16px,2vw,22px)' }}>
         <div className="wrap">
           <div className="sec-head" style={{ marginBottom: 6 }}>
             <div>

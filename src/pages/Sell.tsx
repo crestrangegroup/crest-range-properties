@@ -209,8 +209,9 @@ export default function Sell() {
         </div>
       </section>
 
-      <section className="section dark cta-band">
-        <div className="wrap stack" style={{ gap: 16, alignItems: 'flex-start' }}>
+      {/* Fix 44: section height reduced ~40% (0.6 x the default section padding). */}
+      <section className="section dark cta-band" style={{ paddingBlock: 'clamp(29px,4.2vw,58px)' }}>
+        <div className="wrap stack" style={{ gap: 12, alignItems: 'flex-start' }}>
           <h2 className="h2" style={{ color: '#fff' }}>
             {t.sellCtaH}
           </h2>

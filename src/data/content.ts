@@ -71,11 +71,13 @@ export const TESTIMONIALS: Testimonial[] = [
 export interface Partner {
   name: string
   logo: string
-  /** Round 8 (fix 37): explicit rendered max-height in px. Default is 68.
-   *  PF +30% (88); Binghati/Reportage/Object 1 +80% (122); Q Holding +50% (102,
-   *  uncropped file); Ohana +70% (116). Very wide logos may be limited by the
-   *  narrower tile width before reaching these heights. */
+  /** Round 8/9 (fix 37): explicit rendered max-height in px. Default is 68.
+   *  PF +30% (88); Binghati/Reportage/Object 1/Ohana +80% (122); Q Holding +50%
+   *  (102, uncropped file). */
   h?: number
+  /** Round 9: very wide logos (Binghati/Q Holding/Reportage) get a wider tile so
+   *  they reach their target height instead of being limited by tile width. */
+  wide?: boolean
 }
 
 export const PARTNERS: Partner[] = [
@@ -83,14 +85,14 @@ export const PARTNERS: Partner[] = [
   { name: 'ALDAR', logo: '/images/partners/aldar.png' },
   // Asteco supplied an SVG; preferred over the PNG for crispness at any size.
   { name: 'Asteco', logo: '/images/partners/asteco.svg' },
-  { name: 'Reportage', logo: '/images/partners/reportage.png', h: 122 },
-  { name: 'Q Holding', logo: '/images/partners/q-holding.png', h: 102 },
+  { name: 'Reportage', logo: '/images/partners/reportage.png', h: 122, wide: true },
+  { name: 'Q Holding', logo: '/images/partners/q-holding.png', h: 102, wide: true },
   { name: 'Mudon', logo: '/images/partners/mudon.png' },
   // Round 4: black-on-transparent wordmark (was white-on-black last round).
   { name: 'Huspy', logo: '/images/partners/huspy.svg' },
-  { name: 'Binghati', logo: '/images/partners/binghati.png', h: 122 },
+  { name: 'Binghati', logo: '/images/partners/binghati.png', h: 122, wide: true },
   { name: 'Object 1', logo: '/images/partners/object1.png', h: 122 },
-  { name: 'Ohana', logo: '/images/partners/ohana.png', h: 116 },
+  { name: 'Ohana', logo: '/images/partners/ohana.png', h: 122 },
 ]
 
 /** Homepage hero rotation. Local files only - no external CDN at runtime. */

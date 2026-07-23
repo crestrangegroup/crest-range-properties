@@ -280,7 +280,8 @@ export default function About() {
 
       {/* Careers feature, item 4 (redesigned in fix 19): premium dark two-column
           teaser after the team section - copy + skyline photo, gold CTA. */}
-      <section className="section work-teaser-sec">
+      {/* Fix 43: section height reduced ~30% (0.7 x the default section padding). */}
+      <section className="section work-teaser-sec" style={{ paddingBlock: 'clamp(34px,4.9vw,67px)' }}>
         <div className="wrap">
           <div className="work-teaser">
             <div className="work-teaser-copy">
@@ -303,13 +304,13 @@ export default function About() {
       </section>
 
       {/* Fix 33: light section (rhythm: light -> dark Careers -> light -> dark
-          footer). Fix 36: ~half the height, content spread across a row so the
-          band reads full rather than sparse. */}
-      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
+          footer). Fix 36 (round 9): further reduced height, content spread across
+          a row so the band reads full rather than sparse. */}
+      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(16px,2vw,22px)' }}>
         <div className="wrap">
           <div className="about-contact-row">
             <h2 className="h2" style={{ margin: 0 }}>{t.contactH}</h2>
-            <div className="muted" style={{ lineHeight: 1.7, fontSize: 14 }}>
+            <div className="muted" style={{ lineHeight: 1.55, fontSize: 13.5 }}>
               {addressLines.map((l) => (
                 <div key={l}>{l}</div>
               ))}

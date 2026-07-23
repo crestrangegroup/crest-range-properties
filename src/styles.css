@@ -722,14 +722,19 @@ h4 {
      between tiles). Tall enough for the enlarged logos. */
   width: 70%;
   margin: 0 auto;
-  height: 134px;
+  height: 122px;
   padding: 0 8px;
   background: #fff;
-  /* Fix 38 (reversed): keep a consistent border on all 10 tiles. */
-  border: 1px solid var(--line);
+  /* Round 9: thin, very light bronze border on all 10 tiles (subtle/premium). */
+  border: 1px solid rgba(176, 141, 87, 0.45);
   /* Fix 42: softer, more premium rounded corners. */
   border-radius: 14px;
   box-sizing: border-box;
+}
+/* Round 9: three wide-aspect logos get a wider tile so they aren't width-limited
+   below their target height. The 20vw cell (5-visible spacing) is unchanged. */
+.partner-wide {
+  width: 92%;
 }
 .partner-item img {
   max-width: 100%;
@@ -869,11 +874,12 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-top: 4px;
+  margin-top: 10px;
 }
 .tcard-name {
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 700;
+  color: var(--ink);
 }
 .tcard-role {
   font-size: 13px;
