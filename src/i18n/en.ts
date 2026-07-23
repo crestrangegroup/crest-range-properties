@@ -182,6 +182,9 @@ export const EN = {
   appLinkedIn: 'LinkedIn profile URL',
   appOptional: 'optional',
   appSelect: 'Select…',
+  // Round 10: free-text "why this role" box. Prompt candidates to be genuine.
+  appWhy: 'Why are you interested in this role?',
+  appWhyPlaceholder: 'In your own words — keep it real and unscripted, not robotic. What genuinely draws you to Crest Range and this role?',
   // Full-page apply form (fix 34).
   appLead: 'Tell us about yourself and attach your CV. It takes a couple of minutes.',
   appSecPersonal: 'Personal information',
