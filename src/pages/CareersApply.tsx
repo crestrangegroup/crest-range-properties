@@ -58,6 +58,7 @@ function SelectField({
   onChange,
   options,
   placeholder,
+  optionLabel,
 }: {
   id: string
   label: ReactNode
@@ -65,6 +66,8 @@ function SelectField({
   onChange: (v: string) => void
   options: readonly string[]
   placeholder: string
+  /** Optional label translator; the option's English value is always submitted. */
+  optionLabel?: (englishValue: string) => string
 }) {
   return (
     <div className="field">
@@ -75,7 +78,7 @@ function SelectField({
         <option value="">{placeholder}</option>
         {options.map((o) => (
           <option key={o} value={o}>
-            {o}
+            {optionLabel ? optionLabel(o) : o}
           </option>
         ))}
       </select>
@@ -87,7 +90,7 @@ function SelectField({
  *  lead + notification); the CV file itself is still deferred to the admin
  *  batch (Storage + Edge Function). */
 export default function CareersApply() {
-  const { t } = useI18n()
+  const { t, careerOpt } = useI18n()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const roleId = params.get('role') || 'general'
@@ -217,11 +220,11 @@ export default function CareersApply() {
                 </h2>
               </div>
               <div className="apply-grid">
-                <SelectField id="ap-qual" label={t.appQualification} value={qualification} onChange={setQualification} options={QUALIFICATIONS} placeholder={t.appSelect} />
-                <SelectField id="ap-visa" label={t.appVisa} value={visa} onChange={setVisa} options={VISA_STATUSES} placeholder={t.appSelect} />
-                <SelectField id="ap-cursal" label={`${t.appCurrentSalary}${optional}`} value={curSalary} onChange={setCurSalary} options={SALARY_BANDS} placeholder={t.appSelect} />
-                <SelectField id="ap-expsal" label={t.appSalaryExpect} value={expSalary} onChange={setExpSalary} options={SALARY_EXPECTATIONS} placeholder={t.appSelect} />
-                <SelectField id="ap-notice" label={`${t.appNotice}${optional}`} value={notice} onChange={setNotice} options={NOTICE_PERIODS} placeholder={t.appSelect} />
+                <SelectField id="ap-qual" label={t.appQualification} value={qualification} onChange={setQualification} options={QUALIFICATIONS} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-visa" label={t.appVisa} value={visa} onChange={setVisa} options={VISA_STATUSES} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-cursal" label={`${t.appCurrentSalary}${optional}`} value={curSalary} onChange={setCurSalary} options={SALARY_BANDS} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-expsal" label={t.appSalaryExpect} value={expSalary} onChange={setExpSalary} options={SALARY_EXPECTATIONS} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-notice" label={`${t.appNotice}${optional}`} value={notice} onChange={setNotice} options={NOTICE_PERIODS} placeholder={t.appSelect} optionLabel={careerOpt} />
                 <IconInput id="ap-li" label={`${t.appLinkedIn}${optional}`} icon={<LinkedIn size={15} />} value={linkedin} onChange={setLinkedin} type="url" dir="ltr" placeholder="https://" />
                 <div className="field apply-cv">
                   <label className="label" htmlFor="ap-cv">{t.appCv}</label>

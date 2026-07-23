@@ -30,6 +30,10 @@ interface I18nValue {
   area: (englishName: string) => string
   /** Translate a team role by member id. */
   role: (memberId: string) => string
+  /** Translate a team member's bio by member id (empty string if none). */
+  bio: (memberId: string) => string
+  /** Translate a Careers dropdown option label; the English value stays canonical. */
+  careerOpt: (englishValue: string) => string
   /** Office address, already translated, split into display lines. */
   addressLines: string[]
   /** Opening hours, already translated, split into display lines. */
@@ -80,6 +84,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
     const areas: Record<string, string> = pack?.areas ?? {}
     const roles: Record<string, string> = { ...EN.roles, ...(pack?.roles ?? {}) }
+    const bios: Record<string, string> = pack?.bios ?? {}
+    const careerOpts: Record<string, string> = pack?.careerOpts ?? {}
+    const testimonials: string[] = pack?.testimonials ?? []
 
     // Each helper merges the translated fields over the English base. Doing it
     // here, rather than at each render site, is what stops English titles,
@@ -92,6 +99,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       isRtl: dir === 'rtl',
       area: (name) => areas[name] || name,
       role: (id) => roles[id] || '',
+      // Translated bio if present; empty falls back to the English bio at the
+      // render site (member.bio), so a missing translation never blanks the page.
+      bio: (id) => bios[id] || '',
+      // Translated option label; the English value it maps from stays the stored,
+      // canonical value so back-office lead data is unaffected by site language.
+      careerOpt: (value) => careerOpts[value] || value,
       addressLines: t.addrVal.split('\n'),
       hoursLines: t.hoursVal.split('\n'),
       tListing: (l) => {
@@ -106,11 +119,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         return { ...h, name: areas[h.name] || h.name, blurb: blurb || h.blurb }
       },
       tArticle: (a) => ({ ...a, ...(bundle.articles?.[a.slug] ?? {}) }),
-      // The seven real testimonials (content batch Item 9) are English-only for
-      // now; a translation pass follows sign-off. Until then every language
-      // shows the original English quote, never a stale translation of the
-      // previous placeholder set. Client names are never translated.
-      tTestimonial: (x, _i) => x,
+      // Positional translation of the quote text only. The client's name (`who`)
+      // is a real personal name and is never translated; a missing entry falls
+      // back to the English quote rather than blanking it.
+      tTestimonial: (x, i) => ({ ...x, q: testimonials[i] || x.q }),
     }
   }, [lang, dir])
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from './Icons'
 import { TESTIMONIALS } from '../data/content'
+import { useI18n } from '../i18n/I18nProvider'
 import './stacked-testimonials.css'
 
 /** 2-letter initials, skipping honorifics (matches the main testimonials). */
@@ -17,6 +18,7 @@ const INTERVAL = 6000
  * a visual/interaction treatment in the site's black/gold palette.
  */
 export default function StackedTestimonials() {
+  const { tTestimonial } = useI18n()
   const items = TESTIMONIALS
   const n = items.length
   const [idx, setIdx] = useState(0)
@@ -31,7 +33,7 @@ export default function StackedTestimonials() {
     return () => clearInterval(id)
   }, [n])
 
-  const c = items[idx]
+  const c = tTestimonial(items[idx], idx)
 
   return (
     <div

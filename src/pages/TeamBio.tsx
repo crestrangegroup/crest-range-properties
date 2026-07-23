@@ -18,16 +18,16 @@ function initials(name: string) {
 
 export default function TeamBio() {
   const { id } = useParams()
-  const { t, role } = useI18n()
+  const { t, role, bio: tBio } = useI18n()
   const member = TEAM.find((m) => m.id === id)
 
   // Unknown id: send them to the team section rather than a dead page.
   if (!member) return <Navigate to={ROUTES.team} replace />
 
   const title = role(member.id)
-  // Every member with a supplied bio uses it; a member still pending one (Gift)
-  // falls through to the coming-soon note below.
-  const bio = member.bio || ''
+  // Translated bio for the active language, falling back to the English bio.
+  // A member still pending a bio falls through to the coming-soon note below.
+  const bio = tBio(member.id) || member.bio || ''
   const enquiry = `Hello ${member.name}, I'd like to speak with you about a property.`
 
   return (

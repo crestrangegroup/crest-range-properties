@@ -16,7 +16,7 @@ function testimonialInitials(name: string) {
 }
 
 export default function About() {
-  const { t, addressLines, role } = useI18n()
+  const { t, addressLines, role, tTestimonial } = useI18n()
   const { hash } = useLocation()
   const founder = TEAM.find((m) => m.id === 'fatoki') || TEAM[0]
 
@@ -154,9 +154,11 @@ export default function About() {
             </div>
           </div>
           <Carousel intervalMs={9000} visible={3} label={t.testiH} arrows>
-            {TESTIMONIALS.map((c) => (
-              // Testimonials are English-only for now, so the raw entry is used
-              // directly (no positional translation merge).
+            {TESTIMONIALS.map((raw, i) => {
+              // Positional translation of the quote; the name (`who`) is a real
+              // personal name and stays in Latin script in every language.
+              const c = tTestimonial(raw, i)
+              return (
               <figure key={c.who} className="tcard">
                 <div className="tcard-avatar">
                   {c.photo ? (
@@ -176,7 +178,8 @@ export default function About() {
                   {c.role && <span className="muted tcard-role">{c.role}</span>}
                 </figcaption>
               </figure>
-            ))}
+              )
+            })}
           </Carousel>
         </div>
       </section>
