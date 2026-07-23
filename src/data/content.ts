@@ -38,6 +38,8 @@ export interface Testimonial {
   /** Optional context label (community / relationship). The Company Profile
    *  testimonials carry no such label, so these are left blank for now. */
   role: string
+  /** Real headshot where the client supplied one; otherwise initials are shown. */
+  photo?: string
 }
 
 // Item 9: the seven real client testimonials from the Company Profile, attributed
@@ -48,14 +50,18 @@ export interface Testimonial {
 // confirming before launch — "real statement agency" (Maria Palma, likely "real
 // estate agency") and "proffessional" (Lekoko Kenosi). Left verbatim rather than
 // silently editing an attributed quote.
+// Round 5 (fix 32): nine testimonials. Five carry a real headshot; the rest fall
+// back to two-letter initials. Deshani Gounden and Inshirah Tahir are new.
 export const TESTIMONIALS: Testimonial[] = [
+  { q: 'My experience with Henry was God sent. I say this because Henry not only took into account my requirements but he dove in and got me exactly what I wanted within 3 days. He is patient and so humble in his approach. Never forcing me to go for just any apartment. I have been in Abu Dhabi for almost 9 years and I have never dealt with such a pleasant, kind and genuinely caring real estate agent before. He is definitely a rare find.', who: 'Deshani Gounden', role: '', photo: '/images/testimonials/deshani-gounden.png' },
+  { q: 'Extremely professional and collaborative experience with Crest Range Properties. Elizabeth Abe was a pleasure to work with, extremely kind, communicative and patient especially if you are someone new to the city. She is a calming presence to do the whole process with and I could not recommend her enough. Overall very happy with the experience.', who: 'Inshirah Tahir', role: '', photo: '/images/testimonials/inshirah-tahir.png' },
   { q: 'We had the pleasure of working with this real statement agency. They were super quick and responsive. They will not make you waste any time. I highly recommend them!!', who: 'Maria Palma', role: '' },
-  { q: 'Excellence demonstrated all through finding the right apartment for me and assistance with movement and connections. Crest Range properties is simply the best.', who: 'Dr Martha Banfa', role: '' },
+  { q: 'Excellence demonstrated all through finding the right apartment for me and assistance with movement and connections. Crest Range properties is simply the best.', who: 'Dr Martha Banfa', role: '', photo: '/images/testimonials/dr-martha-banfa.png' },
   { q: 'Very supportive company, responsive to messages and secured my house quickly. Thanks Henry!', who: 'Nicki Williams', role: '' },
   { q: 'Excellent team of dedicated proffessional real estate company. I highly recommend anyone seeking accommodation in Abu Dhabi to contact them.', who: 'Lekoko Kenosi', role: '' },
-  { q: '100% would recommend! From my very first meeting the team were extremely helpful. I had a long list of things I need in an apartment and they managed to check every one of those requirements. Communication was always clear and there were never any grey areas. The team always goes the extra mile to answer my thousands of questions. Even after a year of moving in, the team is still super helpful.', who: 'Marni Venter', role: '' },
+  { q: '100% would recommend! From my very first meeting the team were extremely helpful. I had a long list of things I need in an apartment and they managed to check every one of those requirements. Communication was always clear and there were never any grey areas. The team always goes the extra mile to answer my thousands of questions. Even after a year of moving in, the team is still super helpful.', who: 'Marni Venter', role: '', photo: '/images/testimonials/marni-venter.png' },
   { q: 'The team are all very helpful, they helped me look for an apartment and made the process really easy. I worked with Elizabeth and it was really comfortable getting the apartment I was searching for.', who: 'Alreem Almarzouqi', role: '' },
-  { q: 'John was extraordinarily diligent, patient, and always looking after our interests to ensure we found a home that could accommodate our family. His assistance went well beyond showing apartments, townhouses and villas. There was a high amount of handholding required given we were new to the UAE and he was there every step of the way to guide us. Extremely patient, and I can’t say enough good things about the way he and his company operated — even after technically their job was completed!', who: 'Peter Travnicek', role: '' },
+  { q: 'John was extraordinarily diligent, patient, and always looking after our interests to ensure we found a home that could accommodate our family. His assistance went well beyond showing apartments, townhouses and villas. There was a high amount of handholding required given we were new to the UAE and he was there every step of the way to guide us. Extremely patient, and I can’t say enough good things about the way he and his company operated — even after technically their job was completed!', who: 'Peter Travnicek', role: '', photo: '/images/testimonials/peter-travnicek.png' },
 ]
 
 /** Item 8: partners shown in the logo marquee (Home + Services). `logo` points
@@ -65,6 +71,8 @@ export const TESTIMONIALS: Testimonial[] = [
 export interface Partner {
   name: string
   logo: string
+  /** Round 5 (fix 31): render this logo ~50% larger than the default. */
+  big?: boolean
 }
 
 export const PARTNERS: Partner[] = [
@@ -72,14 +80,14 @@ export const PARTNERS: Partner[] = [
   { name: 'ALDAR', logo: '/images/partners/aldar.png' },
   // Asteco supplied an SVG; preferred over the PNG for crispness at any size.
   { name: 'Asteco', logo: '/images/partners/asteco.svg' },
-  { name: 'Reportage', logo: '/images/partners/reportage.png' },
-  { name: 'Q Holding', logo: '/images/partners/q-holding.png' },
+  { name: 'Reportage', logo: '/images/partners/reportage.png', big: true },
+  { name: 'Q Holding', logo: '/images/partners/q-holding.png', big: true },
   { name: 'Mudon', logo: '/images/partners/mudon.png' },
   // Round 4: black-on-transparent wordmark (was white-on-black last round).
   { name: 'Huspy', logo: '/images/partners/huspy.svg' },
-  { name: 'Binghati', logo: '/images/partners/binghati.png' },
-  { name: 'Object 1', logo: '/images/partners/object1.png' },
-  { name: 'Ohana', logo: '/images/partners/ohana.png' },
+  { name: 'Binghati', logo: '/images/partners/binghati.png', big: true },
+  { name: 'Object 1', logo: '/images/partners/object1.png', big: true },
+  { name: 'Ohana', logo: '/images/partners/ohana.png', big: true },
 ]
 
 /** Homepage hero rotation. Local files only - no external CDN at runtime. */

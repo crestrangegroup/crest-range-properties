@@ -715,7 +715,8 @@ h4 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 96px;
+  /* Taller tile so the fix-31 enlarged logos fit without clipping. */
+  height: 116px;
   /* Fix 28: less padding so logos fill their tile prominently. */
   padding: 0 12px;
   background: #fff;
@@ -731,6 +732,10 @@ h4 {
   height: auto;
   object-fit: contain;
   transition: transform 0.25s ease;
+}
+/* Fix 31: five specific logos rendered ~50% larger than the default. */
+.partner-big img {
+  max-height: 102px;
 }
 .partner-item:hover img {
   transform: scale(1.12);
@@ -801,52 +806,70 @@ h4 {
   }
 }
 
-/* Testimonials premium cards (fix 23): equal height, bold gold quote-mark,
-   gold-outlined initial badge. */
-.testi-card {
+/* Testimonials (fix 32): circular photo/initials overlapping the card top, star
+   rating, name and quote, centered, equal height. */
+.tcard {
   height: 100%;
+  margin: 56px 0 0;
+  padding: 56px 26px 28px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin: 0;
-  padding: 28px 26px;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
 }
-.testi-mark {
-  font-family: var(--serif);
-  font-size: 56px;
-  line-height: 0.6;
-  height: 26px;
-  color: var(--gold);
-}
-.testi-q {
-  flex: 1;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 18px;
-  line-height: 1.55;
-  color: var(--ink);
-}
-.testi-foot {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13.5px;
-}
-.testi-avatar {
-  flex: none;
-  width: 42px;
-  height: 42px;
+.tcard-avatar {
+  position: absolute;
+  top: -44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  border: 1.5px solid var(--gold);
+  overflow: hidden;
+  border: 2px solid var(--gold);
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 30px;
   color: var(--gold);
+  box-shadow: 0 8px 22px rgba(20, 18, 13, 0.14);
+}
+.tcard-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tcard-stars {
+  color: var(--gold-bright);
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+.tcard-q {
+  flex: 1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.tcard-cap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tcard-name {
+  font-size: 15px;
+}
+.tcard-role {
+  font-size: 13px;
 }
 
 /* Careers page premium treatment (fix 20). */

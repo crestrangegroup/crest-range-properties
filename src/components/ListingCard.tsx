@@ -46,13 +46,6 @@ export default function ListingCard({ listing }: Props) {
 
         <SpecRow listing={listing} size={15} gap={14} className="muted" style={{ fontSize: 13.5 }} />
 
-        {listing.permit && (
-          // Fix 27: permit number shown in bold.
-          <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em', fontWeight: 700 }}>
-            {t.permitNo} <span dir="ltr">{listing.permit}</span>
-          </div>
-        )}
-
         <div style={{ fontFamily: 'var(--serif)', fontSize: 21, marginTop: 'auto', paddingTop: 8 }}>
           {fmtPrice(listing)}
         </div>
@@ -81,6 +74,14 @@ export default function ListingCard({ listing }: Props) {
             {t.whatsBtn}
           </a>
         </div>
+
+        {listing.permit && (
+          // Permit refinement: below the action icons, left-aligned; only the
+          // "Permit no." label is bold, the number stays regular weight.
+          <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em', textAlign: 'start' }}>
+            <strong>{t.permitNo}</strong> <span dir="ltr">{listing.permit}</span>
+          </div>
+        )}
       </div>
     </article>
   )

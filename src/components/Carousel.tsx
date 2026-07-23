@@ -1,4 +1,5 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight } from './Icons'
 import './carousel.css'
 
 interface Props {
@@ -8,9 +9,11 @@ interface Props {
   /** Slides visible at once on desktop; always 1 on mobile. */
   visible?: number
   label: string
+  /** Show prev/next arrows beside the dots (testimonials, fix 32). */
+  arrows?: boolean
 }
 
-export default function Carousel({ children, intervalMs, visible = 3, label }: Props) {
+export default function Carousel({ children, intervalMs, visible = 3, label, arrows = false }: Props) {
   const slides = children.filter(Boolean)
   const [idx, setIdx] = useState(0)
   const [perView, setPerView] = useState(visible)
@@ -83,16 +86,28 @@ export default function Carousel({ children, intervalMs, visible = 3, label }: P
       </div>
 
       {pages > 1 && (
-        <div className="carousel-dots">
-          {Array.from({ length: pages }, (_, i) => (
-            <button
-              key={i}
-              className={i === idx ? 'on' : ''}
-              onClick={() => go(i)}
-              aria-label={`${label} ${i + 1} of ${pages}`}
-              aria-current={i === idx}
-            />
-          ))}
+        <div className="carousel-nav">
+          {arrows && (
+            <button className="carousel-arrow" onClick={() => go(idx - 1)} aria-label={`${label}: previous`}>
+              <ArrowLeft size={16} />
+            </button>
+          )}
+          <div className="carousel-dots">
+            {Array.from({ length: pages }, (_, i) => (
+              <button
+                key={i}
+                className={i === idx ? 'on' : ''}
+                onClick={() => go(i)}
+                aria-label={`${label} ${i + 1} of ${pages}`}
+                aria-current={i === idx}
+              />
+            ))}
+          </div>
+          {arrows && (
+            <button className="carousel-arrow" onClick={() => go(idx + 1)} aria-label={`${label}: next`}>
+              <ArrowRight size={16} />
+            </button>
+          )}
         </div>
       )}
     </div>

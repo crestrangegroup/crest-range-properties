@@ -26,6 +26,8 @@ export const ROUTES = {
   teamMemberPattern: '/team/:id',
   /** Public Careers page (admin-side posting management is a later batch). */
   careers: '/careers',
+  /** Full-page job application form (fix 34); role passed as ?role=<id>. */
+  careersApply: '/careers/apply',
   services: '/services',
   /** Unlisted page hosting the Property Management proposal form. */
   proposal: '/services/request-a-proposal',

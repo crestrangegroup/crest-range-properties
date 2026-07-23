@@ -182,6 +182,10 @@ export const EN = {
   appLinkedIn: 'LinkedIn profile URL',
   appOptional: 'optional',
   appSelect: 'Select…',
+  // Full-page apply form (fix 34).
+  appLead: 'Tell us about yourself and attach your CV. It takes a couple of minutes.',
+  appSecPersonal: 'Personal information',
+  appSecDetails: 'Application details',
   appSend: 'Apply Now!', appSendSub: 'We usually respond within two weeks.',
   appSentH: 'Application received',
   appSentP: 'Thank you. Our team will review your details and be in touch if there is a fit.',

@@ -93,6 +93,26 @@ export const ArrowLeft = ({ size = 16, className }: P) => (
   </svg>
 )
 
+export const ArrowRight = ({ size = 16, className }: P) => (
+  <svg {...base(size)} className={className}>
+    <path d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+)
+
+export const User = ({ size = 16, className }: P) => (
+  <svg {...base(size)} className={className}>
+    <path d="M20 21a8 8 0 0 0-16 0" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+)
+
+export const Doc = ({ size = 16, className }: P) => (
+  <svg {...base(size)} className={className}>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+    <path d="M14 2v6h6M9 13h6M9 17h6" />
+  </svg>
+)
+
 export const Globe = ({ size = 16, className }: P) => (
   <svg {...base(size)} className={className}>
     <circle cx="12" cy="12" r="9" />

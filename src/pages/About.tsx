@@ -16,7 +16,7 @@ function testimonialInitials(name: string) {
 }
 
 export default function About() {
-  const { t, tTestimonial, addressLines, role } = useI18n()
+  const { t, addressLines, role } = useI18n()
   const { hash } = useLocation()
   const founder = TEAM.find((m) => m.id === 'fatoki') || TEAM[0]
 
@@ -153,28 +153,30 @@ export default function About() {
               <h2 className="h2">{t.testiH}</h2>
             </div>
           </div>
-          <Carousel intervalMs={9000} visible={3} label={t.testiH}>
-            {TESTIMONIALS.map((raw, i) => {
-              const c = tTestimonial(raw, i)
-              return (
-                <blockquote key={raw.who} className="testi-card">
-                  <span className="testi-mark" aria-hidden>
-                    “
-                  </span>
-                  <p className="testi-q">{c.q}</p>
-                  <footer className="testi-foot">
-                    <span className="testi-avatar" aria-hidden>
-                      {testimonialInitials(raw.who)}
-                    </span>
-                    <span>
-                      {/* Client names are real personal names and stay in Latin script. */}
-                      <strong style={{ display: 'block' }}>{raw.who}</strong>
-                      {c.role && <span className="muted" style={{ fontSize: 13 }}>{c.role}</span>}
-                    </span>
-                  </footer>
-                </blockquote>
-              )
-            })}
+          <Carousel intervalMs={9000} visible={3} label={t.testiH} arrows>
+            {TESTIMONIALS.map((c) => (
+              // Testimonials are English-only for now, so the raw entry is used
+              // directly (no positional translation merge).
+              <figure key={c.who} className="tcard">
+                <div className="tcard-avatar">
+                  {c.photo ? (
+                    <img src={c.photo} alt={c.who} loading="lazy" width={88} height={88} />
+                  ) : (
+                    // Two-letter initials where no headshot was supplied (fix 32).
+                    <span aria-hidden>{testimonialInitials(c.who)}</span>
+                  )}
+                </div>
+                <div className="tcard-stars" aria-label="Rated 5 out of 5">
+                  {'★★★★★'}
+                </div>
+                <blockquote className="tcard-q">{c.q}</blockquote>
+                <figcaption className="tcard-cap">
+                  {/* Client names are real personal names and stay in Latin script. */}
+                  <strong className="tcard-name">{c.who}</strong>
+                  {c.role && <span className="muted tcard-role">{c.role}</span>}
+                </figcaption>
+              </figure>
+            ))}
           </Carousel>
         </div>
       </section>
@@ -300,17 +302,17 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section dark">
+      {/* Fix 33: light section, so the rhythm is light -> dark (Careers) ->
+          light (this) -> dark (footer), not three dark sections in a row. */}
+      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)' }}>
         <div className="wrap">
-          <h2 className="h2" style={{ color: '#fff' }}>
-            {t.contactH}
-          </h2>
+          <h2 className="h2">{t.contactH}</h2>
           <div style={{ marginTop: 18, lineHeight: 1.8 }} className="muted">
             {addressLines.map((l) => (
               <div key={l}>{l}</div>
             ))}
           </div>
-          <Link className="btn btn-gold btn-inline" to={ROUTES.contact} style={{ marginTop: 24 }}>
+          <Link className="btn btn-primary btn-inline" to={ROUTES.contact} style={{ marginTop: 24 }}>
             {t.navContact}
           </Link>
         </div>
