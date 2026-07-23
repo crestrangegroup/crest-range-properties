@@ -22,8 +22,8 @@ export default function ListingCard({ listing }: Props) {
   const agent = byId(listing.agent)
   const url = ROUTES.property(listing.slug)
 
-  // Fix 45: address the listing's agent by name in the WhatsApp message.
-  const enquiry = `Hello ${agent.name}, I'd like details on "${listing.title}" (${listing.addr}).`
+  // Fix 45: address the listing's agent by first name only in the WhatsApp message.
+  const enquiry = `Hello ${agent.name.split(' ')[0]}, I'd like details on "${listing.title}" (${listing.addr}).`
 
   return (
     <article className="card">

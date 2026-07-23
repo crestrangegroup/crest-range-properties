@@ -66,7 +66,7 @@ const PHONE_2 = '+971 54 705 3421'
  *  factual questions get a real answer instead of a canned deflection. */
 const FACTS = `FACTS you may answer directly and specifically from:
 Office F6-01, Zig Zag Towers, Al Zahiya (Tourist Club Area), opposite Abu Dhabi Mall, Abu Dhabi.
-Hours Monday to Saturday 9:00 to 18:00. Viewings by appointment, seven days a week.
+Hours Monday to Friday 10:00 to 18:00. Viewings by appointment, seven days a week.
 Phones ${PHONE_1} and ${PHONE_2}. Email info@crestrangeproperties.com.
 Services: sales, leasing and property management.
 Communities covered: Saadiyat Island, Yas Island, Al Reem Island, Al Raha Beach, Corniche, Al Zahiya, Al Maryah Island, Khalifa City.
