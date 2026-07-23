@@ -2,8 +2,7 @@ import { FormEvent, useState } from 'react'
 import { useI18n } from '../i18n/I18nProvider'
 import { useChat } from '../components/chat/ChatProvider'
 import { COMMUNITIES } from '../data/listings'
-import { TESTIMONIALS } from '../data/content'
-import Carousel from '../components/Carousel'
+import StackedTestimonials from '../components/StackedTestimonials'
 import { NameFields } from '../components/forms/Fields'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
@@ -206,17 +205,7 @@ export default function Sell() {
               </p>
             </div>
           </div>
-          <Carousel intervalMs={9000} visible={2} label={t.sellTestiH}>
-            {TESTIMONIALS.map((raw, i) => (
-              <blockquote key={raw.who} className="card" style={{ padding: 26, margin: 0, gap: 16, justifyContent: 'space-between' }}>
-                <p style={{ fontFamily: 'var(--serif)', fontSize: 18, lineHeight: 1.5, margin: 0 }}>“{raw.q}”</p>
-                <footer style={{ fontSize: 13.5 }}>
-                  <strong>{raw.who}</strong>
-                  <div className="muted">{raw.role}</div>
-                </footer>
-              </blockquote>
-            ))}
-          </Carousel>
+          <StackedTestimonials />
         </div>
       </section>
 

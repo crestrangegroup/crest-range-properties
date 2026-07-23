@@ -93,7 +93,8 @@ export default function CareersApply() {
   const roleId = params.get('role') || 'general'
   const roleTitle = roleId === 'general' ? '' : t[JOB_POSTINGS.find((j) => j.id === roleId)?.titleKey ?? 'jobSampleTitle']
 
-  const [name, setName] = useState('')
+  const [first, setFirst] = useState('')
+  const [last, setLast] = useState('')
   const [email, setEmail] = useState('')
   const [code, setCode] = useState(DEFAULT_CODE)
   const [phone, setPhone] = useState('')
@@ -116,7 +117,8 @@ export default function CareersApply() {
     // Required: name, email, phone, nationality, qualification, visa, salary
     // expectations, CV. (Current salary, notice period, LinkedIn are optional.)
     if (
-      !name.trim() ||
+      !first.trim() ||
+      !last.trim() ||
       !email.trim() ||
       !phoneValid(code, phone) ||
       !nationality ||
@@ -143,7 +145,8 @@ export default function CareersApply() {
     ].filter(Boolean)
     const ok = await submitLead({
       kind: 'career',
-      firstName: name,
+      firstName: first,
+      lastName: last,
       email,
       phoneCode: code,
       phone,
@@ -197,7 +200,8 @@ export default function CareersApply() {
                 </h2>
               </div>
               <div className="apply-grid">
-                <IconInput id="ap-name" label={t.appName} icon={<User size={15} />} value={name} onChange={setName} autoComplete="name" />
+                <IconInput id="ap-first" label={t.formFirst} icon={<User size={15} />} value={first} onChange={setFirst} autoComplete="given-name" />
+                <IconInput id="ap-last" label={t.formLast} icon={<User size={15} />} value={last} onChange={setLast} autoComplete="family-name" />
                 <IconInput id="ap-email" label={t.appEmail} icon={<Mail size={15} />} value={email} onChange={setEmail} type="email" autoComplete="email" dir="ltr" />
                 <PhoneField code={code} phone={phone} onCode={setCode} onPhone={setPhone} required id="ap-phone" />
                 <SelectField id="ap-nat" label={t.appNationality} value={nationality} onChange={setNationality} options={COUNTRY_NAMES} placeholder={t.appSelect} />

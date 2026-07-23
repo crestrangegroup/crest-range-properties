@@ -302,19 +302,22 @@ export default function About() {
         </div>
       </section>
 
-      {/* Fix 33: light section, so the rhythm is light -> dark (Careers) ->
-          light (this) -> dark (footer), not three dark sections in a row. */}
-      <section className="section" style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)' }}>
+      {/* Fix 33: light section (rhythm: light -> dark Careers -> light -> dark
+          footer). Fix 36: ~half the height, content spread across a row so the
+          band reads full rather than sparse. */}
+      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', paddingBlock: 'clamp(26px,3.4vw,40px)' }}>
         <div className="wrap">
-          <h2 className="h2">{t.contactH}</h2>
-          <div style={{ marginTop: 18, lineHeight: 1.8 }} className="muted">
-            {addressLines.map((l) => (
-              <div key={l}>{l}</div>
-            ))}
+          <div className="about-contact-row">
+            <h2 className="h2" style={{ margin: 0 }}>{t.contactH}</h2>
+            <div className="muted" style={{ lineHeight: 1.7, fontSize: 14 }}>
+              {addressLines.map((l) => (
+                <div key={l}>{l}</div>
+              ))}
+            </div>
+            <Link className="btn btn-primary btn-inline" to={ROUTES.contact} style={{ flex: 'none' }}>
+              {t.navContact}
+            </Link>
           </div>
-          <Link className="btn btn-primary btn-inline" to={ROUTES.contact} style={{ marginTop: 24 }}>
-            {t.navContact}
-          </Link>
         </div>
       </section>
     </>

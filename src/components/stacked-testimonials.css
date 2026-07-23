@@ -1,0 +1,109 @@
+/* Sell-page stacked testimonial deck (fix 39). Front card sits on two offset
+   "ghost" cards for a layered-deck depth, flanked by circular gold arrows. */
+.stk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.4vw, 26px);
+  margin-top: 30px;
+}
+.stk-deck {
+  position: relative;
+  flex: 1;
+  max-width: 640px;
+}
+.stk-card {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 20px 44px rgba(20, 18, 13, 0.12);
+  animation: fadeUp 0.35s ease both;
+}
+/* The layered cards behind the front one. */
+.stk-ghost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.stk-ghost.g1 {
+  z-index: 2;
+  transform: translateY(12px) scaleX(0.95);
+  opacity: 0.7;
+  box-shadow: 0 12px 26px rgba(20, 18, 13, 0.08);
+}
+.stk-ghost.g2 {
+  z-index: 1;
+  transform: translateY(24px) scaleX(0.9);
+  opacity: 0.45;
+}
+.stk-stars {
+  color: var(--gold-bright);
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+.stk-q {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.6vw, 20px);
+  line-height: 1.55;
+  color: var(--ink);
+}
+.stk-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+.stk-photo {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+}
+.stk-init {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--gold);
+  background: var(--bg);
+}
+.stk-name {
+  display: block;
+}
+.stk-role {
+  font-size: 12.5px;
+}
+.stk-arrow {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+}
+.stk-arrow:hover {
+  background: var(--gold);
+  color: var(--ink);
+}

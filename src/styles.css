@@ -714,28 +714,27 @@ h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  /* Taller tile so the fix-31 enlarged logos fit without clipping. */
-  height: 116px;
-  /* Fix 28: less padding so logos fill their tile prominently. */
-  padding: 0 12px;
+  /* Fix 37: white tile is 30% narrower than its cell, centered (more gap
+     between tiles). Taller so the enlarged logos fit without clipping. */
+  width: 70%;
+  margin: 0 auto;
+  height: 132px;
+  padding: 0 10px;
   background: #fff;
-  border: 1px solid var(--line);
+  /* Fix 38: no border on any tile (all 10 consistent). */
+  border: 0;
   border-radius: 8px;
   box-sizing: border-box;
 }
 .partner-item img {
   max-width: 100%;
-  /* Fix 28: ~20% larger than the previous 56px baseline. */
+  /* Default rendered height; individual logos override via an inline max-height
+     (see PARTNERS `h`, fix 37). */
   max-height: 68px;
   width: auto;
   height: auto;
   object-fit: contain;
   transition: transform 0.25s ease;
-}
-/* Fix 31: five specific logos rendered ~50% larger than the default. */
-.partner-big img {
-  max-height: 102px;
 }
 .partner-item:hover img {
   transform: scale(1.12);
@@ -853,7 +852,8 @@ h4 {
   font-size: 15px;
 }
 .tcard-q {
-  flex: 1;
+  /* Fix 35: no flex-grow, so the name sits directly under the quote instead of
+     being pushed to the (clipped) bottom of an equal-height card. */
   margin: 0;
   font-family: var(--serif);
   font-size: 16.5px;
@@ -864,12 +864,30 @@ h4 {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-top: 4px;
 }
 .tcard-name {
-  font-size: 15px;
+  font-size: 15.5px;
+  font-weight: 700;
 }
 .tcard-role {
   font-size: 13px;
+}
+
+/* About contact band (fix 36): heading, address and CTA spread across one row
+   so a shorter section still reads full. Stacks on narrow screens. */
+.about-contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+}
+@media (max-width: 640px) {
+  .about-contact-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 /* Careers page premium treatment (fix 20). */

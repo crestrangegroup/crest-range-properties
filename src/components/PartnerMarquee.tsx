@@ -15,11 +15,12 @@ export default function PartnerMarquee() {
       durationSec={45}
       className="partners-marquee"
       items={PARTNERS.map((p) => (
-        <div className={`partner-item${p.big ? ' partner-big' : ''}`}>
+        <div className="partner-item">
           <img
             src={p.logo}
             alt={p.name}
             loading="lazy"
+            style={p.h ? { maxHeight: p.h } : undefined}
             onError={(e) => {
               // Never show a broken image: fall back to the partner name.
               const el = e.currentTarget
