@@ -22,6 +22,10 @@ export const COMPANY = {
    *  in sync as the canonical English source. */
   hoursLines: ['Monday – Friday, 10:00 AM – 6:00 PM', 'Viewings by appointment—7 days a week'],
   mapQuery: 'Zig Zag Towers, Al Zahiya, Abu Dhabi',
+  /** Verified coordinates of the Crest Range Properties LLC Google listing at
+   *  Zig Zag Tower (fix 26). Place ID: ChIJCVav2_hnXj4Rm17f_viY_vw. */
+  mapLat: 24.4953501,
+  mapLng: 54.3793768,
   /** Display order is set in Footer.tsx: LinkedIn, Instagram, TikTok, Threads,
    *  Facebook, YouTube. */
   social: {

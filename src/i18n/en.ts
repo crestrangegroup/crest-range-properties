@@ -88,7 +88,7 @@ export const EN = {
   aboutK: 'Our story', aboutH: 'A boutique brokerage built on repeat clients.',
   // Item 2: About intro, replaced word-for-word from the Company Profile.
   aboutP1: 'Crest Range Properties LLC is a dynamic and forward-thinking Real Estate Company based in the vibrant city of Abu Dhabi. Established in 2020, our Company has swiftly grown to become a prominent player in the local Real Estate Market, thanks to our unwavering commitment to excellence and our extensive portfolio of Leasing, Property Management, and Real Estate Sales Services.',
-  testiH: 'Clients who closed with us',
+  testiK: 'In their words', testiH: 'Clients who closed with us',
 
   // Item 3 / preview fix 4: the section is titled "Founder's Message"
   // (first-person), distinct from Fatoki's third-person bio page.
@@ -170,10 +170,20 @@ export const EN = {
     'Know Al Reem, Al Raha, Saadiyat and Yas street by street',
     'UAE real estate experience welcome but not required — we train for the rest',
   ],
-  // Application form.
-  appName: 'Full name', appPhone: 'Mobile', appEmail: 'Email', appCv: 'CV / résumé',
+  // Application form (round 4 field set).
+  appName: 'Full name', appPhone: 'Phone', appEmail: 'Email', appCv: 'CV / résumé',
   appCvHint: 'PDF or Word, up to 10 MB',
-  appSend: 'Submit application', appSentH: 'Application received',
+  appNationality: 'Nationality (as per passport)',
+  appQualification: 'What is your highest education qualification?',
+  appVisa: 'What is your current visa?',
+  appCurrentSalary: 'Current salary (AED / month)',
+  appSalaryExpect: 'Salary expectations (AED / month)',
+  appNotice: 'Notice period',
+  appLinkedIn: 'LinkedIn profile URL',
+  appOptional: 'optional',
+  appSelect: 'Select…',
+  appSend: 'Apply Now!', appSendSub: 'We usually respond within two weeks.',
+  appSentH: 'Application received',
   appSentP: 'Thank you. Our team will review your details and be in touch if there is a fit.',
   appBack: 'Back to Careers',
 

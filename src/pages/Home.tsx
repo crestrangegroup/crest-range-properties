@@ -196,19 +196,20 @@ export default function Home() {
               {t.viewAll}
             </Link>
           </div>
+          {/* Preview fix 15: featured listings scroll as a continuous marquee
+              (pause + zoom on hover). Fix 29: kept inside .wrap so it respects
+              the page margin instead of bleeding to the window edge. */}
+          <Marquee
+            label={t.featuredH}
+            durationSec={55}
+            className="marquee-listings"
+            items={featured.map((l) => (
+              <div className="marquee-listing">
+                <ListingCard listing={l} />
+              </div>
+            ))}
+          />
         </div>
-        {/* Preview fix 15: featured listings scroll as a continuous marquee
-            (same behaviour as Our Partners), pausing and zooming on hover. */}
-        <Marquee
-          label={t.featuredH}
-          durationSec={55}
-          className="marquee-listings"
-          items={featured.map((l) => (
-            <div className="marquee-listing">
-              <ListingCard listing={l} />
-            </div>
-          ))}
-        />
       </section>
 
       {/* 4 - Neighbourhood guides */}

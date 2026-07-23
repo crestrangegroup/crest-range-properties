@@ -10,8 +10,9 @@
   z-index: 90;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 13px 18px;
+  /* Fix 24: icon-only by default; the label expands on hover. */
+  gap: 0;
+  padding: 14px;
   border: 0;
   border-radius: 999px;
   background: var(--gold-bright);
@@ -22,15 +23,25 @@
   cursor: pointer;
   box-shadow: 0 12px 30px rgba(20, 18, 13, 0.26);
   max-width: calc(100vw - 40px);
+  transition: background 0.18s ease, color 0.18s ease;
 }
 .crc-bubble:hover {
   background: var(--ink);
   color: var(--gold-bright);
 }
 .crc-bubble .lbl {
-  white-space: nowrap;
+  max-width: 0;
+  opacity: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: max-width 0.3s ease, opacity 0.2s ease, margin-inline-start 0.3s ease;
+}
+/* Reveal the full pill on hover (and while keyboard-focused). */
+.crc-bubble:hover .lbl,
+.crc-bubble:focus-visible .lbl {
+  max-width: 220px;
+  opacity: 1;
+  margin-inline-start: 9px;
 }
 
 .crc-badge {

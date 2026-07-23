@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from '../routes'
 import { useI18n, LANGS, LangCode } from '../i18n/I18nProvider'
 import { useChat } from './chat/ChatProvider'
-import { Chevron, Globe, Menu, Close } from './Icons'
+import { Chevron, Globe, Menu, Close, Chat } from './Icons'
 import './Header.css'
 
 /** Languages shown inline; the rest live behind the globe menu. */
@@ -147,7 +147,8 @@ export default function Header() {
             </div>
           </div>
 
-          <button className="btn btn-gold btn-inline" onClick={openChat}>
+          <button className="btn btn-chat btn-inline" onClick={openChat}>
+            <Chat size={15} />
             {t.chatCta}
           </button>
         </div>
@@ -194,13 +195,14 @@ export default function Header() {
         </div>
 
         <button
-          className="btn btn-gold"
+          className="btn btn-chat"
           style={{ width: '100%', marginTop: 14 }}
           onClick={() => {
             setMobileOpen(false)
             openChat()
           }}
         >
+          <Chat size={15} />
           {t.chatCta}
         </button>
       </div>

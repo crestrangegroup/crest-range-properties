@@ -1,10 +1,17 @@
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/I18nProvider'
 import { ROUTES } from '../routes'
-import { JOB_POSTINGS } from '../data/careers'
+import {
+  JOB_POSTINGS,
+  QUALIFICATIONS,
+  VISA_STATUSES,
+  SALARY_BANDS,
+  SALARY_EXPECTATIONS,
+  NOTICE_PERIODS,
+} from '../data/careers'
 import { submitLead } from '../lib/leads'
-import { NameFields, EmailField } from '../components/forms/Fields'
+import { EmailField } from '../components/forms/Fields'
 import PhoneField, { phoneValid } from '../components/forms/PhoneField'
 import { DEFAULT_CODE } from '../data/countries'
 import { Check, Close, Pin } from '../components/Icons'
@@ -156,49 +163,71 @@ export default function Careers() {
   )
 }
 
-/** Lightweight application modal. Submits via the shared lead pathway. */
+/** Application modal (round 4 field set). Submits via the shared lead pathway;
+ *  the CV file is collected but not transmitted (that needs Supabase Storage +
+ *  an Edge Function change - deferred to the admin batch). Everything else,
+ *  including the CV filename, is sent so the team is notified. */
 function ApplyModal({ roleId, roleTitle, onClose }: { roleId: string; roleTitle: string; onClose: () => void }) {
   const { t } = useI18n()
-  const [first, setFirst] = useState('')
-  const [last, setLast] = useState('')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [code, setCode] = useState(DEFAULT_CODE)
   const [phone, setPhone] = useState('')
+  const [nationality, setNationality] = useState('')
+  const [qualification, setQualification] = useState('')
+  const [visa, setVisa] = useState('')
+  const [curSalary, setCurSalary] = useState('')
+  const [expSalary, setExpSalary] = useState('')
+  const [notice, setNotice] = useState('')
+  const [linkedin, setLinkedin] = useState('')
   const [cvName, setCvName] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [sent, setSent] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!first.trim() || !last.trim() || !email.trim() || !phoneValid(code, phone)) {
+    // Required: name, email, phone, nationality, qualification, visa, CV.
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !phoneValid(code, phone) ||
+      !nationality.trim() ||
+      !qualification ||
+      !visa ||
+      !cvName
+    ) {
       setError(t.formRequired)
       return
     }
     setError('')
     setBusy(true)
-    // The CV file itself is not uploaded (needs Storage + an Edge Function
-    // change); we forward the applicant's details and the CV filename so the
-    // team is still notified. `career` is an accepted lead kind (no schema/RLS
-    // change required — the public insert policy does not restrict kind).
+    const details = [
+      `Role: ${roleTitle || 'General interest'}`,
+      `Nationality: ${nationality}`,
+      `Qualification: ${qualification}`,
+      `Visa: ${visa}`,
+      curSalary && `Current salary: ${curSalary}`,
+      expSalary && `Expected salary: ${expSalary}`,
+      notice && `Notice: ${notice}`,
+      linkedin && `LinkedIn: ${linkedin}`,
+      cvName ? `CV: ${cvName} (file not transmitted — pending Storage)` : 'No CV',
+    ].filter(Boolean)
     const ok = await submitLead({
       kind: 'career',
-      firstName: first,
-      lastName: last,
+      firstName: name,
       email,
       phoneCode: code,
       phone,
-      message: [
-        `Careers application: ${roleTitle || 'General interest'}`,
-        cvName ? `CV attached by applicant: ${cvName} (file not transmitted — pending Storage)` : 'No CV file attached',
-      ].join(' | '),
-      meta: { role: roleId, cvName: cvName || null },
+      message: `Careers application | ${details.join(' | ')}`,
+      meta: { role: roleId, nationality, qualification, visa, curSalary, expSalary, notice, linkedin, cvName: cvName || null },
     })
     setBusy(false)
     if (ok) setSent(true)
     else setError(t.formRequired)
   }
+
+  const optional = ` (${t.appOptional})`
 
   return (
     <div
@@ -220,7 +249,7 @@ function ApplyModal({ roleId, roleTitle, onClose }: { roleId: string; roleTitle:
       <div
         className="card"
         onClick={(e) => e.stopPropagation()}
-        style={{ width: 'min(520px, 100%)', maxHeight: '90dvh', overflowY: 'auto', padding: 'clamp(22px,4vw,32px)' }}
+        style={{ width: 'min(540px, 100%)', maxHeight: '90dvh', overflowY: 'auto', padding: 'clamp(22px,4vw,32px)' }}
       >
         <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
           <div>
@@ -233,12 +262,7 @@ function ApplyModal({ roleId, roleTitle, onClose }: { roleId: string; roleTitle:
               </h2>
             )}
           </div>
-          <button
-            onClick={onClose}
-            aria-label={t.closeBtn}
-            className="icon-btn"
-            style={{ flex: 'none' }}
-          >
+          <button onClick={onClose} aria-label={t.closeBtn} className="icon-btn" style={{ flex: 'none' }}>
             <Close size={16} />
           </button>
         </div>
@@ -257,32 +281,74 @@ function ApplyModal({ roleId, roleTitle, onClose }: { roleId: string; roleTitle:
             </button>
           </div>
         ) : (
-          <form onSubmit={onSubmit} className="stack" style={{ gap: 16, marginTop: 20 }}>
-            <div className="form-grid">
-              <NameFields first={first} last={last} onFirst={setFirst} onLast={setLast} />
+          <form onSubmit={onSubmit} className="stack" style={{ gap: 15, marginTop: 20 }}>
+            <div className="field">
+              <label className="label" htmlFor="app-name">{t.appName}</label>
+              <input id="app-name" className="input" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </div>
             <EmailField value={email} onChange={setEmail} required />
             <PhoneField code={code} phone={phone} onCode={setCode} onPhone={setPhone} required id="app-phone" />
             <div className="field">
-              <label className="label" htmlFor="app-cv">
-                {t.appCv}
-              </label>
+              <label className="label" htmlFor="app-nat">{t.appNationality}</label>
+              <input id="app-nat" className="input" value={nationality} onChange={(e) => setNationality(e.target.value)} />
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-qual">{t.appQualification}</label>
+              <select id="app-qual" className="select" value={qualification} onChange={(e) => setQualification(e.target.value)}>
+                <option value="">{t.appSelect}</option>
+                {QUALIFICATIONS.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-visa">{t.appVisa}</label>
+              <select id="app-visa" className="select" value={visa} onChange={(e) => setVisa(e.target.value)}>
+                <option value="">{t.appSelect}</option>
+                {VISA_STATUSES.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-cursal">{t.appCurrentSalary}{optional}</label>
+              <select id="app-cursal" className="select" value={curSalary} onChange={(e) => setCurSalary(e.target.value)}>
+                <option value="">{t.appSelect}</option>
+                {SALARY_BANDS.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-expsal">{t.appSalaryExpect}{optional}</label>
+              <select id="app-expsal" className="select" value={expSalary} onChange={(e) => setExpSalary(e.target.value)}>
+                <option value="">{t.appSelect}</option>
+                {SALARY_EXPECTATIONS.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-notice">{t.appNotice}{optional}</label>
+              <select id="app-notice" className="select" value={notice} onChange={(e) => setNotice(e.target.value)}>
+                <option value="">{t.appSelect}</option>
+                {NOTICE_PERIODS.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-cv">{t.appCv}</label>
               <input
-                ref={fileRef}
                 id="app-cv"
                 type="file"
                 accept=".pdf,.doc,.docx,application/pdf"
                 onChange={(e) => setCvName(e.target.files?.[0]?.name ?? '')}
                 style={{ fontSize: 14 }}
               />
-              <span className="muted" style={{ fontSize: 12 }}>
-                {t.appCvHint}
-              </span>
+              <span className="muted" style={{ fontSize: 12 }}>{t.appCvHint}</span>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="app-li">{t.appLinkedIn}{optional}</label>
+              <input id="app-li" className="input" type="url" inputMode="url" dir="ltr" placeholder="https://" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} />
             </div>
             {error && <p className="field-error">{error}</p>}
-            <button className="btn btn-primary" type="submit" disabled={busy}>
-              {t.appSend}
-            </button>
+            <div className="stack" style={{ gap: 6 }}>
+              <button className="btn btn-primary" type="submit" disabled={busy}>
+                {t.appSend}
+              </button>
+              <span className="muted" style={{ fontSize: 12, textAlign: 'center' }}>{t.appSendSub}</span>
+            </div>
           </form>
         )}
       </div>

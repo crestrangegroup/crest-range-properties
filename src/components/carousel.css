@@ -46,7 +46,9 @@
   transition: background 0.2s;
 }
 .carousel-dots button.on {
+  /* Fix 23: stronger gold active state. */
   background: var(--gold);
+  width: 34px;
 }
 
 @media (max-width: 720px) {

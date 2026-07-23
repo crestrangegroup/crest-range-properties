@@ -59,18 +59,14 @@ export const TESTIMONIALS: Testimonial[] = [
 ]
 
 /** Item 8: partners shown in the logo marquee (Home + Services). `logo` points
- *  at the official high-resolution file supplied by the client.
- *  `dark` marks a logo whose supplied file is a light mark on a solid dark
- *  background (Huspy) - its tile is rendered dark so the mark stays visible. */
+ *  at the official high-resolution file supplied by the client. Round 4 (fix 28)
+ *  swapped in tighter-cropped files and a black-on-transparent Huspy SVG, so
+ *  every logo now sits in a normal white tile (no dark special-case). */
 export interface Partner {
   name: string
   logo: string
-  dark?: boolean
 }
 
-// Fixes round 3 (fix 22): 10-partner list. Kept ALDAR, Asteco, Property Finder,
-// Huspy, Q Holding; dropped PROVIS, dubizzle, Holo, Siadah; added Reportage,
-// Mudon, Object 1, Binghati, Ohana. All official hi-res files.
 export const PARTNERS: Partner[] = [
   { name: 'Property Finder', logo: '/images/partners/property-finder.png' },
   { name: 'ALDAR', logo: '/images/partners/aldar.png' },
@@ -79,8 +75,8 @@ export const PARTNERS: Partner[] = [
   { name: 'Reportage', logo: '/images/partners/reportage.png' },
   { name: 'Q Holding', logo: '/images/partners/q-holding.png' },
   { name: 'Mudon', logo: '/images/partners/mudon.png' },
-  // Huspy's official file is a white wordmark on a solid black square.
-  { name: 'Huspy', logo: '/images/partners/huspy.png', dark: true },
+  // Round 4: black-on-transparent wordmark (was white-on-black last round).
+  { name: 'Huspy', logo: '/images/partners/huspy.svg' },
   { name: 'Binghati', logo: '/images/partners/binghati.png' },
   { name: 'Object 1', logo: '/images/partners/object1.png' },
   { name: 'Ohana', logo: '/images/partners/ohana.png' },

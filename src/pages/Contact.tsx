@@ -149,13 +149,13 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Preview fix 8: center and zoom on the office (Zig Zag Towers) with a
-          marker, rather than a wide city view. output=embed drops a pin on the
-          geocoded query; the specific building name + z=17 keeps it tight. */}
+      {/* Fix 26: exact verified coordinates of the Crest Range Properties LLC
+          listing at Zig Zag Tower. Querying `lat,lng` with output=embed drops a
+          marker precisely at that point (a named-place query did not, last time). */}
       <section aria-label={t.addrH} style={{ height: 'clamp(280px,42vw,440px)' }}>
         <iframe
           title={`${COMPANY.name} on Google Maps`}
-          src={`https://www.google.com/maps?q=${encodeURIComponent(COMPANY.mapQuery)}&z=17&output=embed`}
+          src={`https://www.google.com/maps?q=${COMPANY.mapLat},${COMPANY.mapLng}&z=18&output=embed`}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           style={{ border: 0, width: '100%', height: '100%', display: 'block' }}

@@ -15,7 +15,7 @@ export default function PartnerMarquee() {
       durationSec={45}
       className="partners-marquee"
       items={PARTNERS.map((p) => (
-        <div className={`partner-item${p.dark ? ' partner-item-dark' : ''}`}>
+        <div className="partner-item">
           <img
             src={p.logo}
             alt={p.name}

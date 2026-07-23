@@ -9,6 +9,12 @@ import PageHead from '../components/PageHead'
 import { COMPANY, waLink, telLink, mailTo } from '../data/company'
 import { Phone, Mail, WhatsApp } from '../components/Icons'
 
+/** Initials for the testimonial avatar badge, skipping honorifics. */
+function testimonialInitials(name: string) {
+  const words = name.split(/\s+/).filter((w) => !/^(dr|mr|mrs|ms|prof)\.?$/i.test(w))
+  return words.slice(0, 2).map((w) => w[0]?.toUpperCase() ?? '').join('')
+}
+
 export default function About() {
   const { t, tTestimonial, addressLines, role } = useI18n()
   const { hash } = useLocation()
@@ -137,26 +143,34 @@ export default function About() {
           live only on the Services page. The former duplicate block here has
           been removed. */}
 
-      {/* Testimonials are a rotating carousel, never a static grid. */}
+      {/* Testimonials (fix 23): gold kicker + serif heading, equal-height cards
+          with a bold gold quote-mark and a gold-outlined initial badge. */}
       <section className="section">
         <div className="wrap">
           <div className="sec-head">
-            <h2 className="h2">{t.testiH}</h2>
+            <div>
+              <p className="kicker">{t.testiK}</p>
+              <h2 className="h2">{t.testiH}</h2>
+            </div>
           </div>
           <Carousel intervalMs={9000} visible={3} label={t.testiH}>
             {TESTIMONIALS.map((raw, i) => {
               const c = tTestimonial(raw, i)
               return (
-                <blockquote
-                  key={raw.who}
-                  className="card"
-                  style={{ padding: 26, margin: 0, gap: 16, justifyContent: 'space-between' }}
-                >
-                  <p style={{ fontFamily: 'var(--serif)', fontSize: 19, lineHeight: 1.5, margin: 0 }}>“{c.q}”</p>
-                  <footer style={{ fontSize: 13.5 }}>
-                    {/* Client names are real personal names and stay in Latin script. */}
-                    <strong>{raw.who}</strong>
-                    <div className="muted">{c.role}</div>
+                <blockquote key={raw.who} className="testi-card">
+                  <span className="testi-mark" aria-hidden>
+                    “
+                  </span>
+                  <p className="testi-q">{c.q}</p>
+                  <footer className="testi-foot">
+                    <span className="testi-avatar" aria-hidden>
+                      {testimonialInitials(raw.who)}
+                    </span>
+                    <span>
+                      {/* Client names are real personal names and stay in Latin script. */}
+                      <strong style={{ display: 'block' }}>{raw.who}</strong>
+                      {c.role && <span className="muted" style={{ fontSize: 13 }}>{c.role}</span>}
+                    </span>
                   </footer>
                 </blockquote>
               )

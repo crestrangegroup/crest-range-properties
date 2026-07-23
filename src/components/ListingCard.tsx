@@ -47,7 +47,8 @@ export default function ListingCard({ listing }: Props) {
         <SpecRow listing={listing} size={15} gap={14} className="muted" style={{ fontSize: 13.5 }} />
 
         {listing.permit && (
-          <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em' }}>
+          // Fix 27: permit number shown in bold.
+          <div className="muted" style={{ fontSize: 11.5, letterSpacing: '.02em', fontWeight: 700 }}>
             {t.permitNo} <span dir="ltr">{listing.permit}</span>
           </div>
         )}

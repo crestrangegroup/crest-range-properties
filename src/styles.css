@@ -269,6 +269,24 @@ h4 {
   color: var(--gold-bright);
 }
 
+/* Premium inline "Agent Live Chat" CTA (fix 25): an ink pill with a gold glyph
+   and label, not a flat uppercase yellow block. Gold fill on hover. */
+.btn-chat {
+  background: var(--ink);
+  color: var(--gold-bright);
+  border-color: var(--ink);
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+  font-size: 13px;
+}
+.btn-chat:hover {
+  background: var(--gold-bright);
+  color: var(--ink);
+  border-color: var(--gold-bright);
+}
+
 .btn-outline {
   border-color: var(--line-strong);
   color: var(--ink);
@@ -698,20 +716,17 @@ h4 {
   justify-content: center;
   width: 100%;
   height: 96px;
-  padding: 0 22px;
+  /* Fix 28: less padding so logos fill their tile prominently. */
+  padding: 0 12px;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 8px;
   box-sizing: border-box;
 }
-/* Huspy: white mark on black - give the tile a matching dark ground. */
-.partner-item-dark {
-  background: #000;
-  border-color: #000;
-}
 .partner-item img {
   max-width: 100%;
-  max-height: 56px;
+  /* Fix 28: ~20% larger than the previous 56px baseline. */
+  max-height: 68px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -784,6 +799,54 @@ h4 {
   .work-teaser-photo {
     min-height: 180px;
   }
+}
+
+/* Testimonials premium cards (fix 23): equal height, bold gold quote-mark,
+   gold-outlined initial badge. */
+.testi-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 28px 26px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.testi-mark {
+  font-family: var(--serif);
+  font-size: 56px;
+  line-height: 0.6;
+  height: 26px;
+  color: var(--gold);
+}
+.testi-q {
+  flex: 1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.testi-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+.testi-avatar {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--gold);
 }
 
 /* Careers page premium treatment (fix 20). */
