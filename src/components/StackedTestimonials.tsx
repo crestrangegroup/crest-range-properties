@@ -18,7 +18,7 @@ const INTERVAL = 6000
  * a visual/interaction treatment in the site's black/gold palette.
  */
 export default function StackedTestimonials() {
-  const { tTestimonial } = useI18n()
+  const { tTestimonial, t } = useI18n()
   const items = TESTIMONIALS
   const n = items.length
   const [idx, setIdx] = useState(0)
@@ -49,7 +49,7 @@ export default function StackedTestimonials() {
         <span className="stk-ghost g2" aria-hidden />
         <span className="stk-ghost g1" aria-hidden />
         <blockquote className="stk-card" key={idx}>
-          <div className="stk-stars" aria-label="Rated 5 out of 5">
+          <div className="stk-stars" aria-label={t.rated5}>
             {'★★★★★'}
           </div>
           <p className="stk-q">{c.q}</p>

@@ -168,7 +168,7 @@ export default function About() {
                     <span aria-hidden>{testimonialInitials(c.who)}</span>
                   )}
                 </div>
-                <div className="tcard-stars" aria-label="Rated 5 out of 5">
+                <div className="tcard-stars" aria-label={t.rated5}>
                   {'★★★★★'}
                 </div>
                 <blockquote className="tcard-q">{c.q}</blockquote>

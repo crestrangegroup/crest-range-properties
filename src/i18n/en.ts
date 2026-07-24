@@ -223,6 +223,12 @@ export const EN = {
 
   city: 'Abu Dhabi', mapLayer: 'Google Maps · live listings layer',
 
+  // Accessibility labels (screen-reader / control labels) — translated so no
+  // English is announced or shown in the country picker in other languages.
+  searchCountry: 'Search country', rated5: 'Rated 5 out of 5',
+  pagePrev: 'Previous page', pageNext: 'Next page',
+  menuLbl: 'Menu', navPrimary: 'Primary',
+
   // Item 1: titles updated to match the official Company Profile. Names that
   // are not mentioned in the brief (fatoki, dimka, njeri) keep their titles.
   roles: {

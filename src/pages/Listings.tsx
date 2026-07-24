@@ -168,12 +168,12 @@ export default function Listings({ forcedPurpose }: Props) {
               </div>
 
               {totalPages > 1 && (
-                <nav className="pager" aria-label={`${title} pages`}>
+                <nav className="pager" aria-label={title}>
                   <button
                     className="pager-btn"
                     onClick={() => goPage(page - 1)}
                     disabled={page === 1}
-                    aria-label="Previous page"
+                    aria-label={t.pagePrev}
                   >
                     ‹
                   </button>
@@ -191,7 +191,7 @@ export default function Listings({ forcedPurpose }: Props) {
                     className="pager-btn"
                     onClick={() => goPage(page + 1)}
                     disabled={page === totalPages}
-                    aria-label="Next page"
+                    aria-label={t.pageNext}
                   >
                     ›
                   </button>

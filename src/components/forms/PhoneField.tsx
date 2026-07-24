@@ -75,8 +75,8 @@ export default function PhoneField({ code, phone, onCode, onPhone, id = 'phone',
                 className="phone-search"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search country"
-                aria-label="Search country"
+                placeholder={t.searchCountry}
+                aria-label={t.searchCountry}
                 dir="ltr"
               />
               <div className="phone-list">

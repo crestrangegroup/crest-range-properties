@@ -57,7 +57,7 @@ export default function Header() {
           <img className="word" src="/images/logo-wordmark.png" alt="Crest Range Properties" />
         </Link>
 
-        <nav className="hdr-nav" aria-label="Primary">
+        <nav className="hdr-nav" aria-label={t.navPrimary}>
           <NavLink to={ROUTES.home} end className={({ isActive }) => `nav-a${isActive ? ' active' : ''}`}>
             {t.navHome}
           </NavLink>
@@ -156,7 +156,7 @@ export default function Header() {
         <button
           className="hdr-burger"
           onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Menu"
+          aria-label={t.menuLbl}
           aria-expanded={mobileOpen}
         >
           {mobileOpen ? <Close size={20} /> : <Menu size={22} />}
