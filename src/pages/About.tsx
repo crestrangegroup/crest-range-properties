@@ -90,12 +90,23 @@ export default function About() {
         <div className="wrap">
           <div className="split" style={{ alignItems: 'center', gap: 'clamp(24px,4vw,52px)' }}>
             <div style={{ flex: 'none' }}>
+              {/* Dedicated Founder's Welcome headshot (B&W), framed as an arch
+                  (flat bottom, rounded top) — a subtle nod to Arabic/Islamic
+                  architecture. Arch scope is this photo only for now; the team
+                  card keeps its own photo. The 50%/42% radii track the 5:6 box
+                  so the top reads as a clean semicircular dome at any size. */}
               <img
-                src={founder.photo}
+                src="/images/team/founder-welcome.jpg"
                 alt={founder.name}
                 width={300}
-                height={340}
-                style={{ width: '100%', maxWidth: 300, aspectRatio: '5 / 6', objectFit: 'cover', borderRadius: 8 }}
+                height={360}
+                style={{
+                  width: '100%',
+                  maxWidth: 300,
+                  aspectRatio: '5 / 6',
+                  objectFit: 'cover',
+                  borderRadius: '50% 50% 10px 10px / 42% 42% 10px 10px',
+                }}
               />
             </div>
             <div style={{ minWidth: 0 }}>

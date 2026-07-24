@@ -93,7 +93,7 @@ export const EN = {
   // Item 3 / preview fix 4: the section is titled "Founder's Message"
   // (first-person), distinct from Fatoki's third-person bio page.
   welcomeK: 'Founder’s Message',
-  welcomeP: 'We believe that every client deserves personalized attention and a tailor-made solution. Your goals are our goals, and your success is our success. As the Founder of Crest Range Properties, I take pride in the unwavering commitment of our team to uphold the highest standards of integrity, transparency, and professionalism. We are here to guide you through every step of your Real Estate journey, ensuring that your experience with us is not only successful but also enjoyable. Our commitment to “Finding Home Away from Home” extends beyond the properties we offer. It is about creating lasting relationships. We are excited to be part of your story and to help you find your perfect place in this world.',
+  welcomeP: 'We believe that every client deserves personalized attention and a tailor-made solution. Your goals are our goals, and your success is our success. As the founder of Crest Range Properties, I take pride in the unwavering commitment of our team to uphold the highest standards of integrity, transparency, and professionalism. We are here to guide you through every step of your real estate journey, ensuring that your experience with us is not only successful but also enjoyable. Our commitment to “Finding Home Away from Home” extends beyond the properties we offer. It is about creating lasting relationships. We are excited to be part of your story and to help you find your perfect place in this world.',
   welcomeName: 'Olatubosun Fatoki',
   welcomeRole: 'Founder',
 
@@ -114,9 +114,9 @@ export const EN = {
   s1Desc:
     'Crest Range Properties is the ideal partner for those looking to buy or sell real estate in the U.A.E. Our experienced sales professionals offer tailored solutions that match buyers with their dream properties and assist sellers in securing the best deals.',
   s2Desc:
-    'Crest Range Properties offers a versatile collection of properties, including Residential, Commercial and Mixed Used Properties. Our team of leasing experts is dedicated to helping you find the perfect property to suit your needs. We provide comprehensive guidance to make the decision-making process simple and straightforward.',
+    'We offer a versatile collection of properties, including Residential, Commercial and Mixed Used Properties. Our team of leasing experts is dedicated to helping you find the perfect property to suit your needs. We provide comprehensive guidance to make the decision-making process simple and straightforward.',
   s3Desc:
-    'Over the years our property management services have focused on offering a tailored experience to our Clientele, Landlords and Tenants. Our property management team takes care of all aspects of property management, including maintenance, inspections, and tenant relations, giving property owners and tenants satisfactory service delivery.',
+    'Over the years, our property management approach has been built around delivering a seamless and personalized experience for both landlords and tenants. Our dedicated team oversees every aspect of the process, from maintenance coordination and inspections to tenant relations, ensuring properties are well cared for and clients receive reliable, efficient support.',
   included: 'What’s included', sCtaChat: 'Chat with a live agent now', sCtaForm: 'Request a proposal',
   s1B: ['Pricing & comparable analysis', 'Off-market buyer network', 'Offer negotiation & closing', 'Ownership transfer coordination'],
   s2B: ['Tenant sourcing & vetting', 'Tawtheeq contract handling', 'Cheque structuring', 'Renewals & move-in coordination'],

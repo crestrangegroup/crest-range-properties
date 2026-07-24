@@ -93,6 +93,9 @@ export const PARTNERS: Partner[] = [
   { name: 'Binghati', logo: '/images/partners/binghati.png', h: 122, wide: true },
   { name: 'Object 1', logo: '/images/partners/object1.png', h: 122 },
   { name: 'Ohana', logo: '/images/partners/ohana.png', h: 122 },
+  // 11th partner (2026-07). Black "SOBHA / REALTY" wordmark on white; sits
+  // cleanly on the white tile at a modest height like the other wordmarks.
+  { name: 'Sobha Realty', logo: '/images/partners/sobha-realty.png', h: 76 },
 ]
 
 /** Homepage hero rotation. Local files only - no external CDN at runtime. */

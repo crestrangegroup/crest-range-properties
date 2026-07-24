@@ -749,6 +749,34 @@ h4 {
 .partner-item:hover img {
   transform: scale(1.12);
 }
+/* Mobile fix: the 20vw cell shrinks the tile WIDTH with the viewport, but the
+   tile HEIGHT was a fixed 122px, so on phones the tiles rendered as tall
+   vertical pills with tiny logos. Widen the cells (so fewer show at once) and
+   shorten the tile, keeping it a proper wide landscape card. The !important
+   overrides each logo's inline max-height (PARTNERS `h`) so tall marks still
+   fit the shorter tile. */
+@media (max-width: 760px) {
+  .partners-marquee .marquee-cell {
+    width: 46vw;
+  }
+  .partner-item {
+    height: 104px;
+  }
+  .partner-item img {
+    max-height: 60px !important;
+  }
+}
+@media (max-width: 480px) {
+  .partners-marquee .marquee-cell {
+    width: 64vw;
+  }
+  .partner-item {
+    height: 92px;
+  }
+  .partner-item img {
+    max-height: 52px !important;
+  }
+}
 .partner-fallback {
   display: none;
   font-family: var(--serif);
