@@ -29,6 +29,17 @@ const IDLE_CHECKIN_MS = 180_000
 const IDLE_CLOSING_MS = 60_000
 const IDLE_HANGUP_MS = 12_000
 
+// --- James human-pacing (agent phase only) ---
+// A real person reads an incoming message before starting to type. Hold this
+// long (from when the visitor sent) before James's typing indicator appears.
+const AGENT_READ_MIN_MS = 30_000
+const AGENT_READ_MAX_MS = 40_000
+const readDelayMs = () => AGENT_READ_MIN_MS + Math.random() * (AGENT_READ_MAX_MS - AGENT_READ_MIN_MS)
+// The typing indicator then stays up for a length-scaled duration: a longer
+// reply visibly takes longer to "type" than a short one.
+const typingMs = (text: string) => Math.min(9000, 1400 + text.length * 28)
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+
 const CHECKINS = ['Are you still there?', 'Still with me? No rush at all.', 'Just checking you are still around.']
 const CLOSINGS = [
   `It seems you have stepped away, so I will close this chat for now. Open it again whenever you are ready, or call us on ${COMPANY.phones[0].display} and we will pick this right up.`,
@@ -305,11 +316,43 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     return us[us.length - 1] || ''
   }
 
+  /**
+   * Deliver one of James's replies at a human pace. A longer reply shows the
+   * typing indicator for longer (typingMs), and a reply the model split with a
+   * blank line arrives as a couple of separate bubbles, each preceded by its own
+   * short typing burst - the way a person fires off two quick messages. Every
+   * await is gated by `closed` so nothing lands after the visitor leaves.
+   */
+  const deliverAgentReply = useCallback(
+    async (reply: string) => {
+      const parts = reply
+        .split(/\n{2,}/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const bubbles = parts.length ? parts : [reply]
+      for (let i = 0; i < bubbles.length; i++) {
+        setTyping(true)
+        await sleep(typingMs(bubbles[i]))
+        if (closed.current) {
+          setTyping(false)
+          return
+        }
+        setTyping(false)
+        pushBot('a', bubbles[i])
+        if (i < bubbles.length - 1) {
+          await sleep(700) // brief beat between two quick messages
+          if (closed.current) return
+        }
+      }
+    },
+    [pushBot],
+  )
+
   const joinAgent = useCallback(() => {
     if (closed.current) return
     setPhase('agent')
     setTyping(true) // typing indicator is shown for James only, never the Concierge
-    joinT.current = window.setTimeout(async () => {
+    ;(async () => {
       if (closed.current) return
       const detail = summary.current || lastUserDetail(msgs)
       const knownLead = readLeads().slice(-1)[0]
@@ -335,15 +378,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         history: msgs,
       })
       if (closed.current) return
-      setTyping(false)
-      pushBot(
-        'a',
+      // The opener follows the connect wait, so no extra read delay here - just
+      // the length-scaled typing burst handled by deliverAgentReply.
+      await deliverAgentReply(
         res?.reply ||
           `Hi, my name is James. You mentioned ${detail || 'you were looking for something in Abu Dhabi'}. Let me help you with that.`,
       )
+      if (closed.current) return
       bumpIdle()
-    }, 1600)
-  }, [msgs, pushBot, bumpIdle])
+    })()
+  }, [msgs, deliverAgentReply, bumpIdle])
 
   const send = useCallback(
     (text: string) => {
@@ -359,14 +403,17 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       persist(next, phase)
       bumpIdle()
 
-      // While waiting for an agent the visitor can still type; those messages
-      // are kept as context for James rather than answered by the Concierge.
+      // During the handoff the input is disabled (see AgentLiveChat), so a send
+      // should not normally arrive here. Kept as a safety no-op: anything typed
+      // is preserved as context for James rather than answered by the Concierge.
       if (phase === 'waiting') {
         setBusy(false)
         return
       }
 
-      if (phase === 'agent') setTyping(true)
+      // James (agent phase) is paced like a human below: no typing indicator
+      // yet. The Concierge stays instant.
+      const sentAt = Date.now()
       ;(async () => {
         const res = await invokeFn<{
           reply?: string
@@ -385,7 +432,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         // A reply that lands after the visitor closed the chat must not speak.
         if (closed.current) return
         if (res?.sessionId) sessionId.current = res.sessionId
-        setTyping(false)
         setBusy(false)
 
         // Remember this visitor so a later visit can be recognised.
@@ -398,15 +444,38 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           })
         }
 
+        // ---- James (agent phase): read delay, then length-scaled typing, then
+        // the message(s). This is what makes the reply feel human rather than an
+        // instant machine response.
+        if (phase === 'agent') {
+          const text =
+            res?.reply ||
+            `Sorry, I lost that for a moment. Could you send it once more, or call us on ${COMPANY.phones[0].display}?`
+          // Hold ~30-40s from when the visitor sent, minus any time the network
+          // call already took, before the typing indicator appears.
+          const waited = Date.now() - sentAt
+          await sleep(Math.max(0, readDelayMs() - waited))
+          if (closed.current) return
+          await deliverAgentReply(text)
+          if (closed.current) return
+          if (res?.closing) {
+            finishSession()
+            return
+          }
+          bumpIdle()
+          return
+        }
+
+        // ---- Concierge: instant, and may hand off to James.
         if (!res?.reply) {
           pushBot(
-            phase === 'agent' ? 'a' : 'c',
+            'c',
             `Sorry, I lost that for a moment. Could you send it once more, or call us on ${COMPANY.phones[0].display}?`,
           )
           return
         }
 
-        if (res.connect && phase === 'concierge') {
+        if (res.connect) {
           summary.current = res.summary || lastUserDetail(next)
           // One message, not an acknowledgement followed by a near-identical
           // connecting line. Only append the wait if the model didn't already
@@ -417,7 +486,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           persist(next, 'waiting', Date.now() + AGENT_WAIT_MS)
           joinT.current = window.setTimeout(() => joinAgent(), AGENT_WAIT_MS)
         } else {
-          pushBot(phase === 'agent' ? 'a' : 'c', res.reply)
+          pushBot('c', res.reply)
         }
 
         // The model signalled this reply is a farewell. End the session here
@@ -429,7 +498,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         bumpIdle()
       })()
     },
-    [msgs, phase, persist, pushBot, bumpIdle, joinAgent, finishSession],
+    [msgs, phase, persist, pushBot, bumpIdle, joinAgent, finishSession, deliverAgentReply],
   )
 
   const open = useCallback(() => {

@@ -53,8 +53,12 @@ export default function AgentLiveChat() {
     )
   }
 
+  // Handoff in progress: input disabled + connecting indicator shown.
+  const waiting = c.phase === 'waiting'
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (waiting) return
     c.send(c.input)
   }
 
@@ -106,19 +110,30 @@ export default function AgentLiveChat() {
         )}
       </div>
 
+      {/* Handoff in progress: the input is disabled and a connecting indicator
+          gives the visitor clear feedback while they wait for James. It clears
+          the moment the phase leaves 'waiting' (James has connected). */}
+      {c.phase === 'waiting' && (
+        <div className="crc-connect" role="status" aria-live="polite">
+          <span className="crc-connect-bar" aria-hidden />
+          <span className="crc-connect-lbl">{t.chatConnectBar}</span>
+        </div>
+      )}
+
       <form className="crc-foot" onSubmit={onSubmit}>
         <input
           value={c.input}
           onChange={(e) => c.setInput(e.target.value)}
           /* This is the ONLY place on the site that instructs the visitor to
              type in English. It must not appear on any other input. */
-          placeholder={EN.chatPlaceholder}
+          placeholder={waiting ? t.chatConnectBar : EN.chatPlaceholder}
           aria-label={EN.chatPlaceholder}
           dir="ltr"
           lang="en"
           autoComplete="off"
+          disabled={waiting}
         />
-        <button type="submit" disabled={!c.input.trim()} aria-label="Send">
+        <button type="submit" disabled={waiting || !c.input.trim()} aria-label="Send">
           <Send size={17} />
         </button>
       </form>

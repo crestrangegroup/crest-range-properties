@@ -198,6 +198,55 @@
   animation-delay: 0.3s;
 }
 
+/* Handoff-in-progress indicator: an indeterminate progress bar plus a status
+   label, shown above the (disabled) input while connecting the visitor to James. */
+.crc-connect {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+.crc-connect-bar {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+.crc-connect-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -40%;
+  width: 40%;
+  border-radius: 999px;
+  background: var(--gold);
+  animation: crcConnect 1.3s ease-in-out infinite;
+}
+.crc-connect-lbl {
+  flex: none;
+  white-space: nowrap;
+}
+@keyframes crcConnect {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crc-connect-bar::after {
+    animation-duration: 2.6s;
+  }
+}
+
 .crc-foot {
   flex: none;
   border-top: 1px solid var(--line);
@@ -205,6 +254,13 @@
   display: flex;
   gap: 8px;
   background: var(--surface);
+}
+/* Disabled while the handoff is in progress. */
+.crc-foot input:disabled {
+  background: var(--surface);
+  color: var(--ink-mute);
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 .crc-foot input {
   flex: 1;

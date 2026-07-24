@@ -214,6 +214,8 @@ export const EN = {
   chipCall: 'Request a call back', chipVal: 'Instant valuation', chipView: 'Book a viewing',
   chatTitle: 'Crest Concierge', chatOnline: 'Online',
   connecting: 'Connecting you to an agent. Usually 1 to 3 minutes.',
+  // Short label for the progress indicator shown while the handoff is in flight.
+  chatConnectBar: 'Connecting to James…',
   typingLbl: 'James is typing…',
   chatIntro: 'How can I help today? Buying, renting, selling, or something else?',
   chatPlaceholder: 'Type in English…',
