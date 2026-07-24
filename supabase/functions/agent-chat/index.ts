@@ -29,23 +29,50 @@ interface AnthropicRequest {
 }
 
 async function callAnthropic(apiKey: string, body: AnthropicRequest): Promise<string> {
-  const res = await fetch(ANTHROPIC_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': ANTHROPIC_VERSION,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const json = await res.json()
-  if (!res.ok || json.error) {
-    throw new Error(`Anthropic ${res.status}: ${JSON.stringify(json.error ?? json).slice(0, 300)}`)
+  // Retry transient failures (5xx, 429, network error). These were surfacing to
+  // the visitor as the generic "I lost that, please repeat" fallback for a
+  // perfectly normal message; a couple of quick retries self-heal most of them.
+  let lastErr: unknown = null
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(ANTHROPIC_URL, {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': ANTHROPIC_VERSION,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      const json = await res.json()
+      if (!res.ok || json.error) {
+        const transient = res.status === 429 || res.status >= 500
+        const msg = `Anthropic ${res.status}: ${JSON.stringify(json.error ?? json).slice(0, 300)}`
+        if (transient && attempt < 2) {
+          console.warn(`[agent-chat] ${msg} (transient, retry ${attempt + 1}/2)`)
+          lastErr = new Error(msg)
+          await new Promise((r) => setTimeout(r, 400 * (attempt + 1)))
+          continue
+        }
+        throw new Error(msg)
+      }
+      const text = (json.content ?? [])
+        .filter((b: { type: string }) => b.type === 'text')
+        .map((b: { text: string }) => b.text)
+        .join('')
+      return text
+    } catch (e) {
+      // Network-level failure: retry, then rethrow so the caller logs it.
+      lastErr = e
+      if (attempt < 2) {
+        console.warn(`[agent-chat] Anthropic call threw (retry ${attempt + 1}/2)`, e)
+        await new Promise((r) => setTimeout(r, 400 * (attempt + 1)))
+        continue
+      }
+      throw e
+    }
   }
-  return (json.content ?? [])
-    .filter((b: { type: string }) => b.type === 'text')
-    .map((b: { text: string }) => b.text)
-    .join('')
+  throw lastErr ?? new Error('Anthropic call failed')
 }
 
 // Mid-tier Sonnet-class model, chosen for natural conversation quality at
@@ -100,9 +127,10 @@ Continue naturally on the actual topic for two or three exchanges before asking 
 Once you know their name, use it naturally but not in every message.
 Ask for a mobile number when it fits naturally, framed as a reason ("so I can have someone call you"). Ask for email only if it comes up naturally.
 You are already speaking to the visitor, so the handoff has happened. Leave connect false; it is not yours to set.
-If you are told a returning visitor may have spoken to us before, treat that as a soft hint only, never as proof. Ask to verify, for example "Have we spoken before? Can I get your name and number, just to check our records?" Only confirm you recognise them once the name and number they give actually match the stored record. If they do not match, treat it as a brand new conversation and never claim to recognise them.
+If you are told a returning visitor may have spoken to us before, treat that as a soft hint only, never as proof. You may ask to verify AT MOST ONCE, for example "Have we spoken before? Can I get your name and number, just to check our records?" The moment the visitor answers that (for instance "no we have not"), REGISTER their answer and never ask it again: accept it, treat them as a new customer, and simply ask for their name and number so you can arrange the callback. If you have already asked whether you have spoken before, or the visitor has already told you, do not repeat the question under any circumstances. Only confirm you recognise someone once the name and number they give actually match the stored record; if they do not match, treat it as a brand new conversation and never claim to recognise them.
 When the name and number DO match the stored record, say so warmly and carry the earlier context forward by referring to what they were looking at last time, then ask whether they are still after the same thing. Never say you cannot find their number when a matching record was provided to you.
 
+Answer direct questions directly. If the visitor asks when an agent will call or get back to them, give a concrete answer such as "usually within the hour" or "shortly, on the number you gave me", never a vague deflection or a request to rephrase.
 Short replies: when the visitor answers with a brief acknowledgement such as "yes", "ok", "ok cool", "sure" or "thanks", they are agreeing, not asking you to repeat yourself. Do not restate the callback promise, the timeframe or anything you have already said in this conversation. Move forward with one new, specific thing, or simply acknowledge briefly and stop. Never send a message that is a paraphrase of one you have already sent.
 
 Endings: when the visitor says something warm or final such as "thanks, you have been great", "appreciate it", "have a good evening", "bye" or "you can close the chat", acknowledge what they actually said before anything else. Respond to the warmth genuinely and in your own words, vary how you do it, then close. Do not jump straight to a stock sign-off, and do not ask another question once they have clearly finished.
@@ -234,7 +262,7 @@ Deno.serve(async (req: Request) => {
     const known = record?.name
       ? `\nOur records for this browser show a previous visitor named "${record.name}"${
           record.phone ? ` with mobile number "${record.phone}" (digits ${digits(record.phone)})` : ''
-        }, who was previously interested in: "${record.summary || 'not recorded'}". This is a soft hint, not proof. Ask them to confirm their name and number. If what they give matches this record (compare phone numbers by their last 9 digits, ignoring spaces and country code), confirm you recognise them and refer back to what they were looking at. If it does not match, treat them as new.`
+        }, who was previously interested in: "${record.summary || 'not recorded'}". This is a soft hint, not proof. If the conversation so far shows you have NOT yet asked whether you have spoken before, and the visitor has not already said, you may ask once to check. If you have already asked, or they have already answered, do NOT ask again: just collect their name and number. If what they give matches this record (compare phone numbers by their last 9 digits, ignoring spaces and country code), confirm you recognise them and refer back to what they were looking at. If it does not match, treat them as new.`
       : ''
 
     if (mode === 'agent-open') {

@@ -46,6 +46,30 @@ const readDelayMs = () => AGENT_READ_MIN_MS + Math.random() * (AGENT_READ_MAX_MS
 const typingMs = (text: string) => Math.min(9000, 1400 + text.length * 28)
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
+/**
+ * Call the agent-chat function with a short retry. A transient API failure
+ * (Anthropic 5xx, a timeout, a network blip) makes invokeFn return null, or
+ * occasionally yields an empty reply; without a retry the visitor gets the
+ * generic "I lost that" fallback for a message that was perfectly fine. We
+ * retry a couple of times before giving up, and log clearly if we still fail
+ * so the failure is surfaced for debugging rather than only masked.
+ */
+async function callChat<T extends { reply?: string }>(body: unknown, tries = 3): Promise<T | null> {
+  let last: T | null = null
+  for (let attempt = 0; attempt < tries; attempt++) {
+    last = await invokeFn<T>('agent-chat', body)
+    if (last?.reply) return last
+    if (attempt < tries - 1) {
+      console.warn(`[crest-range] agent-chat: no usable reply, retry ${attempt + 1}/${tries - 1}`)
+      await sleep(500 * (attempt + 1))
+    }
+  }
+  if (!last?.reply) {
+    console.error('[crest-range] agent-chat gave no reply after retries; showing fallback to visitor')
+  }
+  return last
+}
+
 const CHECKINS = ['Are you still there?', 'Still with me? No rush at all.', 'Just checking you are still around.']
 const CLOSINGS = [
   `It seems you have stepped away, so I will close this chat for now. Open it again whenever you are ready, or call us on ${COMPANY.phones[0].display} and we will pick this right up.`,
@@ -244,8 +268,20 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         // real failure: short affirmatives ("yes", "ok cool") made James restate
         // the same callback promise with a word or two changed, which slipped
         // through unchanged three times in one conversation.
-        const recentBot = cur.filter((m) => m.who === 'a' || m.who === 'c').slice(-5).map((m) => m.text)
-        const isNearDuplicate = recentBot.some((prev) => similarity(prev, clean) >= 0.7)
+        //
+        // But this must NEVER replace a genuine answer to a direct question: the
+        // reply "Usually within the hour" to "when can the agent call me?" was
+        // scored a near-duplicate of the earlier callback promise and swapped for
+        // an evasive rephrase. So: skip the check entirely when the visitor's
+        // last message is a question, only compare against the last two bot lines
+        // (not five), and require a high 0.85 overlap so only a near-verbatim
+        // restatement, not a legitimately similar answer, is caught.
+        const lastUser = [...cur].reverse().find((m) => m.who === 'u')?.text?.trim() ?? ''
+        const isQuestion =
+          /\?/.test(lastUser) ||
+          /^(when|where|how|what|why|who|which|can|could|do|does|did|is|are|was|will|would|should)\b/i.test(lastUser)
+        const recentBot = cur.filter((m) => m.who === 'a' || m.who === 'c').slice(-2).map((m) => m.text)
+        const isNearDuplicate = !isQuestion && recentBot.some((prev) => similarity(prev, clean) >= 0.85)
         const final = isNearDuplicate ? REPHRASE[pick.current++ % REPHRASE.length] : clean
         const next = [...cur, { who, text: final }]
         persist(next, phase)
@@ -430,7 +466,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       // line he produced near-identical openers ("good choice, plenty of
       // options") immediately after the Concierge said the same thing.
       const lastConciergeLine = [...msgs].reverse().find((m) => m.who === 'c')?.text ?? ''
-      const res = await invokeFn<{ reply?: string }>('agent-chat', {
+      const res = await callChat<{ reply?: string }>({
         mode: 'agent-open',
         sessionId: sessionId.current,
         detail,
@@ -496,7 +532,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       // yet. The Concierge stays instant.
       const sentAt = Date.now()
       ;(async () => {
-        const res = await invokeFn<{
+        const res = await callChat<{
           reply?: string
           connect?: boolean
           summary?: string
@@ -504,7 +540,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           closing?: boolean
           visitorName?: string
           visitorPhone?: string
-        }>('agent-chat', {
+        }>({
           mode: phase === 'agent' ? 'agent' : 'concierge',
           sessionId: sessionId.current,
           history: next,
