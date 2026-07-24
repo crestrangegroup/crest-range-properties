@@ -122,6 +122,7 @@ export default function CareersApply() {
   const [curSalary, setCurSalary] = useState('')
   const [expSalary, setExpSalary] = useState('')
   const [notice, setNotice] = useState('')
+  const [why, setWhy] = useState('')
   const [linkedin, setLinkedin] = useState('')
   const [cvName, setCvName] = useState('')
   const [error, setError] = useState('')
@@ -132,8 +133,9 @@ export default function CareersApply() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    // Required: name, email, phone, nationality, qualification, visa, salary
-    // expectations, CV. (Current salary, notice period, LinkedIn are optional.)
+    // Every field is required except LinkedIn: name, email, phone, nationality,
+    // qualification, visa, current salary, salary expectations, notice period,
+    // "why this role", and CV.
     if (
       !first.trim() ||
       !last.trim() ||
@@ -142,7 +144,10 @@ export default function CareersApply() {
       !nationality ||
       !qualification ||
       !visa ||
+      !curSalary ||
       !expSalary ||
+      !notice ||
+      !why.trim() ||
       !cvName
     ) {
       setError(t.formRequired)
@@ -159,6 +164,7 @@ export default function CareersApply() {
       `Expected salary: ${expSalary}`,
       notice && `Notice: ${notice}`,
       linkedin && `LinkedIn: ${linkedin}`,
+      why.trim() && `Why this role: ${why.trim()}`,
       cvName ? `CV: ${cvName} (file not transmitted — pending Storage)` : 'No CV',
     ].filter(Boolean)
     const ok = await submitLead({
@@ -169,7 +175,7 @@ export default function CareersApply() {
       phoneCode: code,
       phone,
       message: `Careers application | ${details.join(' | ')}`,
-      meta: { role: roleId, nationality, qualification, visa, curSalary, expSalary, notice, linkedin, cvName: cvName || null },
+      meta: { role: roleId, nationality, qualification, visa, curSalary, expSalary, notice, why: why.trim() || null, linkedin, cvName: cvName || null },
     })
     setBusy(false)
     if (ok) setSent(true)
@@ -245,10 +251,21 @@ export default function CareersApply() {
               <div className="apply-grid">
                 <SelectField id="ap-qual" label={t.appQualification} value={qualification} onChange={setQualification} options={QUALIFICATIONS} placeholder={t.appSelect} optionLabel={careerOpt} />
                 <SelectField id="ap-visa" label={t.appVisa} value={visa} onChange={setVisa} options={VISA_STATUSES} placeholder={t.appSelect} optionLabel={careerOpt} />
-                <SelectField id="ap-cursal" label={`${t.appCurrentSalary}${optional}`} value={curSalary} onChange={setCurSalary} options={SALARY_BANDS} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-cursal" label={t.appCurrentSalary} value={curSalary} onChange={setCurSalary} options={SALARY_BANDS} placeholder={t.appSelect} optionLabel={careerOpt} />
                 <SelectField id="ap-expsal" label={t.appSalaryExpect} value={expSalary} onChange={setExpSalary} options={SALARY_EXPECTATIONS} placeholder={t.appSelect} optionLabel={careerOpt} />
-                <SelectField id="ap-notice" label={`${t.appNotice}${optional}`} value={notice} onChange={setNotice} options={NOTICE_PERIODS} placeholder={t.appSelect} optionLabel={careerOpt} />
+                <SelectField id="ap-notice" label={t.appNotice} value={notice} onChange={setNotice} options={NOTICE_PERIODS} placeholder={t.appSelect} optionLabel={careerOpt} />
                 <IconInput id="ap-li" label={`${t.appLinkedIn}${optional}`} icon={<LinkedIn size={15} />} value={linkedin} onChange={setLinkedin} type="url" dir="ltr" placeholder="https://" />
+                <div className="field apply-why">
+                  <label className="label" htmlFor="ap-why">{t.appWhy}</label>
+                  <textarea
+                    id="ap-why"
+                    className="input apply-why-input"
+                    value={why}
+                    onChange={(e) => setWhy(e.target.value)}
+                    rows={4}
+                    placeholder={t.appWhyPlaceholder}
+                  />
+                </div>
                 <div className="field apply-cv">
                   <label className="label" htmlFor="ap-cv">{t.appCv}</label>
                   <div className="ai-input">

@@ -32,6 +32,19 @@
 .apply-grid .apply-cv {
   grid-column: 1 / -1;
 }
+/* Round 10: full-width free-text "why this role" box. */
+.apply-grid .apply-why {
+  grid-column: 1 / -1;
+}
+.apply-why-input {
+  width: 100%;
+  border-radius: 10px;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 108px;
+  font: inherit;
+  line-height: 1.5;
+}
 @media (max-width: 620px) {
   .apply-grid {
     grid-template-columns: 1fr;
