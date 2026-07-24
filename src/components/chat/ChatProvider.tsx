@@ -29,6 +29,12 @@ const IDLE_CHECKIN_MS = 180_000
 const IDLE_CLOSING_MS = 60_000
 const IDLE_HANGUP_MS = 12_000
 
+// After a genuine farewell exchange (the model sets closing=true on a mutual
+// goodbye), wait this long, then offer to close. If the visitor does not
+// respond to that prompt within the second window, the chat closes itself.
+const FAREWELL_CLOSE_MS = 30_000
+const FAREWELL_PROMPT_MS = 20_000
+
 // --- James human-pacing (agent phase only) ---
 // A real person reads an incoming message before starting to type. Hold this
 // long (from when the visitor sent) before James's typing indicator appears.
@@ -85,6 +91,12 @@ interface ChatValue {
   askClose: () => void
   cancelClose: () => void
   endConversation: () => void
+  /** The post-farewell "this chat will close soon" prompt is showing. */
+  closePrompt: boolean
+  /** Visitor still needs help: dismiss the prompt, keep the chat open. */
+  keepOpen: () => void
+  /** Visitor is done: close now instead of waiting out the timer. */
+  confirmAutoClose: () => void
 }
 
 const Ctx = createContext<ChatValue | null>(null)
@@ -148,6 +160,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [input, setInput] = useState('')
   const [unread, setUnread] = useState(0)
   const [confirmClose, setConfirmClose] = useState(false)
+  /** The "this chat will close soon, still need help?" prompt after a farewell. */
+  const [closePrompt, setClosePrompt] = useState(false)
 
   const sessionId = useRef<string>('')
   const summary = useRef('')
@@ -155,6 +169,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const idle2 = useRef<number>()
   const idle3 = useRef<number>()
   const joinT = useRef<number>()
+  const farewellT = useRef<number>()
+  const autoCloseT = useRef<number>()
+  /** Bumped on every send; a reply whose token is stale was superseded by a
+   *  newer message and must not deliver, so a single combined reply covers
+   *  everything the visitor sent in quick succession. */
+  const replyGen = useRef(0)
+  /** Live mirror of `msgs`, so a rapid follow-up builds on the full history
+   *  (including the message just sent) rather than a stale render closure. */
+  const msgsRef = useRef<Msg[]>([])
   /** True once the session has ended. Gates every timer and late async reply. */
   const closed = useRef(false)
   /** The stored record this visitor appears to match, sent to the agent to verify. */
@@ -162,6 +185,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const pick = useRef(0)
   const openRef = useRef(isOpen)
   openRef.current = isOpen
+  // Kept in sync every render so send() and rapid follow-ups always read the
+  // freshest history; send() also updates it synchronously when appending.
+  msgsRef.current = msgs
 
   // Restore an in-flight conversation so it survives navigation between pages.
   // sessionStorage (not localStorage) means it resets on tab close, by design.
@@ -234,6 +260,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     ;[idle1, idle2, idle3].forEach((r) => r.current && clearTimeout(r.current))
   }
 
+  /** Cancel a pending farewell auto-close (visitor is active again, or session
+   *  ended). Also hides the "closing soon" prompt. */
+  const clearFarewell = () => {
+    ;[farewellT, autoCloseT].forEach((r) => r.current && clearTimeout(r.current))
+    setClosePrompt(false)
+  }
+
   /**
    * Ends the session without clearing the transcript, so the visitor can still
    * read the goodbye. Once this runs nothing may speak again: every timer is
@@ -248,6 +281,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const finishSession = useCallback(() => {
     closed.current = true
     clearIdle()
+    clearFarewell()
     if (joinT.current) clearTimeout(joinT.current)
     setTyping(false)
     setBusy(false)
@@ -256,6 +290,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const endConversation = useCallback(() => {
     closed.current = true
     clearIdle()
+    clearFarewell()
     if (joinT.current) clearTimeout(joinT.current)
     try {
       sessionStorage.removeItem(CHAT_KEY)
@@ -264,6 +299,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
     summary.current = ''
     sessionId.current = ''
+    msgsRef.current = []
     setConfirmClose(false)
     setIsOpen(false)
     setMinimized(false)
@@ -304,6 +340,35 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }, IDLE_CHECKIN_MS)
   }, [phase, persist, endConversation])
 
+  /**
+   * A genuine farewell just happened (model set closing=true on a mutual
+   * goodbye). Instead of nagging with idle check-ins, wait ~30s then offer to
+   * close; if the visitor ignores that prompt for ~20s, close automatically.
+   * The visitor typing (send) or tapping "still need help" cancels all of this.
+   */
+  const armFarewellClose = useCallback(() => {
+    clearIdle() // no "still there?" nagging after a goodbye
+    clearFarewell()
+    if (closed.current) return
+    farewellT.current = window.setTimeout(() => {
+      if (closed.current) return
+      setClosePrompt(true)
+      autoCloseT.current = window.setTimeout(() => endConversation(), FAREWELL_PROMPT_MS)
+    }, FAREWELL_CLOSE_MS)
+  }, [endConversation])
+
+  /** Visitor tapped "still need help" (or otherwise stays): dismiss the prompt,
+   *  keep the chat open, and resume the normal idle cycle. */
+  const keepOpen = useCallback(() => {
+    clearFarewell()
+    bumpIdle()
+  }, [bumpIdle])
+
+  /** Visitor tapped "we're done": close immediately, no need to wait it out. */
+  const confirmAutoClose = useCallback(() => {
+    endConversation()
+  }, [endConversation])
+
   /** Most recent substantive thing the visitor said - what James must open on. */
   const lastUserDetail = (list: Msg[]) => {
     const us = list.filter((m) => m.who === 'u').map((m) => m.text.trim())
@@ -324,7 +389,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
    * await is gated by `closed` so nothing lands after the visitor leaves.
    */
   const deliverAgentReply = useCallback(
-    async (reply: string) => {
+    async (reply: string, shouldAbort?: () => boolean) => {
+      // Abort if the session closed OR (for send) a newer message superseded
+      // this reply mid-delivery, so a stale reply never trickles out after the
+      // combined one.
+      const abort = () => closed.current || (shouldAbort ? shouldAbort() : false)
       const parts = reply
         .split(/\n{2,}/)
         .map((s) => s.trim())
@@ -333,7 +402,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       for (let i = 0; i < bubbles.length; i++) {
         setTyping(true)
         await sleep(typingMs(bubbles[i]))
-        if (closed.current) {
+        if (abort()) {
           setTyping(false)
           return
         }
@@ -341,7 +410,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         pushBot('a', bubbles[i])
         if (i < bubbles.length - 1) {
           await sleep(700) // brief beat between two quick messages
-          if (closed.current) return
+          if (abort()) return
         }
       }
     },
@@ -393,15 +462,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     (text: string) => {
       const body = text.trim()
       if (!body) return
-      const next: Msg[] = [...msgs, { who: 'u', text: body }]
+      // Build on the freshest history (msgsRef), not this render's closure, so a
+      // second message sent before James replies is never lost: it appends to
+      // the first rather than overwriting it.
+      const base = msgsRef.current.length >= msgs.length ? msgsRef.current : msgs
+      const next: Msg[] = [...base, { who: 'u', text: body }]
+      msgsRef.current = next
       // The visitor typing revives a session that had ended, so a closed chat
       // can be picked back up deliberately - just never on its own.
       closed.current = false
+      // The visitor is active again: cancel any pending farewell auto-close.
+      clearFarewell()
       setMsgs(next)
       setInput('')
       setBusy(true)
       persist(next, phase)
       bumpIdle()
+      // Supersede any reply still in flight for an earlier message. Only the
+      // newest generation delivers, and it carries the full history, so two
+      // messages sent back-to-back get one combined reply that covers both
+      // rather than James answering one and silently dropping the other.
+      const gen = ++replyGen.current
 
       // During the handoff the input is disabled (see AgentLiveChat), so a send
       // should not normally arrive here. Kept as a safety no-op: anything typed
@@ -431,7 +512,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         })
         // A reply that lands after the visitor closed the chat must not speak.
         if (closed.current) return
+        // Record the session id even for a superseded reply, so the newer call
+        // reuses the same session rather than opening a duplicate.
         if (res?.sessionId) sessionId.current = res.sessionId
+        // A newer message arrived while this reply was in flight. Drop this one;
+        // the newest generation carries the full history and answers everything.
+        if (gen !== replyGen.current) return
         setBusy(false)
 
         // Remember this visitor so a later visit can be recognised.
@@ -455,11 +541,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           // call already took, before the typing indicator appears.
           const waited = Date.now() - sentAt
           await sleep(Math.max(0, readDelayMs() - waited))
-          if (closed.current) return
-          await deliverAgentReply(text)
-          if (closed.current) return
+          if (closed.current || gen !== replyGen.current) return
+          await deliverAgentReply(text, () => gen !== replyGen.current)
+          if (closed.current || gen !== replyGen.current) return
+          // A genuine farewell: offer to auto-close after ~30s instead of
+          // nagging with idle check-ins.
           if (res?.closing) {
-            finishSession()
+            armFarewellClose()
             return
           }
           bumpIdle()
@@ -489,16 +577,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           pushBot('c', res.reply)
         }
 
-        // The model signalled this reply is a farewell. End the session here
-        // rather than leaving idle timers armed behind the goodbye.
+        // The model signalled this reply is a farewell. Offer to auto-close
+        // after ~30s rather than leaving idle timers armed behind the goodbye.
         if (res.closing) {
-          finishSession()
+          armFarewellClose()
           return
         }
         bumpIdle()
       })()
     },
-    [msgs, phase, persist, pushBot, bumpIdle, joinAgent, finishSession, deliverAgentReply],
+    [msgs, phase, persist, pushBot, bumpIdle, joinAgent, finishSession, deliverAgentReply, armFarewellClose],
   )
 
   const open = useCallback(() => {
@@ -549,6 +637,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     askClose: () => setConfirmClose(true),
     cancelClose: () => setConfirmClose(false),
     endConversation,
+    closePrompt,
+    keepOpen,
+    confirmAutoClose,
   }
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

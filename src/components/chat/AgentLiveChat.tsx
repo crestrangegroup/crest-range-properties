@@ -120,6 +120,22 @@ export default function AgentLiveChat() {
         </div>
       )}
 
+      {/* Post-farewell auto-close prompt. One button keeps the chat open, one
+          closes it now; if it is ignored it closes on its own (ChatProvider). */}
+      {c.closePrompt && (
+        <div className="crc-closeprompt" role="status" aria-live="polite">
+          <p>{t.chatCloseSoon}</p>
+          <div className="crc-closeprompt-acts">
+            <button className="btn btn-primary btn-inline" onClick={c.keepOpen}>
+              {t.chatStayOpen}
+            </button>
+            <button className="btn btn-outline btn-inline" onClick={c.confirmAutoClose}>
+              {t.chatCloseNow}
+            </button>
+          </div>
+        </div>
+      )}
+
       <form className="crc-foot" onSubmit={onSubmit}>
         <input
           value={c.input}

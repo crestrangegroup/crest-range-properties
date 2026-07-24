@@ -222,6 +222,10 @@ export const EN = {
   contChat: 'Continue your chat',
   closeQ: 'Close this conversation entirely, or minimize it?',
   closeBtn: 'Close conversation', minBtn: 'Minimize',
+  // Post-farewell auto-close prompt. Buttons are self-describing to avoid any
+  // Yes/No ambiguity: one keeps the chat open, one closes it now.
+  chatCloseSoon: 'This chat will close soon. Still need help?',
+  chatStayOpen: 'Yes, still here', chatCloseNow: 'No, all done',
 
   city: 'Abu Dhabi', mapLayer: 'Google Maps · live listings layer',
 

@@ -247,6 +247,30 @@
   }
 }
 
+/* Post-farewell auto-close prompt, shown above the input. */
+.crc-closeprompt {
+  flex: none;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.crc-closeprompt p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+.crc-closeprompt-acts {
+  display: flex;
+  gap: 8px;
+}
+.crc-closeprompt-acts .btn {
+  padding: 7px 12px;
+  font-size: 12.5px;
+}
+
 .crc-foot {
   flex: none;
   border-top: 1px solid var(--line);
